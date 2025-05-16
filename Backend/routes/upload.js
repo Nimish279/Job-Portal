@@ -13,7 +13,7 @@ const uploadToCloudinary = (buffer, mimetype, folder = "resume", filename) => {
     const stream = cloudinary.uploader.upload_stream(
       {
         folder,
-        public_id: filename,   // ✅ now correctly passed
+        public_id: filename,   
         resource_type: resourceType,
         overwrite: true,
       },

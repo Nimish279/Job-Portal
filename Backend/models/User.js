@@ -23,7 +23,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["Active", "Inactive"],
         default: "Active",
-    }
+    },
+    university:{type:String},
+    city:{type:String},
+    degree:{type:String},
+    github:{type:String},
+    about:{type:String}
 }, {
     timestamps: true
 })

@@ -5,12 +5,14 @@ import connectDB from './config/db.js';
 import recruiterRoutes from './routes/recruiterRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import upload from './routes/upload.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 const app = express();
 
 // Common Middlewares
 app.use(cors());
+app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 

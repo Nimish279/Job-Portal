@@ -1,6 +1,7 @@
 import {User} from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { Job } from '../models/Job.js';
 
 export const loginUser = async (req, res) => {
     const {email, password} = req.body;
@@ -12,7 +13,14 @@ export const loginUser = async (req, res) => {
         if(!isMatch) return res.status(400).json({message: 'Invalid Credentials'});
 
         const token = jwt.sign({id: existingUser._id}, process.env.JWT_SECRET, {expiresIn: '1h'});
-        res.status(200).json({token, user: existingUser});
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict",
+            maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
+          });
+        res.status(200).json({success:true,message:"User login successful"});
     } catch(err){
         res.status(500).json({error: err.message});
     }
@@ -32,3 +40,54 @@ export const registerUser = async (req, res) => {
         res.status(500).json({error: err.message});
     }
 };
+
+
+export const editProfile=async (req,res) => {
+    try {
+        const user=await User.findById(req.user.id)
+        console.log(user)
+        const {name,github,degree,university,email,city,about}=req.body
+        const updatedFields=['name','github',"degree",'city','university','email','about']
+        console.log(req.body.github)
+        
+        updatedFields.forEach(field=>{
+            if(req.body[field]){
+                user[field]=req.body[field]
+            }
+        })
+
+        await user.save()
+
+        res.status(200).json({success:true,message:"User profile edited successfully"})
+    } catch (error) {
+        res.status(500).json({error:error})
+        console.log(error)
+    }
+}
+
+export const userlogout=async(req,res)=>{
+    try {
+        res.clearCookie('token')
+        res.status(200).json({success:true,message:"User logged out successfully"})
+    } catch (error) {
+        res.status(500).json({error:error.message})
+        console.log(error);
+    }
+}
+
+
+export const seeJobs=async (req,res) => {
+    try {
+        const jobs=await Job.find()
+        if(jobs.length===0){
+            return res.status(203).json({message:"No Active jobs"})
+        }
+        return res.status(200).json({success:true,jobs})
+    } catch (error) {
+          res.status(500).json({error:error.message})
+        console.log(error);
+    }
+}
+
+
+
