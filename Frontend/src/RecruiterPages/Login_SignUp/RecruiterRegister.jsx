@@ -27,28 +27,24 @@ const RecruiterRegister = () => {
         companyPanCardNumber: ''
     });
     
-    const [companyLogo, setCompanyLogo] = useState(null);
-    const [companyPanCarFile, setCompanyPanCardFile] = useState(null);
+    // const [companyLogo, setCompanyLogo] = useState(null);
+    // const [companyPanCarFile, setCompanyPanCardFile] = useState(null);
 
     const handleChange = (e) => {
         const {name, value} = e.target;
         setFormData(prev => ({...prev, [name]: value}));
     }
 
-    const handleFileChange = (e, setter) => {
-        setter(e.target.files[0]);
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
         try {
           const form = new FormData();
+          
           for (const key in formData) {
             form.append(key, formData[key]);
           }
-          form.append('companyLogo', companyLogo);
-          form.append('companyPanCardFile', companyPanCardFile);
+          // form.append('companyLogo', companyLogo);
+          // form.append('companyPanCardFile', companyPanCardFile);
     
           const res = await fetch(baseUrl, {
             method: 'POST',
@@ -56,6 +52,7 @@ const RecruiterRegister = () => {
           });
     
           const data = await res.json();
+          // console.log(data);
           if (res.ok) {
             toast.success('Recruiter registered successfully!');
             navigate('/recruiter/dashboard');
@@ -110,33 +107,33 @@ const RecruiterRegister = () => {
                     value={formData[name]}
                     onChange={handleChange}
                     className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#5F9D08]"
-                    required
+                    
                   />
                 </div>
               ))}
 
               {/* File Inputs */}
-              <div className="mb-4 w-full">
+              {/* <div className="mb-4 w-full">
                 <label className="block text-gray-700 mb-2 text-left">Company Logo</label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => handleFileChange(e, setCompanyLogo)}
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#5F9D08]"
-                  required
+                  
                 />
-              </div>
+              </div> */}
 
-              <div className="mb-6 w-full">
+              {/* <div className="mb-6 w-full">
                 <label className="block text-gray-700 mb-2 text-left">Company PAN Card File</label>
                 <input
                   type="file"
                   accept=".pdf,.jpg,.png"
                   onChange={(e) => handleFileChange(e, setCompanyPanCardFile)}
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#5F9D08]"
-                  required
+                  
                 />
-              </div>
+              </div> */}
 
               <button
                 type="submit"

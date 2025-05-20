@@ -28,7 +28,7 @@ export const loginRecruiter = async (req, res) => {
 
 export const registerRecruiter = async (req, res) => {
     try {
-        const {recruiterName, jobTitle, email, phone, alternateContact, linkedIn, password, companyName, website, street, city, state, postalCode, industryType, registrationNumber, companyPanCardNumber, companyLogo, companyPanCardFile} = req.body;
+        const {recruiterName, jobTitle, email, phone, alternateContact, linkedIn, password, companyName, website, street, city, state, postalCode, industryType, registrationNumber, companyPanCardNumber} = req.body;
     
         const existingRecruiter = await Recruiter.findOne({email});
         if(existingRecruiter){
@@ -56,8 +56,6 @@ export const registerRecruiter = async (req, res) => {
             industryType,
             registrationNumber,
             companyPanCardNumber,
-            companyLogo,
-            companyPanCardFile,
         });
     
         await newRecruiter.save();

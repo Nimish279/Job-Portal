@@ -63,7 +63,7 @@ const Profile = () => {
               {/* Use Link to navigate to the profile page */}
               <li>
                 <Link 
-                  to="/profile"  // Navigate to profile page
+                  to="/users/profile"  // Navigate to profile page
                   className="block px-4 py-2 hover:bg-gray-200"
                   style={{ color: '#5F9D08' }}
                 >
@@ -72,7 +72,7 @@ const Profile = () => {
               </li>
               <li>
               <Link 
-                  to="/editProfile"  // Navigate to the profile page
+                  to="/users/editProfile"  // Navigate to the profile page
                   className="block px-4 py-2 hover:bg-gray-200" 
                   style={{ color: '#5F9D08' }}
                 >
@@ -81,7 +81,7 @@ const Profile = () => {
               </li>
               <li>
               <Link 
-                  to="/"  // Navigate to the profile page
+                  to="/users/logout"  // Navigate to the profile page
                   className="block px-4 py-2 hover:bg-gray-200" 
                   style={{ color: '#5F9D08' }}
                 >

@@ -76,7 +76,7 @@ export const userlogout=async(req,res)=>{
 }
 
 
-export const seeJobs=async (req,res) => {
+export const getJobs=async (req,res) => {
     try {
         const jobs=await Job.find()
         if(jobs.length===0){

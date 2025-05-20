@@ -5,6 +5,7 @@ import RecruiterRegister from './RecruiterPages/Login_SignUp/RecruiterRegister';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard.jsx';
+import Logout from './pages/Logout.jsx';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path='/' element={<LandingPage/>} />
         <Route path='/users/register' element={<Register/>}/>
         <Route path='/users/login' element={<Login/>}/>
+        <Route path='/users/logout' element={<Logout/>}/>
         <Route path='/users/dashboard' element={<Dashboard/>} />
 
         {/* Recruiter Pages */}

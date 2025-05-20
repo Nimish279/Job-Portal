@@ -6,7 +6,7 @@ import upload from '../middlewares/multer.js';
 
 const router = express.Router();
 
-router.post('/register', registerRecruiter);
+router.post('/register', upload.none(), registerRecruiter);
 router.post('/login', loginRecruiter);
 router.post('/createJob',protect,
     isRecruiter,

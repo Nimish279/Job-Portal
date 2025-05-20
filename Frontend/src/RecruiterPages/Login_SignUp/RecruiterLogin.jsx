@@ -17,19 +17,20 @@ const RecruiterLogin = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({ email, password }),
         });
   
         const data = await response.json();
   
-        if (response.ok) {
+        if (response.success) {
           toast.success("Login Successful!");
   
           // Store JWT Token in localStorage
-          localStorage.setItem("token", data.token);
+          // localStorage.setItem("token", data.token);
   
           // Redirect to dashboard
-          navigate("/dashboard");
+          navigate("/recruiter/dashboard");
         } else {
           toast.error(data.message || "Invalid email or password");
         }

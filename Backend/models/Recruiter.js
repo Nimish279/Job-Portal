@@ -58,12 +58,12 @@ const recruiterSchema = new mongoose.Schema({
     companyPanCardNumber: {
         type: String,
     },
-    companyLogo: {
-        type: String,
-    },
-    companyPanCardFile: {
-        type: String,
-    },
+    // companyLogo: {
+    //     type: String,
+    // },
+    // companyPanCardFile: {
+    //     type: String,
+    // },
     role: {
         type: String,
         enum: ["Seeker", "Recruiter"],
