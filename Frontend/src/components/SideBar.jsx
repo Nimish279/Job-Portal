@@ -34,18 +34,18 @@ const SideBar = ({ isOpen, onClose }) => {
                           {/* for small devices */}
 
               <li className="flex items-center pt-16 p-1 hover:bg-gray-700 text-md">
-                <Link to="/savedJobs" className="flex items-center">
+                <Link to="/users/saved-jobs" className="flex items-center">
                   <FaBookmark className="mr-2" /> Saved Jobs
                 </Link>
               </li>
               <li className="flex items-center  p-1 hover:bg-gray-700 text-md">
-                <Link to="/jobRecommendations" className="flex items-center">
+                <Link to="/users/job-recommendations" className="flex items-center">
                   <FaStar     className="mr-2" />Job Recommendationss
                 </Link>
               </li>
              
               <li className="flex items-center p-1 hover:bg-gray-700 text-md">
-              <Link to="/resume" className="flex items-center">
+              <Link to="/users/resume" className="flex items-center">
                   <FaFileAlt     className="mr-2" />Resume
                 </Link>
               </li>
@@ -67,18 +67,18 @@ const SideBar = ({ isOpen, onClose }) => {
                                     {/* for large devices */}
 
             <li className="flex items-center lg:p-2 hover:bg-gray-700 text-md lg:text-xl md:text-sm">
-              <Link to="/savedJobs" className="flex items-center">
+              <Link to="/users/saved-jobs" className="flex items-center">
                 <FaBookmark className="mr-2" /> Saved Jobs
               </Link>
             </li>
             <li className="flex items-center  lg:p-2 hover:bg-gray-700 text-md lg:text-xl md:text-sm">
-                <Link to="/jobRecommendations" className="flex items-center">
+                <Link to="/users/job-recommendations" className="flex items-center">
                   <FaStar     className="mr-2" /> Job Recommendations
                 </Link>
               </li>
           
             <li className="flex items-center lg:p-2 hover:bg-gray-700 text-md lg:text-xl md:text-sm">
-            <Link to="/resume" className="flex items-center">
+            <Link to="/users/resume" className="flex items-center">
                   <FaFileAlt     className="mr-2" />Resume
                 </Link>
             </li>

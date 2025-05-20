@@ -1,0 +1,35 @@
+[
+  {
+    "id": "rec1",
+    "jobTitle": "Full Stack Developer",
+    "company": "Alpha Solutions",
+    "location": "Berlin, Germany",
+    "experience": "3-5 years",
+    "jobType": "Full-time",
+    "salary": "€70,000 - €90,000",
+    "skillsRequired": "JavaScript, React, Node.js, SQL",
+    "timeAgo": "2 days ago"
+  },
+  {
+    "id": "rec2",
+    "jobTitle": "DevOps Engineer",
+    "company": "Beta Cloud Services",
+    "location": "Remote",
+    "experience": "5+ years",
+    "jobType": "Full-time",
+    "salary": "$120,000 - $150,000",
+    "skillsRequired": "AWS, Docker, Kubernetes, Python",
+    "timeAgo": "5 days ago"
+  },
+  {
+    "id": "rec3",
+    "jobTitle": "Junior UI/UX Designer",
+    "company": "Gamma Creatives",
+    "location": "London, UK",
+    "experience": "1-2 years",
+    "jobType": "Internship",
+    "salary": "£25,000 - £30,000",
+    "skillsRequired": "Figma, Adobe XD, User Research",
+    "timeAgo": "1 week ago"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "savedJob1",
+    "title": "Senior Frontend Engineer",
+    "company": "FutureTech Solutions",
+    "location": "San Francisco, CA",
+    "jobRole": "Lead Developer",
+    "skillsRequired": "React, Redux, TypeScript, Node.js",
+    "ctc": "$140,000 - $170,000",
+    "description": "Join a dynamic team to build cutting-edge web applications. Responsible for leading frontend development efforts and mentoring junior developers.",
+    "postedDate": "2024-05-10"
+  },
+  {
+    "id": "savedJob2",
+    "title": "Product Designer (UX/UI)",
+    "company": "Creative Minds Inc.",
+    "location": "Remote",
+    "jobRole": "Senior Designer",
+    "skillsRequired": "Figma, Sketch, Adobe XD, Prototyping, User Research",
+    "ctc": "$100,000 - $130,000",
+    "description": "We are seeking a talented Product Designer to create intuitive and engaging user experiences for our suite of digital products.",
+    "postedDate": "2024-05-08"
+  },
+  {
+    "id": "savedJob3",
+    "title": "Cloud Infrastructure Engineer",
+    "company": "SkyHigh Cloud Services",
+    "location": "Austin, TX",
+    "jobRole": "DevOps Engineer",
+    "skillsRequired": "AWS, Kubernetes, Docker, Terraform, CI/CD",
+    "ctc": "$110,000 - $145,000",
+    "description": "Manage and scale our cloud infrastructure. Implement automation and best practices for reliability and performance.",
+    "postedDate": "2024-05-12"
+  }
+]
