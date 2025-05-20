@@ -1,9 +1,9 @@
 // src/components/Sidebar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ActiveJobs from '../images/ActiveJob00.png';
-import ClosedJobs from '../images/ClosedJob00.png';
-import PostJobs from '../images/PostAJob00.png';
+import ActiveJobs from '../assets/images/ActiveJob00.png';
+import ClosedJobs from '../assets/images/ClosedJob00.png';
+import PostJobs from '../assets/images/PostAJob00.png';
 
 const SideBar_Recr = () => {
   return (
