@@ -4,42 +4,54 @@ import Sidebar from '../components/SideBar_Recr';
 import Search from '../assets/images/search00.png';
 import Notifications from '../assets/images/notifications00.png';
 import JobCard from './components/JobCard';
-
+import{ toast }from 'react-toastify';
+import axios from 'axios';
 function JobPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
 
-  useEffect(() => {
+   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        
-        const response = await fetch("http://localhost:8000/api/recruiters/myJobs", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // make sure to include this if you're dealing with cookies
-          body: JSON.stringify({response: response.data.jobs}),
+        const response = await axios.get('http://localhost:8000/api/recruiters/myJobs', {
+          withCredentials: true, // <-- THIS is required to send cookies
         });
-        console.log(response.data);
-        
-        // if (error) {
-        //   console.error('Error fetching job listings:', error.message);
-        //   setError('Failed to load job listings. Please try again later.');
-        // } else {
-        //   setJobs();
-        // }
-      } catch (err) {
-        console.error('Unexpected error:', err.message);
-        setError('An unexpected error occurred. Please try again later.');
-      } finally {
+
+        setJobs(response.data.jobs); // Adjust according to your API shape
+        setLoading(false);
+        // console.log(response.data.jobs)
+      } catch (error) {
+        toast.error("Failed to fetch jobs");
+        console.error("Error fetching jobs:", error);
         setLoading(false);
       }
     };
 
     fetchJobs();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchProfile=async()=>{
+      try {
+        const res=await axios.get('http://localhost:8000/api/recruiters/getProfile',{
+          withCredentials:true
+        })
+        const recruiter=res.data.recruiter
+        
+        setUserName(recruiter.recruiterName)
+        setLoading(false);
+        // console.log(res.data.recruiter)
+      } catch (error) {
+         toast.error("Failed to fetch Recrutier Details");
+        console.error("Error fetching recuriter:", error);
+        setLoading(false);
+      }
+    }
+
+    fetchProfile()
   }, []);
   
 
@@ -88,16 +100,13 @@ function JobPage() {
             <div className="space-y-4">
               {jobs.map((job) => (
                 <JobCard
-                  key={job.job_id}
-                  jobTitle={job.job_role}
-                  jobType={job.job_type}
-                  experience={job.experience}
+                  key={job._id}
+                  jobTitle={job.jobRole}
                   location={job.location}
-                  salaryRange={job.salary_range}
-                  jobDescription={job.job_description}
-                  skills={job.skills}
-                  qualifications={job.qualifications}
-                  eligibilityCriteria={job.eligibility_criteria}
+                  salaryRange={job.ctc}
+                  jobDescription={job.jobDescription}
+                  skills={job.skillsRequired}
+                  eligibilityCriteria={job.eligibilityCriteria}
                   status={job.status}
                   opened={job.created_at}
                   actionButtonText="View Applicants"

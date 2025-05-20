@@ -3,13 +3,10 @@ import { Link } from "react-router-dom";
 
 const JobCard = ({
   jobTitle,
-  jobType,
-  experience,
   location,
   salaryRange,
   jobDescription,
   skills,
-  qualifications,
   eligibilityCriteria,
   opened,
   status,
@@ -37,14 +34,7 @@ const JobCard = ({
         {/* Detailed Information */}
         <div className="mt-4 text-gray-700 text-sm space-y-2">
           <div className="flex flex-wrap mt-4 space-y-2 sm:space-y-0 sm:space-x-8">
-            <div className="text-center">
-              <p>Job Type</p>
-              <p className="text-gray-700 font-semibold">{jobType}</p>
-            </div>
-            <div className="text-center">
-              <p>Experience</p>
-              <p className="text-gray-700 font-semibold">{experience}</p>
-            </div>
+            
             <div className="text-center">
               <p>Location</p>
               <p className="text-gray-700 font-semibold">{location}</p>
@@ -56,10 +46,8 @@ const JobCard = ({
             <div className="text-center">
               <p>Skills</p>
               <p className="text-gray-700 font-semibold">{skills}</p>
-            </div><div className="text-center">
-              <p>Qualifications</p>
-              <p className="text-gray-700 font-semibold">{qualifications}</p>
-            </div><div className="text-center">
+            </div>
+            <div className="text-center">
               <p>Eligibility Criteria</p>
               <p className="text-gray-700 font-semibold">{eligibilityCriteria}</p>
             </div><div className="text-center">
