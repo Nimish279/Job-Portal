@@ -18,16 +18,16 @@ const Login = () => {
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: "include",
             body: JSON.stringify({email, password}),
         });
 
         const data = await response.json();
 
-        if(response.ok){
+        if(response.success){
             toast.success("Login Successful!");
 
-            // Store JWT Token in localstorage
-            localStorage.setItem("token", data.token);
+            
 
             // Redirect to dashboard
             navigate("/dashboard");
