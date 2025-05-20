@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import NavSearchBar from '../components/Header/NavSearchBar';
-import SideBar from '../components/SideBar';
-import AppliedJobs from '../components/AppliedJobs';
-import JobCards from '../components/JobCards';
+import NavSearchBar from '../../components/Header/NavSearchBar';
+import SideBar from '../../components/SideBar';
+import JobCards from '../../components/JobCards';
+import AppliedJobs from '../../components/AppliedJobs';
+
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
