@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "title": "Software Engineer",
+    "company": "Amazon",
+    "location": "Seattle",
+    "type": "Full-time",
+    "jobRole": "Software Engineer",
+    "skillsRequired": "JavaScript, React",
+    "ctc": "120,000",
+    "description": "Job description goes here.\nMore details about the job.",
+    "link": "https://amazon.jobs",
+    "status": 3,
+    "eligibility": "Bachelor's degree in Computer Science"
+  },
+  {
+    "id": 2,
+    "title": "Software Engineer",
+    "company": "Amazon",
+    "location": "Seattle",
+    "type": "Full-time",
+    "jobRole": "Software Engineer",
+    "skillsRequired": "JavaScript, React",
+    "ctc": "120,000",
+    "description": "Job description goes here.\nMore details about the job.",
+    "link": "https://amazon.jobs",
+    "status": 3,
+    "eligibility": "Bachelor's degree in Computer Science"
+  }
+]

@@ -1,0 +1,30 @@
+[
+    {
+      "company": "Amazon",
+      "jobTitle": "Software Developer",
+      "companyLogo": "path-to-amazon-logo",
+      "experience": "5-6 Years",
+      "jobType": "Full-Time",
+      "salary": "60,000 LPA",
+      "timeAgo": "2 days ago"
+    },
+    {
+      "company": "Google",
+      "jobTitle": "Frontend Developer",
+      "companyLogo": "path-to-google-logo",
+      "experience": "3-5 Years",
+      "jobType": "Full-Time",
+      "salary": "80,000 LPA",
+      "timeAgo": "1 week ago"
+    },
+    {
+      "company": "Apple",
+      "jobTitle": "Backend Developer",
+      "companyLogo": "path-to-apple-logo",
+      "experience": "4-6 Years",
+      "jobType": "Full-Time",
+      "salary": "90,000 LPA",
+      "timeAgo": "3 days ago"
+    }
+  ]
+  

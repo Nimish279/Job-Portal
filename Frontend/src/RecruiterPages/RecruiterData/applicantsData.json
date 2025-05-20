@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Prachi Shirsale",
+    "course": "MCA Management",
+    "image": "../images/Profile_pics/1.jpg"
+  },
+  {
+    "name": "Rahul Sharma",
+    "course": "MBA Marketing",
+    "image": "../../images/Profile_pics/2.jpg"
+  },
+  {
+    "name": "Anjali Verma",
+    "course": "B.Tech Computer Science",
+    "image": "../../images/Profile_pics/3.jpg"
+  }
+]

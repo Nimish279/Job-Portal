@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import Sidebar from '../components/SideBar_Recr';
 import Search from '../assets/images/search00.png';
 import Notifications from '../assets/images/notifications00.png';
-import ProfileImage from '../assets/images/Profile_pics/1.jpg';
 import JobCard from './components/JobCard';
 import{ toast }from 'react-toastify';
 import axios from 'axios';
-function JobPage() {
-  const [jobs, setJobs] = useState([]);
+
+function AllJobs_ClosedJobs() {
+   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
@@ -64,16 +64,14 @@ function JobPage() {
           <input
             type="text"
             placeholder="Search"
-            className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
+            className="w-full sm:w-64 p-2 rounded text-gray-700"
           />
         </div>
         <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
           <Link to="/notifications">
             <img src={Notifications} alt="Notifications Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
           </Link>
-          <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8">
-            <img src={ProfileImage} alt="" />
-          </div>
+          <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8"></div>
           <Link to="/recruiters/getProfile">
           <span className="text-sm sm:text-base">{userName || 'Loading...'}</span> 
           </Link>
@@ -126,4 +124,4 @@ function JobPage() {
   );
 }
 
-export default JobPage;
+export default AllJobs_ClosedJobs;

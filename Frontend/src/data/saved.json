@@ -1,0 +1,30 @@
+[
+    {
+      "id": 1,
+      "title": "Software Developer",
+      "company": "Amazon",
+      "location": "Bangalore",
+      "jobRole": "Full-Time",
+      "skillsRequired": "React, Node.js",
+      "ctc": "60,000 LPA"
+    },
+    {
+      "id": 2,
+      "title": "Frontend Developer",
+      "company": "Google",
+      "location": "Pune",
+      "jobRole": "Full-Time",
+      "skillsRequired": "HTML, CSS, JavaScript",
+      "ctc": "80,000 LPA"
+    },
+    {
+      "id": 3,
+      "title": "Backend Developer",
+      "company": "Apple",
+      "location": "Mumbai",
+      "jobRole": "Full-Time",
+      "skillsRequired": "Node.js, MongoDB",
+      "ctc": "90,000 LPA"
+    }
+  ]
+  
