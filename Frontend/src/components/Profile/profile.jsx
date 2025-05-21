@@ -21,7 +21,7 @@ const Profile = () => {
         
         if (response.ok) {
           const data = await response.json();
-          console.log("Fetched data:", data); // Log data to inspect structure
+          // console.log("Fetched data:", data); // Log data to inspect structure
 
           if (data && data.length > 0) {
             setName(data[0].name); // Ensure 'name' is the correct property name in your Supabase table

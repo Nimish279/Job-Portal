@@ -13,7 +13,7 @@ const Dashboard = () => {
       <NavSearchBar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
       <SideBar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <div className="flex flex-1 flex-col md:flex-row mt-16 md:mt-0">
-        <div className="flex-1">
+        <div className="flex-3">
           <JobCards />
         </div>
         <AppliedJobs />
