@@ -86,10 +86,7 @@ const EditProfile = () => {
         <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center">
           <label className="block text-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0" htmlFor="email">Email:</label>
           <input
-            type="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
+            
             className="border border-[#808080] rounded w-full sm:w-3/4 p-2 font-bold"
           />
         </div>
