@@ -5,6 +5,7 @@ const userStore=create(set=>({
     loading:false,
     jobs:[],
     // user:null,
+    appliedJobs:[],
     login:async({ email, password })=>{
         try {
             const response=await axiosInstance.post('/users/login',{
@@ -62,6 +63,36 @@ const userStore=create(set=>({
         
     } catch (error) {
         const msg=error.response.data.message;
+        toast.error(msg);
+        console.log(error)
+    }
+  },
+
+  applyJob:async (jobId) => {
+    try {
+      const response=await axiosInstance.put('/users/applyJob',{
+        jobId:jobId
+      })
+      toast.success(response.data.message)
+
+      set({loading:false})
+
+    } catch (error) {
+       const msg=error.response.data.message;
+        toast.error(msg);
+        console.log(error)
+    }
+  },
+
+  getAppliedJobs:async()=>{
+    try {
+        const response=await axiosInstance.get('/users/getAppliedJobs')
+        
+
+        set({loading:false,appliedJobs:response.data.appliedJobs})
+
+    } catch (error) {
+       const msg=error.response.data.message;
         toast.error(msg);
         console.log(error)
     }

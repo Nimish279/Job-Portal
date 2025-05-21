@@ -28,8 +28,15 @@ const userSchema = new mongoose.Schema({
     city:{type:String},
     degree:{type:String},
     github:{type:String},
-    about:{type:String}
-}, {
+    about:{type:String},
+    appliedJobs: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Job"
+    }],
+},
+
+
+{
     timestamps: true
 })
 

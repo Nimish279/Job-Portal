@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import JobCard from './JobCard';
-// import jobData from './jobData.json';
+
 import useUserStore from '../store/userStore.js'
 const JobCards = () => {
 const {getJobs,jobs}=useUserStore()
-// const []
+
 useEffect(() => {
   getJobs()
 }, [getJobs]);

@@ -31,6 +31,7 @@ export const isRecruiter = async(req, res, next) => {
 export const isSeeker = async(req, res, next) => {
     const user=await User.findById(req.user.id)
     // console.log(user)
+    req.user=user
     if (user.role !== "Seeker") {
         return res.status(403).json({ message: "Access denied" });
     }

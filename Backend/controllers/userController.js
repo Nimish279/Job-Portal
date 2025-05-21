@@ -89,5 +89,59 @@ export const getJobs=async (req,res) => {
     }
 }
 
+export const applyToJobs=async (req,res) => {
+    try {
+        
+        const {jobId}=req.body;
+        const job=await Job.findById(jobId)
+        if(job===null){
+            return res.status(404).json({message:"Job Not found"})
+        }
+
+        if(job.status==='closed'){
+            return res.status(403).json({message:"Job Opening Is closed"})
+        }
+        const user=req.user
+
+          const alreadyApplied = job.candidates.includes(user._id);
+          if (alreadyApplied) {
+            return res.status(403).json({ message: "Already applied to this job" });
+             }
+        job.candidates.push(user._id)
+        user.appliedJobs.push(job._id);
+        await job.save({
+            validateBeforeSave:false
+        })
+        await user.save({
+            validateBeforeSave:false
+        });
+
+        res.status(200).json({message:"Applied To Job successfully"})
 
 
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error:error.message})
+    }
+}
+
+
+export const getAppliedJobs=async (req,res) => {
+    try {
+        const userId=req.user._id
+        const user=await User.findById(userId).populate("appliedJobs")
+        console.log(user?.appliedJobs)
+        if(user.appliedJobs.length === 0 || !user){
+        return res.status(203).json({
+         success: false,
+        message: "You haven't applied to any jobs yet.",
+        appliedJobs: []})
+        }
+        
+        return res.status(200).json({success:true,appliedJobs:user.appliedJobs})
+    } catch (error) {
+       console.log(error)
+        res.status(500).json({error:error.message})
+    
+    }
+}

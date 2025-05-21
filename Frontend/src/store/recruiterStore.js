@@ -51,7 +51,22 @@ const recruiterStore=create(set=>({
             const msg=error.response.data.message
             toast(msg)
         }
+    },
+
+    postJob: async (jobData) => {
+    try {
+      set({ loading: true });
+      const response = await axiosInstance.post("/recruiters/postJob", jobData);
+      set({ loading: false });
+      toast.success("Job posted successfully!");
+      return { success: true };
+    } catch (error) {
+      set({ loading: false });
+      const msg = error.response?.data?.message || "Failed to post job";
+      toast.error(msg);
+      return { success: false };
     }
+  },
 }))
 
 export default recruiterStore

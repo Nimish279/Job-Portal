@@ -1,75 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "./Notifications/Navbar";
+import useRecruiterStore from "../store/recruiterStore";
 
 function PostJob_Job() {
+  const jobRoleRef = useRef();
+  const experienceRef = useRef();
+  const ctcRef = useRef();
+  const skillsRequiredRef = useRef();
+  const jobDescriptionRef = useRef();
+  const locationsRef = useRef();
+  const eligibilityCriteriaRef = useRef();
+  const qualificationsRef = useRef();
+  const requiredDocumentsRef = useRef();
+
+  const [selectedJobType, setSelectedJobType] = useState("Full-Time");
   const [jobType, setJobType] = useState("Job");
-  const [jobRole, setJobRole] = useState("");
-  const [experience, setExperience] = useState("");
-  const [ctc, setCtc] = useState("");
-  const [skillsRequired, setSkillsRequired] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
-  const [locations, setLocations] = useState("");
-  const [eligibilityCriteria, setEligibilityCriteria] = useState([""]);
-  const [qualifications, setQualifications] = useState("");
-  const [selectedJobType, setSelectedJobType] = useState("");
-  const [requiredDocuments, setRequiredDocuments] = useState("");
 
+  const { postJob } = useRecruiterStore();
 
-  
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
     const jobData = {
       jobType: selectedJobType,
-      jobRole,
-      experience,
-      ctc,
-      skillsRequired,
-      jobDescription,
-      location: locations,
-      eligibilityCriteria,
-      qualifications,
-      requiredDocuments
+      jobRole: jobRoleRef.current.value,
+      experience: experienceRef.current.value,
+      ctc: ctcRef.current.value,
+      skillsRequired: skillsRequiredRef.current.value,
+      jobDescription: jobDescriptionRef.current.value,
+      location: locationsRef.current.value,
+      eligibilityCriteria: eligibilityCriteriaRef.current.value,
+      qualifications: qualificationsRef.current.value,
+      requiredDocuments: requiredDocumentsRef.current.value,
     };
 
-    const response = await fetch("http://localhost:8000/api/recruiters/postJob", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(jobData),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      alert("Job posted successfully!");
-      resetForm();
-    } else {
-      console.error("Server error:", data.message);
-      alert("Failed to post job. Check the console for details.");
+    const result = await postJob(jobData);
+    if (result.success) {
+      e.target.reset(); // clears the form
     }
-  } catch (error) {
-    console.error("Error submitting job:", error);
-    alert("Something went wrong while posting the job.");
-  }
-};
-
-  const resetForm = () => {
-    setJobRole("");
-    setExperience("");
-    setCtc("");
-    setSkillsRequired("");
-    setJobDescription("");
-    setLocations([""]);
-    setEligibilityCriteria([""]);
-    setQualifications("");
-    setSelectedJobType("");
-    setRequiredDocuments("");
   };
 
   return (
@@ -100,75 +69,68 @@ function PostJob_Job() {
         </div>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
-        <div>
+          <div>
             <label className="block text-gray-700 font-bold">Job Role</label>
             <input
               type="text"
+              ref={jobRoleRef}
               placeholder="e.g., Software Developer"
               className="w-full p-2 border border-gray-300 rounded"
-              value={jobRole}
-              onChange={(e) => setJobRole(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Experience</label>
             <input
               type="number"
+              ref={experienceRef}
               placeholder="Years of experience"
               className="w-full p-2 border border-gray-300 rounded"
-              value={experience}
-              onChange={(e) => setExperience(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Job Profile CTC (in LPA)</label>
             <input
               type="number"
+              ref={ctcRef}
               placeholder="LPA"
               className="w-full p-2 border border-gray-300 rounded"
-              value={ctc}
-              onChange={(e) => setCtc(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Skills Required</label>
             <input
               type="text"
+              ref={skillsRequiredRef}
               placeholder="e.g., Java, SQL"
               className="w-full p-2 border border-gray-300 rounded"
-              value={skillsRequired}
-              onChange={(e) => setSkillsRequired(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Qualifications</label>
             <input
               type="text"
+              ref={qualificationsRef}
               placeholder="e.g., Bachelor's Degree in Computer Science"
               className="w-full p-2 border border-gray-300 rounded"
-              value={qualifications}
-              onChange={(e) => setQualifications(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Eligibility Criteria</label>
-              <input
-                type="text"
-                value={eligibilityCriteria}
-                placeholder="Eligibility Criteria"
-                className="w-full p-2 mt-2 border border-gray-300 rounded"
-                onChange={(e) => setEligibilityCriteria(e.target.value)}
-              />
+            <input
+              type="text"
+              ref={eligibilityCriteriaRef}
+              placeholder="Eligibility Criteria"
+              className="w-full p-2 mt-2 border border-gray-300 rounded"
+            />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Documents Required</label>
-              <input
-                type="text"
-                value={requiredDocuments}
-                placeholder="Resume"
-                className="w-full p-2 mt-2 border border-gray-300 rounded"
-                onChange={(e) => setRequiredDocuments(e.target.value)}
-              />
+            <input
+              type="text"
+              ref={requiredDocumentsRef}
+              placeholder="Resume"
+              className="w-full p-2 mt-2 border border-gray-300 rounded"
+            />
           </div>
 
           <div>
@@ -198,28 +160,22 @@ function PostJob_Job() {
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Location</label>
-              <input
-                type="text"
-                value={locations}
-                placeholder="Location"
-                className="w-full p-2 mt-2 border border-gray-300 rounded"
-                onChange={(e) => setLocations(e.target.value)}
-              />
+            <input
+              type="text"
+              ref={locationsRef}
+              placeholder="Location"
+              className="w-full p-2 mt-2 border border-gray-300 rounded"
+            />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Job Description</label>
             <textarea
+              ref={jobDescriptionRef}
               className="w-full p-2 border border-gray-300 rounded h-24"
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
             ></textarea>
-          </div>          
-          {/* <div>
-            <label className="block text-gray-700 font-bold">Attached Documents</label>
-            <input type="file" multiple onChange={handleFileUpload} />
-          </div> */}
+          </div>
 
-         <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-6">
             <button
               type="submit"
               className="py-2 px-6 bg-[#5F9D08] text-white rounded-lg hover:bg-[#4f8d07] w-full sm:w-auto"
