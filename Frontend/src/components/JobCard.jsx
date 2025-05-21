@@ -1,18 +1,68 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const JobCard = ({ job }) => {
   return (
-    <div className="border rounded-lg p-4 md:p-2 shadow-md bg-white transition hover:shadow-lg">
-      <h2 className="lg:text-xl md:text-sm font-bold">{job.title}</h2>
-      <p className="text-gray-600 lg:text-xl md:text-sm">{job.company}</p>
-      <p className="text-gray-500  lg:text-xlmd:text-sm">{job.location}</p>
-      <p className="mt-2 lg:text-xl md:text-sm"><strong>Role:</strong> {job.jobRole}</p>
-      <p className="text-gray-600 lg:text-xl md:text-sm"><strong>Skills Required:</strong> {job.skillsRequired}</p>
-      <p className="text-gray-600 lg:text-xl md:text-sm"><strong>CTC:</strong> {job.ctc}</p>
-      <Link to={`/job/${job.id}`} className="text-blue-500 hover:underline lg:mt-4 block">
-        Apply Now
-      </Link>
+    <div className="rounded-xl p-5 shadow-md bg-white transition-all duration-300 hover:shadow-lg border border-gray-100">
+      <div className="flex items-start">
+        <div className="bg-green-50 p-3 rounded-full mr-4 hidden md:flex items-center justify-center">
+          <div className="w-10 h-10 flex items-center justify-center text-[#5F9D08] font-bold text-xl">
+            {job.company.charAt(0)}
+          </div>
+        </div>
+        
+        <div className="flex-1">
+          <h2 className="text-lg md:text-xl font-bold text-gray-800">{job.title}</h2>
+          <p className="text-[#5F9D08] font-medium">{job.company}</p>
+          
+          <div className="flex flex-wrap items-center mt-2 text-sm text-gray-600">
+            <span className="inline-flex items-center mr-3">
+              <span className="w-2 h-2 bg-blue-500 rounded-full mr-1"></span>
+              {job.location}
+            </span>
+            {job.jobRole && (
+              <span className="inline-flex items-center mr-3">
+                <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
+                {job.jobRole}
+              </span>
+            )}
+            {job.ctc && (
+              <span className="inline-flex items-center">
+                <span className="w-2 h-2 bg-yellow-500 rounded-full mr-1"></span>
+                {job.ctc}
+              </span>
+            )}
+          </div>
+          
+          {job.skillsRequired && (
+            <div className="mt-3">
+              <p className="text-sm text-gray-700 font-medium mb-1">Skills Required:</p>
+              <div className="flex flex-wrap gap-2">
+                {job.skillsRequired.split(',').map((skill, index) => (
+                  <span 
+                    key={index} 
+                    className="inline-block bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs"
+                  >
+                    {skill.trim()}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          <div className="mt-4 flex justify-end">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link 
+                to={`/job/${job.id}`} 
+                className="bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] text-white px-4 py-2 rounded-lg inline-block font-medium hover:shadow-md transition-all duration-300"
+              >
+                Apply Now
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

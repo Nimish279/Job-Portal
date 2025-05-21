@@ -23,7 +23,8 @@
     "skillsRequired": "Python, Go, Cloud Computing, Kubernetes",
     "ctc": "700,000",
     "description": "As a Software Engineer at Google, you will work on projects that have real impact and contribute to the success of our users. You will collaborate with other talented engineers to design, develop, and maintain software applications, leveraging advanced technology and the latest in software engineering practices.\n\nOur team is focused on delivering scalable and innovative solutions, and we encourage engineers to explore new technologies and take ownership of their work.\n\nWe are open to hiring candidates to work out of one of the following locations:\n\nHyderabad, IND | Bangalore, IND",
-    "link": "https://careers.google.com/jobs/results/123456789/software-engineer"
+    "link": "https://careers.google.com/jobs/results/123456789/software-engineer",
+    "status": 2
   },
   {
     "id": 3,
@@ -35,6 +36,7 @@
     "skillsRequired": "JavaScript, React, PHP, GraphQL",
     "ctc": "800,000",
     "description": "Facebook is seeking a Software Engineer to join our team. You will be responsible for building and maintaining features that enhance our platform's user experience. You will collaborate with designers and product managers to create scalable solutions and work on high-impact projects that will benefit millions of users.\n\nThe ideal candidate will have experience with modern web technologies, a passion for user-centric design, and a desire to tackle complex problems in a fast-paced environment.\n\nWe are open to hiring candidates to work out of one of the following locations:\n\nMenlo Park, USA | Seattle, USA | New York, USA",
-    "link": "https://www.facebook.com/careers/jobs/123456789/software-engineer"
+    "link": "https://www.facebook.com/careers/jobs/123456789/software-engineer",
+    "status": 1
   }
 ]
