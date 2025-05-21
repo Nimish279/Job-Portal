@@ -9,7 +9,7 @@ function PostJob_Job() {
   const [ctc, setCtc] = useState("");
   const [skillsRequired, setSkillsRequired] = useState("");
   const [jobDescription, setJobDescription] = useState("");
-  const [locations, setLocations] = useState([""]);
+  const [locations, setLocations] = useState("");
   const [eligibilityCriteria, setEligibilityCriteria] = useState([""]);
   const [qualifications, setQualifications] = useState("");
   const [selectedJobType, setSelectedJobType] = useState("");
@@ -219,12 +219,14 @@ function PostJob_Job() {
             <input type="file" multiple onChange={handleFileUpload} />
           </div> */}
 
-          <button
-            type="submit"
-            className="w-full py-2 bg-green-500 text-white rounded mt-6"
-          >
-            Submit Job
-          </button>
+         <div className="flex justify-center mt-6">
+            <button
+              type="submit"
+              className="py-2 px-6 bg-[#5F9D08] text-white rounded-lg hover:bg-[#4f8d07] w-full sm:w-auto"
+            >
+              Post Job
+            </button>
+          </div>
         </form>
       </div>
     </div>

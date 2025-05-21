@@ -5,73 +5,65 @@ import Navbar from './Notifications/Navbar';
 function PostJob_Internship() {
   const [jobType, setJobType] = useState('Internship');
   const [internshipRole, setInternshipRole] = useState('');
-  const [stipendType, setStipendType] = useState('');
   const [stipendAmount, setStipendAmount] = useState('');
+  const [stipendType, setStipendType] = useState('');
   const [skillsRequired, setSkillsRequired] = useState('');
   const [internshipDuration, setInternshipDuration] = useState('');
   const [internshipType, setInternshipType] = useState('');
   const [location, setLocation] = useState('');
-  const [documentsUrl, setDocumentsUrl] = useState([]);
-  const [eligibilityCriteria, setEligibilityCriteria] = useState([]);
+  const [eligibilityCriteria, setEligibilityCriteria] = useState('');
   
-  const handleFileUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    const uploadedUrls = [];
   
-    for (const file of files) {
-      try {
-        const { data, error } = await supabase.storage
-          .from("job-documents")
-          .upload(`documents/${file.name}`, file);
-  
-        if (error) throw new Error(`Error uploading file: ${error.message}`);
-  
-        const { data: publicData } = supabase.storage
-          .from("job-documents")
-          .getPublicUrl(`documents/${file.name}`);
-  
-        if (publicData?.publicUrl) {
-          uploadedUrls.push(publicData.publicUrl);
-        } else {
-          throw new Error("Public URL generation failed");
-        }
-      } catch (err) {
-        console.error(err.message);
-      }
-    }
-  
-    setDocumentsUrl((prevUrls) => [...prevUrls, ...uploadedUrls]);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Convert eligibilityCriteria to a string and documentsUrl to a string
-    const eligibilityCriteriaString = eligibilityCriteria.join(", ");
-    const documentsString = documentsUrl.join(", ");
-  
     try {
-      const { data, error } = await supabase.from("internship_documents").insert({
-        internship_role: internshipRole,            // Role of the internship
-        stipend_type: stipendType,                  // Stipend type (Fixed, Performance Based, or Unpaid)
-        stipend_amount: stipendAmount,              // Stipend amount (if applicable)
-        skills_required: skillsRequired,            // Skills required for the internship
-        internship_type: internshipType,            // Full-Time or Part-Time internship
-        internship_duration: internshipDuration,    // Duration of the internship in months
-        location: location,                         // Location of the internship
-        attached_documents_url: documentsString,    // URLs of uploaded documents
-        eligibility_criteria: eligibilityCriteriaString // Eligibility criteria
-      });
-  
-      if (error) throw error;  // Improved error handling
-  
+      const internshipData = {
+        jobType, // should be 'Internship'
+        internshipRole,
+        stipendType,
+        stipendAmount,
+        skillsRequired,
+        internshipDuration,
+        internshipType,
+        location,
+        eligibilityCriteria
+      };
+
+    const response = await fetch("http://localhost:8000/api/recruiters/postInternship", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(internshipData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
       alert("Internship posted successfully!");
-      console.log("Data inserted successfully:", data);
-    } catch (err) {
-      console.error("Error inserting data:", err);  // Log the full error
+      resetForm();
+    } else {
+      console.error("Server error:", data.message);
       alert("Failed to post internship. Check the console for details.");
     }
-  };
+  } catch (error) {
+    console.error("Error submitting internship:", error);
+    alert("Something went wrong while posting the internship.");
+  }
+};
+
+const resetForm = () => {
+  setInternshipRole("");
+  setStipendAmount("");
+  setStipendType("");
+  setSkillsRequired("");
+  setInternshipDuration("");
+  setInternshipType("");
+  setLocation("");
+  setEligibilityCriteria([]);
+};
   
   return (
     <div className="flex flex-col items-center p-4 sm:p-8 bg-gray-100 min-h-screen">
@@ -223,23 +215,12 @@ function PostJob_Internship() {
             />
           </div>
 
-          {/* Attach Document */}
-          <div>
-            <label className="block text-gray-700 font-bold">Attach Document</label>
-            <input
-              type="file"
-              onChange={handleFileUpload}
-              className="w-full p-2 border border-gray-300 rounded"
-              multiple
-            />
-          </div>
-
           {/* Eligibility Criteria */}
           <div>
             <label className="block text-gray-700 font-bold">Eligibility Criteria</label>
             <textarea
               value={eligibilityCriteria}
-              onChange={(e) => setEligibilityCriteria(e.target.value.split(', '))}
+              onChange={(e) => setEligibilityCriteria(e.target.value)}
               placeholder="Enter eligibility criteria separated by commas"
               className="w-full p-2 border border-gray-300 rounded"
             />

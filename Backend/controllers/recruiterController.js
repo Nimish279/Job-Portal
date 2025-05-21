@@ -2,6 +2,7 @@ import {Recruiter} from '../models/Recruiter.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Job } from '../models/Job.js';
+import { Internship } from '../models/Internship.js';
 
 export const loginRecruiter = async (req, res) => {
     const {email, password} = req.body;
@@ -219,35 +220,28 @@ export const updateJob=async (req,res) => {
 export const postInternship = async (req, res) => {
   try {
     const {
-      internshipTitle,
-      stipend,
-      duration,
-      experienceRequired,
+      internshipRole,
+      stipendAmount,
+      stipendType,
       skillsRequired,
-      qualifications,
-      eligibilityCriteria,
-      internshipDescription,
-      internshipType, // e.g., remote/on-site/hybrid
+      internshipDuration,
+      internshipType,
       location,
-      requiredDocuments,
+      eligibilityCriteria
     } = req.body;
 
-    // Assuming recruiter is authenticated and attached to request
     const recruiter = req.recruiter;
 
     const newInternship = await Internship.create({
       recruiter: recruiter._id,
-      internshipTitle,
-      stipend,
-      duration,
-      experienceRequired,
+      internshipRole,
+      stipendAmount,
+      stipendType,
       skillsRequired,
-      qualifications,
-      eligibilityCriteria,
-      internshipDescription,
+      internshipDuration,
       internshipType,
       location,
-      requiredDocuments,
+      eligibilityCriteria
     });
 
     res.status(201).json({ message: "Internship created successfully", internship: newInternship });

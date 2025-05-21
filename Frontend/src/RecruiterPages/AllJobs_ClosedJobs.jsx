@@ -64,7 +64,7 @@ function AllJobs_ClosedJobs() {
           <input
             type="text"
             placeholder="Search"
-            className="w-full sm:w-64 p-2 rounded text-gray-700"
+            className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
           />
         </div>
         <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
@@ -85,7 +85,7 @@ function AllJobs_ClosedJobs() {
         {/* Main Content */}
         <div className="flex-1 p-4 bg-gray-100">
           <h2 className="text-lg sm:text-2xl font-semibold mb-2">All Jobs</h2>
-          <h3 className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Active Jobs</h3>
+          <h3 className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Closed Jobs</h3>
 
           {loading ? (
             <div className="text-center">
