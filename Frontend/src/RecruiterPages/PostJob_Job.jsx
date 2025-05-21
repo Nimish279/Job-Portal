@@ -6,109 +6,70 @@ function PostJob_Job() {
   const [jobType, setJobType] = useState("Job");
   const [jobRole, setJobRole] = useState("");
   const [experience, setExperience] = useState("");
-  const [salaryRange, setSalaryRange] = useState("");
-  const [skills, setSkills] = useState("");
+  const [ctc, setCtc] = useState("");
+  const [skillsRequired, setSkillsRequired] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [locations, setLocations] = useState([""]);
   const [eligibilityCriteria, setEligibilityCriteria] = useState([""]);
   const [qualifications, setQualifications] = useState("");
-  const [documentsUrl, setDocumentsUrl] = useState([]);
   const [selectedJobType, setSelectedJobType] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
+  const [requiredDocuments, setRequiredDocuments] = useState("");
 
-  const handleLocationChange = (index, value) => {
-    const updatedLocations = [...locations];
-    updatedLocations[index] = value;
-    setLocations(updatedLocations);
-  };
 
-  const handleEligibilityChange = (index, value) => {
-    const updatedCriteria = [...eligibilityCriteria];
-    updatedCriteria[index] = value;
-    setEligibilityCriteria(updatedCriteria);
-  };
-  const handleFileUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    const uploadedUrls = [];
-    setIsUploading(true);
   
-    for (const file of files) {
-      const { data, error } = await supabase.storage
-        .from("job-documents")
-        .upload(`documents/${file.name}`, file);
-  
-      if (error) {
-        console.error("Error uploading file:", error.message);
-      } else {
-        const { data: publicData } = supabase.storage
-          .from("job-documents")
-          .getPublicUrl(`documents/${file.name}`);
-  
-        if (publicData?.publicUrl) {
-          uploadedUrls.push(publicData.publicUrl);
-        }
-      }
-    }
-  
-    // Debugging log: Check if uploaded URLs are updated correctly
-    console.log("Uploaded URLs:", uploadedUrls);
-  
-    setDocumentsUrl((prevUrls) => [...prevUrls, ...uploadedUrls]);
-    setIsUploading(false);
-  };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isUploading) {
-      alert("Please wait until the documents are fully uploaded.");
-      return;
-    }
-
-    if (documentsUrl.length === 0) {
-      alert("Please upload at least one document.");
-      return;
-    }
-
-    const eligibilityCriteriaString = eligibilityCriteria.join(", ");
-    const locationsString = locations.join(", ");
-    const documentsString = documentsUrl.join(", ");
-
-    const { data, error } = await supabase.from("job_listing").insert({
-      job_type: selectedJobType,
-      job_role: jobRole,
+    try {
+    const jobData = {
+      jobType: selectedJobType,
+      jobRole,
       experience,
-      location: locationsString,
-      salary_range: salaryRange,
-      job_description: jobDescription,
-      skills,
+      ctc,
+      skillsRequired,
+      jobDescription,
+      location: locations,
+      eligibilityCriteria,
       qualifications,
-      eligibility_criteria: eligibilityCriteriaString,
-      attached_documents_url: documentsString,
-      status: 1,
+      requiredDocuments
+    };
+
+    const response = await fetch("http://localhost:8000/api/recruiters/postJob", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(jobData),
     });
 
-    if (error) {
-      console.error("Error inserting data:", error.message);
-      alert("Failed to post job. Check the console for details.");
-    } else {
-      console.log("Data inserted successfully:", data);
+    const data = await response.json();
+
+    if (response.ok) {
       alert("Job posted successfully!");
       resetForm();
+    } else {
+      console.error("Server error:", data.message);
+      alert("Failed to post job. Check the console for details.");
     }
-  };
+  } catch (error) {
+    console.error("Error submitting job:", error);
+    alert("Something went wrong while posting the job.");
+  }
+};
 
   const resetForm = () => {
     setJobRole("");
     setExperience("");
-    setSalaryRange("");
-    setSkills("");
+    setCtc("");
+    setSkillsRequired("");
     setJobDescription("");
     setLocations([""]);
     setEligibilityCriteria([""]);
     setQualifications("");
-    setDocumentsUrl([]);
     setSelectedJobType("");
+    setRequiredDocuments("");
   };
 
   return (
@@ -165,8 +126,8 @@ function PostJob_Job() {
               type="number"
               placeholder="LPA"
               className="w-full p-2 border border-gray-300 rounded"
-              value={salaryRange}
-              onChange={(e) => setSalaryRange(e.target.value)}
+              value={ctc}
+              onChange={(e) => setCtc(e.target.value)}
             />
           </div>
           <div>
@@ -175,8 +136,8 @@ function PostJob_Job() {
               type="text"
               placeholder="e.g., Java, SQL"
               className="w-full p-2 border border-gray-300 rounded"
-              value={skills}
-              onChange={(e) => setSkills(e.target.value)}
+              value={skillsRequired}
+              onChange={(e) => setSkillsRequired(e.target.value)}
             />
           </div>
           <div>
@@ -191,16 +152,23 @@ function PostJob_Job() {
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Eligibility Criteria</label>
-            {eligibilityCriteria.map((criteria, index) => (
               <input
-                key={index}
                 type="text"
-                value={criteria}
+                value={eligibilityCriteria}
                 placeholder="Eligibility Criteria"
                 className="w-full p-2 mt-2 border border-gray-300 rounded"
-                onChange={(e) => handleEligibilityChange(index, e.target.value)}
+                onChange={(e) => setEligibilityCriteria(e.target.value)}
               />
-            ))}
+          </div>
+          <div>
+            <label className="block text-gray-700 font-bold">Documents Required</label>
+              <input
+                type="text"
+                value={requiredDocuments}
+                placeholder="Resume"
+                className="w-full p-2 mt-2 border border-gray-300 rounded"
+                onChange={(e) => setRequiredDocuments(e.target.value)}
+              />
           </div>
 
           <div>
@@ -230,16 +198,13 @@ function PostJob_Job() {
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Location</label>
-            {locations.map((location, index) => (
               <input
-                key={index}
                 type="text"
-                value={location}
+                value={locations}
                 placeholder="Location"
                 className="w-full p-2 mt-2 border border-gray-300 rounded"
-                onChange={(e) => handleLocationChange(index, e.target.value)}
+                onChange={(e) => setLocations(e.target.value)}
               />
-            ))}
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Job Description</label>
@@ -248,16 +213,17 @@ function PostJob_Job() {
               value={jobDescription}
               onChange={(e) => setJobDescription(e.target.value)}
             ></textarea>
-          </div>          <div>
+          </div>          
+          {/* <div>
             <label className="block text-gray-700 font-bold">Attached Documents</label>
             <input type="file" multiple onChange={handleFileUpload} />
-          </div>
+          </div> */}
 
           <button
             type="submit"
             className="w-full py-2 bg-green-500 text-white rounded mt-6"
           >
-            {isUploading ? "Uploading..." : "Submit Job"}
+            Submit Job
           </button>
         </form>
       </div>

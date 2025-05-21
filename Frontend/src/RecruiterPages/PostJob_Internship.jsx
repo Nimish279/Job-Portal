@@ -11,7 +11,6 @@ function PostJob_Internship() {
   const [internshipDuration, setInternshipDuration] = useState('');
   const [internshipType, setInternshipType] = useState('');
   const [location, setLocation] = useState('');
-  const [attachedDocument, setAttachedDocument] = useState(null);
   const [documentsUrl, setDocumentsUrl] = useState([]);
   const [eligibilityCriteria, setEligibilityCriteria] = useState([]);
   
