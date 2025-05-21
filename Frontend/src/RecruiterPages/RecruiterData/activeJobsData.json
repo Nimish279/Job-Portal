@@ -1,0 +1,36 @@
+[
+    {
+      "id": 1,
+      "jobTitle": "Software Developer",
+      "status": "Active",
+      "accepted": 3,
+      "rejected": 5,
+      "jobType": "Full Time",
+      "salary": "60,0000 LPA",
+      "openings": 10,
+      "posted": "2 days ago"
+    },
+    {
+      "id": 2,
+      "jobTitle": "UI/UX Designer",
+      "status": "Active",
+      "accepted": 3,
+      "rejected": 2,
+      "jobType": "Full Time",
+      "salary": "50,0000 LPA",
+      "openings": 5,
+      "posted": "1 week ago"
+    },
+    {
+      "id": 3,
+      "jobTitle": "Product Manager",
+      "status": "Active",
+      "accepted": 3,
+      "rejected": 4,
+      "jobType": "Part Time",
+      "salary": "40,0000 LPA",
+      "openings": 3,
+      "posted": "3 days ago"
+    }
+  ]
+  

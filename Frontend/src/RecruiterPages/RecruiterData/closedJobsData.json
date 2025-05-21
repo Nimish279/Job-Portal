@@ -1,0 +1,23 @@
+[
+    {
+      "id": 1,
+      "title": "Software Developer",
+      "accepted": 2,
+      "rejected": 5,
+      "jobType": "Full Time",
+      "salary": "60,0000 LPA",
+      "openings": 10,
+      "closedTime": "2 days ago"
+    },
+    {
+      "id": 2,
+      "title": "UI/UX Designer",
+      "accepted": 3,
+      "rejected": 1,
+      "jobType": "Part Time",
+      "salary": "40,000 LPA",
+      "openings": 5,
+      "closedTime": "5 days ago"
+    }
+  ]
+  

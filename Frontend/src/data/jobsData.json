@@ -31,5 +31,35 @@
     "salary": "£25,000 - £30,000",
     "skillsRequired": "Figma, Adobe XD, User Research",
     "timeAgo": "1 week ago"
+  },
+  {
+    "id": "rec4",
+    "jobTitle": "Software Developer",
+    "company": "Amazon",
+    "companyLogo": "path-to-amazon-logo",
+    "experience": "5-6 Years",
+    "jobType": "Full-Time",
+    "salary": "60,000 LPA",
+    "timeAgo": "2 days ago"
+  },
+  {
+    "id": "rec5",
+    "jobTitle": "Frontend Developer",
+    "company": "Google",
+    "companyLogo": "path-to-google-logo",
+    "experience": "3-5 Years",
+    "jobType": "Full-Time",
+    "salary": "80,000 LPA",
+    "timeAgo": "1 week ago"
+  },
+  {
+    "id": "rec6",
+    "jobTitle": "Backend Developer",
+    "company": "Apple",
+    "companyLogo": "path-to-apple-logo",
+    "experience": "4-6 Years",
+    "jobType": "Full-Time",
+    "salary": "90,000 LPA",
+    "timeAgo": "3 days ago"
   }
 ]

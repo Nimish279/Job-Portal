@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "title": "Software Engineer",
+    "company": "Amazon",
+    "location": "Bangalore, Chennai, Pune",
+    "type": "Full time",
+    "jobRole": "Engineering",
+    "skillsRequired": "Java, C, C++, MySQL",
+    "ctc": "475,000",
+    "description": "Principal Engineers provide technical leadership at Amazon.com. They help establish technical standards and drive Amazon’s overall technical architecture, engineering practices, and engineering methodologies. They work on our hardest problems, building high quality, architecturally sound systems that are aligned with our business needs.\n\nPrincipal Engineers are pragmatic visionaries who can translate business needs into workable technology solutions. Their expertise is deep and broad. They are hands on, producing both detailed technical work and high-level architectural designs.\n\nWe are open to hiring candidates to work out of one of the following locations:\n\nBangalore, IND | Chennai, IND | Delhi, IND | Hyderabad, IND | Pune, IND",
+    "link": "https://amazon.jobs/en/jobs/123456789/software-developer",
+    "status": 3 
+
+  },
+  {
+    "id": 2,
+    "title": "Software Engineer",
+    "company": "Google",
+    "location": "Hyderabad, Bangalore",
+    "type": "Full time",
+    "jobRole": "Engineering",
+    "skillsRequired": "Python, Go, Cloud Computing, Kubernetes",
+    "ctc": "700,000",
+    "description": "As a Software Engineer at Google, you will work on projects that have real impact and contribute to the success of our users. You will collaborate with other talented engineers to design, develop, and maintain software applications, leveraging advanced technology and the latest in software engineering practices.\n\nOur team is focused on delivering scalable and innovative solutions, and we encourage engineers to explore new technologies and take ownership of their work.\n\nWe are open to hiring candidates to work out of one of the following locations:\n\nHyderabad, IND | Bangalore, IND",
+    "link": "https://careers.google.com/jobs/results/123456789/software-engineer"
+  },
+  {
+    "id": 3,
+    "title": "Software Engineer",
+    "company": "Facebook",
+    "location": "Menlo Park, Seattle, New York",
+    "type": "Full time",
+    "jobRole": "Engineering",
+    "skillsRequired": "JavaScript, React, PHP, GraphQL",
+    "ctc": "800,000",
+    "description": "Facebook is seeking a Software Engineer to join our team. You will be responsible for building and maintaining features that enhance our platform's user experience. You will collaborate with designers and product managers to create scalable solutions and work on high-impact projects that will benefit millions of users.\n\nThe ideal candidate will have experience with modern web technologies, a passion for user-centric design, and a desire to tackle complex problems in a fast-paced environment.\n\nWe are open to hiring candidates to work out of one of the following locations:\n\nMenlo Park, USA | Seattle, USA | New York, USA",
+    "link": "https://www.facebook.com/careers/jobs/123456789/software-engineer"
+  }
+]

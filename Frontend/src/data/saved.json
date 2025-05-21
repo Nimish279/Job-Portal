@@ -31,5 +31,38 @@
     "ctc": "$110,000 - $145,000",
     "description": "Manage and scale our cloud infrastructure. Implement automation and best practices for reliability and performance.",
     "postedDate": "2024-05-12"
+  },
+  {
+    "id": "savedJob4",
+    "title": "Software Developer",
+    "company": "Amazon",
+    "location": "Bangalore, India",
+    "jobRole": "Full-Stack Developer",
+    "skillsRequired": "React, Node.js, AWS",
+    "ctc": "₹60,00,000 LPA",
+    "description": "Join Amazon's development team to build scalable web applications and services.",
+    "postedDate": "2024-05-15"
+  },
+  {
+    "id": "savedJob5",
+    "title": "Frontend Developer",
+    "company": "Google",
+    "location": "Pune, India",
+    "jobRole": "Full-Time",
+    "skillsRequired": "HTML, CSS, JavaScript, React",
+    "ctc": "₹80,00,000 LPA",
+    "description": "Join Google's frontend team to build amazing user experiences at scale.",
+    "postedDate": "2024-05-14"
+  },
+  {
+    "id": "savedJob6",
+    "title": "Backend Developer",
+    "company": "Microsoft",
+    "location": "Hyderabad, India",
+    "jobRole": "Senior Developer",
+    "skillsRequired": "Node.js, Python, SQL, Azure",
+    "ctc": "₹75,00,000 LPA",
+    "description": "Work on building scalable backend services for Microsoft's cloud platform.",
+    "postedDate": "2024-05-13"
   }
 ]

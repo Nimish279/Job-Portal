@@ -77,6 +77,16 @@ export const registerRecruiter = async (req, res) => {
 
 }
 
+export const getProfile = async (req, res) => {
+    try{
+        const recruiter = req.recruiter;
+        res.status(200).json({recruiter, message: "Recruiter Profile Fetched Successfully"});
+    } catch(error){
+        console.error("Error fetching ", error);
+        res.status(500).json({message: "Server error while fetching profile"})
+    }
+}
+
 export const recruiterLogout=async (req,res) => {
     try {
         res.clearCookie('token',{
@@ -105,22 +115,22 @@ export const createJob=async(req,res)=>{
             location
         } = req.body
     //Testing Purposes postman
-        //   const attachedDocs=req.body.attachedDocs.map(file=>({
-    //     fileName:file.originalName,
-    //     fileType:file.mimeType,
-    //     fileSize:file.size,
-    //     url:`uploads/${file.originalName}`,
-    //     uploadedAt: new Date()
-    //   }))
-
-    
-      const attachedDocs=req.files.map(file=>({
+          const attachedDocs=req.body.attachedDocs.map(file=>({
         fileName:file.originalName,
         fileType:file.mimeType,
         fileSize:file.size,
         url:`uploads/${file.originalName}`,
         uploadedAt: new Date()
       }))
+
+    
+    //   const attachedDocs=req.files.map(file=>({
+    //     fileName:file.originalName,
+    //     fileType:file.mimeType,
+    //     fileSize:file.size,
+    //     url:`uploads/${file.originalName}`,
+    //     uploadedAt: new Date()
+    //   }))
 
 
 

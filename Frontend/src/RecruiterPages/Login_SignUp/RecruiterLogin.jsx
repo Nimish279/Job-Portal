@@ -23,14 +23,14 @@ const RecruiterLogin = () => {
   
         const data = await response.json();
   
-        if (response.success) {
+        if (response.ok) {
           toast.success("Login Successful!");
   
           // Store JWT Token in localStorage
           // localStorage.setItem("token", data.token);
   
           // Redirect to dashboard
-          navigate("/recruiter/dashboard");
+          navigate("/recruiters/jobs/active");
         } else {
           toast.error(data.message || "Invalid email or password");
         }
