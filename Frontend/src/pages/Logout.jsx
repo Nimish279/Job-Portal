@@ -2,32 +2,20 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import useUserStore from '../store/userStore.js'
 const Logout = () => {
   const navigate = useNavigate();
-
+  const {logout}=useUserStore()
   useEffect(() => {
-    const logoutUser = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/api/users/logout', {
-          method: 'POST', // Or GET if your backend handles it that way
-          credentials: 'include', // Important for sending cookies
-        });
+    const logoutUser=async () => {
+      const result=await logout()
 
-        if (response.ok) {
-            toast.success("User Logged Out Successfully");
-          navigate('/users/login');
-        } else {
-          const data = await response.json();
-          toast.error(data.message || "Logout failed");
-        }
-      } catch (error) {
-        toast.error("Something went wrong while logging out.");
+      if(result.success){
+        navigate('/users/login')
       }
-    };
-
+    }
     logoutUser();
-  }, [navigate]);
+  }, [navigate,logout]);
 
   return (
     <div className="flex min-h-screen justify-center items-center bg-gray-100">

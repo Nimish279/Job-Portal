@@ -3,6 +3,7 @@ import Navbar from '../components/Header/Navbar';
 import NotificationCard from '../components/NotificationCard';
 import amazonLogo from '../assets/images/amazon-logo.svg';
 import googleLogo from '../assets/images/Email00.png';
+import appleLogo from '../assets/images/AppleLogo.jpg';
 // import facebookLogo from '../assets/images/facebook.png';
 // import netflixLogo from '../assets/images/netflix.png';
 

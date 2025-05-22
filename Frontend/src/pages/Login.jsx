@@ -2,42 +2,23 @@ import React, { useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useUserStore from '../store/userStore.js';
+
 
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const navigate = useNavigate();
-
+    const { login, loading } = useUserStore();
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
-
-    try {
-      const response = await fetch("http://localhost:8000/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // make sure to include this if you're dealing with cookies
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success("Login Successful!");
-
-        // Optionally store token in localStorage if not using HttpOnly cookie
-        // localStorage.setItem("token", data.token);
-
-        navigate("/users/dashboard");
-      } else {
-        toast.error(data.message || "Invalid email or password");
-      }
-    } catch (error) {
-      toast.error("Login failed. Please try again.");
+    const result = await login({
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+    });
+    
+    if(result.success){
+      navigate('/users/dashboard')
     }
   };
 

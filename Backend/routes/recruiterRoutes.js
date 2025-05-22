@@ -1,5 +1,5 @@
 import express from 'express';
-import {createJob, deleteJob, getProfile, loginRecruiter,  myJobs, recruiterLogout, registerRecruiter,seeCandidates, updateJob, updateJobDocs} from '../controllers/recruiterController.js';
+import {deleteJob, getProfile, loginRecruiter,  myJobs, postInternship, postJob, recruiterLogout, registerRecruiter,seeCandidates, updateJob, updateJobDocs} from '../controllers/recruiterController.js';
 import { isRecruiter, protect } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/multer.js';
 
@@ -8,10 +8,10 @@ const router = express.Router();
 
 router.post('/register', upload.none(), registerRecruiter); // WOrking
 router.post('/login', loginRecruiter); // WOrking
-router.post('/createJob',protect,
+router.post('/postJob',protect,
     isRecruiter,
-    upload.array('files',5),
-    createJob) // WOrking
+    postJob) // WOrking
+router.post('/postInternship', protect, isRecruiter, postInternship);
 router.get('/job/:jobId/candidates',protect,
     isRecruiter,
     seeCandidates) 

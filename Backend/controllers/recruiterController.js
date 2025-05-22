@@ -2,6 +2,7 @@ import {Recruiter} from '../models/Recruiter.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Job } from '../models/Job.js';
+import { Internship } from '../models/Internship.js';
 
 export const loginRecruiter = async (req, res) => {
     const {email, password} = req.body;
@@ -102,26 +103,29 @@ export const recruiterLogout=async (req,res) => {
 }
 
 
-export const createJob=async(req,res)=>{
+export const postJob = async(req,res)=>{
     try {
          const {
-             hiringWorkflow,
+            hiringWorkflow,
             jobRole,
             ctc,
+            experience,
             requiredDocuments,
+            qualifications,
             eligibilityCriteria,
             skillsRequired,
             jobDescription,
+            jobType,
             location
         } = req.body
     //Testing Purposes postman
-          const attachedDocs=req.body.attachedDocs.map(file=>({
-        fileName:file.originalName,
-        fileType:file.mimeType,
-        fileSize:file.size,
-        url:`uploads/${file.originalName}`,
-        uploadedAt: new Date()
-      }))
+    //     const attachedDocs=req.body.attachedDocs.map(file=>({
+    //     fileName:file.originalName,
+    //     fileType:file.mimeType,
+    //     fileSize:file.size,
+    //     url:`uploads/${file.originalName}`,
+    //     uploadedAt: new Date()
+    //   }))
 
     
     //   const attachedDocs=req.files.map(file=>({
@@ -141,21 +145,20 @@ export const createJob=async(req,res)=>{
         hiringWorkflow,
         jobRole,
         ctc,
+        experience,
         requiredDocuments,
+        qualifications,
         eligibilityCriteria,
         skillsRequired,
         jobDescription,
-        attachedDocs,
+        jobType,
         location
       })
-    res.status(201).json({ message: "Job created successfully", job: newJob });
-
-        
+    res.status(201).json({ message: "Job created successfully", job: newJob });  
     } catch (error) {
         res.status(500).json({error:error.message})
         console.log(error)
     }    
-
 }
 
 export const seeCandidates=async (req,res) => {
@@ -213,6 +216,40 @@ export const updateJob=async (req,res) => {
         console.log(error)
     }
 } 
+
+export const postInternship = async (req, res) => {
+  try {
+    const {
+      internshipRole,
+      stipendAmount,
+      stipendType,
+      skillsRequired,
+      internshipDuration,
+      internshipType,
+      location,
+      eligibilityCriteria
+    } = req.body;
+
+    const recruiter = req.recruiter;
+
+    const newInternship = await Internship.create({
+      recruiter: recruiter._id,
+      internshipRole,
+      stipendAmount,
+      stipendType,
+      skillsRequired,
+      internshipDuration,
+      internshipType,
+      location,
+      eligibilityCriteria
+    });
+
+    res.status(201).json({ message: "Internship created successfully", internship: newInternship });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 export const deleteJob=async (req,res) => {
     try {

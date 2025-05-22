@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaBell, FaUser, FaCaretDown } from 'react-icons/fa';
+import { FaBell, FaHome, FaCaretDown } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -39,9 +39,11 @@ const ProfileGreen = () => {
           </Link>
         </li>
         <li>
-          <FaUser className="text-2xl cursor-pointer hover:text-gray-300" style={{ color: '#5F9D08' }} />
+          <Link to="/recruiters/jobs/active">
+            <FaHome className="text-2xl cursor-pointer hover:text-gray-300" style={{ color: '#5F9D08' }} />
+          </Link>
         </li>
-        <li className="relative">
+        <li className="relative z-1">
           <button
             onClick={toggleDropdown}
             className="flex items-center text-lg font-bold text-black hover:text-[#5F9D08] space-x-2"

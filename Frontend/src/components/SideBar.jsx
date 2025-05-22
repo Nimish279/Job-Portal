@@ -40,7 +40,7 @@ const SideBar = ({ isOpen, onClose }) => {
               </li>
               <li className="flex items-center  p-1 hover:bg-gray-700 text-md">
                 <Link to="/users/job-recommendations" className="flex items-center">
-                  <FaStar     className="mr-2" />Job Recommendationss
+                  <FaStar     className="mr-2" />Job Recommendations
                 </Link>
               </li>
              
@@ -49,11 +49,6 @@ const SideBar = ({ isOpen, onClose }) => {
                   <FaFileAlt     className="mr-2" />Resume
                 </Link>
               </li>
-              <li className="flex items-center p-1 hover:bg-gray-700 text-md">
-               <Link to={`/applied-jobs/${1}`} className="flex items-center">
-              <FaBriefcase className="mr-2" /> Applied Jobs
-              </Link>
-              </li>
             </ul>
           </div>
         </div>
@@ -61,7 +56,7 @@ const SideBar = ({ isOpen, onClose }) => {
 
       {!isMobile && (
         <div
-          className={`fixed md:relative w-full md:w-52 lg:w-72 h-auto md:h-[670px] bg-[#5F9D08] text-white mt-16 md:mt-20 p-4 rounded-tr-2xl shadow-lg md:hover:left-0 transition-all duration-300 ease-in-out z-10`}
+          className={`fixed left-0 w-52 lg:w-72 h-auto md:h-[670px] bg-[#5F9D08] text-white mt-16 md:mt-20 p-4 rounded-tr-2xl shadow-lg transition-all duration-300 ease-in-out z-10`}
         >
           <ul className="space-y-4">
                                     {/* for large devices */}
@@ -78,9 +73,9 @@ const SideBar = ({ isOpen, onClose }) => {
               </li>
           
             <li className="flex items-center lg:p-2 hover:bg-gray-700 text-md lg:text-xl md:text-sm">
-            <Link to="/users/resume" className="flex items-center">
-                  <FaFileAlt     className="mr-2" />Resume
-                </Link>
+              <Link to="/users/resume" className="flex items-center">
+                <FaFileAlt className="mr-2" />Resume
+              </Link>
             </li>
             
           </ul>

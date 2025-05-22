@@ -1,115 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "./Notifications/Navbar";
 import { motion } from "framer-motion";
+import useRecruiterStore from "../store/recruiterStore";
 
 function PostJob_Job() {
+  const jobRoleRef = useRef();
+  const experienceRef = useRef();
+  const ctcRef = useRef();
+  const skillsRequiredRef = useRef();
+  const jobDescriptionRef = useRef();
+  const locationsRef = useRef();
+  const eligibilityCriteriaRef = useRef();
+  const qualificationsRef = useRef();
+  const requiredDocumentsRef = useRef();
+
+  const [selectedJobType, setSelectedJobType] = useState("Full-Time");
   const [jobType, setJobType] = useState("Job");
-  const [jobRole, setJobRole] = useState("");
-  const [experience, setExperience] = useState("");
-  const [salaryRange, setSalaryRange] = useState("");
-  const [skills, setSkills] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
-  const [locations, setLocations] = useState([""]);
-  const [eligibilityCriteria, setEligibilityCriteria] = useState([""]);
-  const [qualifications, setQualifications] = useState("");
-  const [documentsUrl, setDocumentsUrl] = useState([]);
-  const [selectedJobType, setSelectedJobType] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
 
-  const handleLocationChange = (index, value) => {
-    const updatedLocations = [...locations];
-    updatedLocations[index] = value;
-    setLocations(updatedLocations);
-  };
+  const { postJob } = useRecruiterStore();
 
-  const handleEligibilityChange = (index, value) => {
-    const updatedCriteria = [...eligibilityCriteria];
-    updatedCriteria[index] = value;
-    setEligibilityCriteria(updatedCriteria);
-  };
-  const handleFileUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    const uploadedUrls = [];
-    setIsUploading(true);
-  
-    for (const file of files) {
-      const { data, error } = await supabase.storage
-        .from("job-documents")
-        .upload(`documents/${file.name}`, file);
-  
-      if (error) {
-        console.error("Error uploading file:", error.message);
-      } else {
-        const { data: publicData } = supabase.storage
-          .from("job-documents")
-          .getPublicUrl(`documents/${file.name}`);
-  
-        if (publicData?.publicUrl) {
-          uploadedUrls.push(publicData.publicUrl);
-        }
-      }
-    }
-  
-    // Debugging log: Check if uploaded URLs are updated correctly
-    console.log("Uploaded URLs:", uploadedUrls);
-  
-    setDocumentsUrl((prevUrls) => [...prevUrls, ...uploadedUrls]);
-    setIsUploading(false);
-  };
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isUploading) {
-      alert("Please wait until the documents are fully uploaded.");
-      return;
+    const jobData = {
+      jobType: selectedJobType,
+      jobRole: jobRoleRef.current.value,
+      experience: experienceRef.current.value,
+      ctc: ctcRef.current.value,
+      skillsRequired: skillsRequiredRef.current.value,
+      jobDescription: jobDescriptionRef.current.value,
+      location: locationsRef.current.value,
+      eligibilityCriteria: eligibilityCriteriaRef.current.value,
+      qualifications: qualificationsRef.current.value,
+      requiredDocuments: requiredDocumentsRef.current.value,
+    };
+
+    const result = await postJob(jobData);
+    if (result.success) {
+      e.target.reset(); // clears the form
     }
-
-    if (documentsUrl.length === 0) {
-      alert("Please upload at least one document.");
-      return;
-    }
-
-    const eligibilityCriteriaString = eligibilityCriteria.join(", ");
-    const locationsString = locations.join(", ");
-    const documentsString = documentsUrl.join(", ");
-
-    const { data, error } = await supabase.from("job_listing").insert({
-      job_type: selectedJobType,
-      job_role: jobRole,
-      experience,
-      location: locationsString,
-      salary_range: salaryRange,
-      job_description: jobDescription,
-      skills,
-      qualifications,
-      eligibility_criteria: eligibilityCriteriaString,
-      attached_documents_url: documentsString,
-      status: 1,
-    });
-
-    if (error) {
-      console.error("Error inserting data:", error.message);
-      alert("Failed to post job. Check the console for details.");
-    } else {
-      console.log("Data inserted successfully:", data);
-      alert("Job posted successfully!");
-      resetForm();
-    }
-  };
-
-  const resetForm = () => {
-    setJobRole("");
-    setExperience("");
-    setSalaryRange("");
-    setSkills("");
-    setJobDescription("");
-    setLocations([""]);
-    setEligibilityCriteria([""]);
-    setQualifications("");
-    setDocumentsUrl([]);
-    setSelectedJobType("");
   };
 
   return (
@@ -161,64 +91,64 @@ function PostJob_Job() {
             <label className="block text-gray-700 font-bold">Job Role</label>
             <input
               type="text"
+              ref={jobRoleRef}
               placeholder="e.g., Software Developer"
               className="w-full p-2 border border-gray-300 rounded"
-              value={jobRole}
-              onChange={(e) => setJobRole(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Experience</label>
             <input
               type="number"
+              ref={experienceRef}
               placeholder="Years of experience"
               className="w-full p-2 border border-gray-300 rounded"
-              value={experience}
-              onChange={(e) => setExperience(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Job Profile CTC (in LPA)</label>
             <input
               type="number"
+              ref={ctcRef}
               placeholder="LPA"
               className="w-full p-2 border border-gray-300 rounded"
-              value={salaryRange}
-              onChange={(e) => setSalaryRange(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Skills Required</label>
             <input
               type="text"
+              ref={skillsRequiredRef}
               placeholder="e.g., Java, SQL"
               className="w-full p-2 border border-gray-300 rounded"
-              value={skills}
-              onChange={(e) => setSkills(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Qualifications</label>
             <input
               type="text"
+              ref={qualificationsRef}
               placeholder="e.g., Bachelor's Degree in Computer Science"
               className="w-full p-2 border border-gray-300 rounded"
-              value={qualifications}
-              onChange={(e) => setQualifications(e.target.value)}
             />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Eligibility Criteria</label>
-            {eligibilityCriteria.map((criteria, index) => (
-              <input
-                key={index}
-                type="text"
-                value={criteria}
-                placeholder="Eligibility Criteria"
-                className="w-full p-2 mt-2 border border-gray-300 rounded"
-                onChange={(e) => handleEligibilityChange(index, e.target.value)}
-              />
-            ))}
+            <input
+              type="text"
+              ref={eligibilityCriteriaRef}
+              placeholder="Eligibility Criteria"
+              className="w-full p-2 mt-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-bold">Documents Required</label>
+            <input
+              type="text"
+              ref={requiredDocumentsRef}
+              placeholder="Resume"
+              className="w-full p-2 mt-2 border border-gray-300 rounded"
+            />
           </div>
 
           <div>
@@ -248,37 +178,31 @@ function PostJob_Job() {
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Location</label>
-            {locations.map((location, index) => (
-              <input
-                key={index}
-                type="text"
-                value={location}
-                placeholder="Location"
-                className="w-full p-2 mt-2 border border-gray-300 rounded"
-                onChange={(e) => handleLocationChange(index, e.target.value)}
-              />
-            ))}
+            <input
+              type="text"
+              ref={locationsRef}
+              placeholder="Location"
+              className="w-full p-2 mt-2 border border-gray-300 rounded"
+            />
           </div>
           <div>
             <label className="block text-gray-700 font-bold">Job Description</label>
             <textarea
+              ref={jobDescriptionRef}
               className="w-full p-2 border border-gray-300 rounded h-24"
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
             ></textarea>
-          </div>          <div>
-            <label className="block text-gray-700 font-bold">Attached Documents</label>
-            <input type="file" multiple onChange={handleFileUpload} />
           </div>
 
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            type="submit"
-            className="w-full py-2 bg-green-500 text-white rounded mt-6"
-          >
-            {isUploading ? "Uploading..." : "Submit Job"}
-          </motion.button>
+          <div className="flex justify-center mt-6">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              className="py-2 px-6 bg-[#5F9D08] text-white rounded-lg hover:bg-[#4f8d07] w-full sm:w-auto"
+            >
+              Post Job
+            </motion.button>
+          </div>
         </motion.form>
       </motion.div>
     </motion.div>

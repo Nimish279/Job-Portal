@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import JobCard from './JobCard';
+import useUserStore from '../store/userStore.js';
 
-// Mock data for development
+// Mock data for development when API fails
 const MOCK_JOBS = [
   {
     id: 1,
@@ -56,56 +57,33 @@ const MOCK_JOBS = [
 ];
 
 const JobCards = () => {
-  const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { getJobs } = useUserStore();
+  const jobs = useUserStore(state => state.jobs);
 
   useEffect(() => {
-    const fetchLatestJobs = async () => {
+    const fetchJobs = async () => {
+      setLoading(true);
       try {
-        // For now, using mock data instead of API call
-        // Uncomment this when backend is ready:
-        /*
-        const response = await axios.get('http://localhost:8000/api/jobs/latest', {
-          timeout: 5000
-        });
-        setJobs(response.data);
-        */
-        
-        // Using mock data for development
-        console.log('Using mock job data for development');
-        setJobs(MOCK_JOBS);
+        const result = await getJobs();
+        if (!result?.success) {
+          console.log('Using mock data as fallback');
+          // If the API call fails, manually set mock data to global state
+          useUserStore.setState({ jobs: MOCK_JOBS });
+        }
       } catch (err) {
-        console.error('Error details:', {
-          message: err.message,
-          response: err.response ? {
-            status: err.response.status,
-            statusText: err.response.statusText,
-            data: err.response.data
-          } : 'No response',
-          request: err.request ? 'Request was made but no response received' : 'No request was made',
-          config: {
-            url: err.config?.url,
-            method: err.config?.method,
-            headers: err.config?.headers
-          }
-        });
-        
-        // Fallback to mock data if API fails
-        console.warn('Falling back to mock data due to API error');
-        setJobs(MOCK_JOBS);
+        console.error('Error fetching jobs:', err);
+        setError('Failed to load jobs. Please try again later.');
+        // Use mock data as fallback
+        useUserStore.setState({ jobs: MOCK_JOBS });
       } finally {
         setLoading(false);
       }
     };
-
-    // Small delay to simulate network request
-    const timer = setTimeout(() => {
-      fetchLatestJobs();
-    }, 500);
     
-    return () => clearTimeout(timer);
-  }, []);
+    fetchJobs();
+  }, [getJobs]);
 
   if (loading) {
     return (
@@ -135,17 +113,17 @@ const JobCards = () => {
 
   return (
     <div className="p-4 md:p-0 md:-pl-4 sm:-mt-8 md:pt-20 md:mx-8 lg:ml-8 lg:mr-30">
-      <h2 className="text-2xl md:text-base sm:pb-8 text-black font-bold text-left md:pt-8 lg:pb-6 md:pb-2">
+      <h2 className="text-2xl md:text-base sm:pb-8 mb-5 text-black font-bold text-left md:pt-8 lg:pb-6 md:pb-2">
         Latest Jobs
       </h2>
       <div className="flex flex-col space-y-4">
-        {jobs.length > 0 ? (
+        {jobs && jobs.length > 0 ? (
           jobs.map((job) => (
             <JobCard key={job._id || job.id} job={job} />
           ))
         ) : (
           <div className="text-gray-500 text-center py-8">
-            No latest jobs available at the moment.
+            No jobs available at the moment. Loading mock data...
           </div>
         )}
       </div>
