@@ -1,8 +1,50 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Navbar from './Notifications/Navbar';
 
 function PostJob_Internship() {
+  // Animation variants
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { duration: 0.5 }
+    }
+  };
+
+  const slideUp = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { 
+        type: 'spring',
+        stiffness: 80,
+        damping: 12
+      }
+    }
+  };
+
+  const formFieldVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { type: 'spring', stiffness: 100 }
+    }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
   const [jobType, setJobType] = useState('Internship');
   const [internshipRole, setInternshipRole] = useState('');
   const [stipendType, setStipendType] = useState('');
@@ -75,46 +117,98 @@ function PostJob_Internship() {
   };
   
   return (
-    <div className="flex flex-col items-center p-4 sm:p-8 bg-gray-100 min-h-screen">
+    <motion.div 
+      className="flex flex-col items-center p-4 sm:p-8 bg-gray-100 min-h-screen"
+      initial="hidden"
+      animate="visible"
+      variants={fadeIn}
+    >
       <Navbar pageName="Post Internship" />
-      <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-center">Post {jobType}</h2>
+      <motion.h2 
+        className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-center"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
+      >
+        Post {jobType}
+      </motion.h2>
 
-      <div className="w-full max-w-3xl bg-white p-4 sm:p-6 rounded shadow-md">
-        <div className="flex border-b-2 mb-4 sm:mb-6">
-          <Link
-            to="/recruiters/postJob"
-            onClick={() => setJobType('Job')}
-            className={`flex-1 py-2 text-center font-semibold ${jobType === 'Job' ? 'bg-[#5F9D08] text-white' : 'text-gray-500'}`}
+      <motion.div 
+        className="w-full max-w-3xl bg-white p-4 sm:p-6 rounded shadow-md"
+        variants={slideUp}
+      >
+        <motion.div 
+          className="flex border-b-2 mb-4 sm:mb-6"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <motion.div 
+            className={`flex-1 ${jobType === 'Job' ? 'bg-[#5F9D08]' : 'hover:bg-gray-100'} rounded-t-md transition-colors duration-300`}
+            whileHover={{ scale: 1.02 }} 
+            whileTap={{ scale: 0.98 }}
           >
-            Job
-          </Link>
-          <button
-            onClick={() => setJobType('Internship')}
-            className={`flex-1 py-2 text-center font-semibold ${jobType === 'Internship' ? 'bg-[#5F9D08] text-white' : 'text-gray-500'}`}
+            <Link
+              to="/recruiters/postJob"
+              onClick={() => setJobType('Job')}
+              className={`block w-full py-3 text-center font-semibold ${jobType === 'Job' ? 'text-white' : 'text-gray-600'}`}
+            >
+              Job
+            </Link>
+          </motion.div>
+          <motion.div 
+            className={`flex-1 ${jobType === 'Internship' ? 'bg-[#5F9D08]' : 'hover:bg-gray-100'} rounded-t-md transition-colors duration-300`}
+            whileHover={{ scale: 1.02 }} 
+            whileTap={{ scale: 0.98 }}
           >
-            Internship
-          </button>
-        </div>
+            <button
+              onClick={() => setJobType('Internship')}
+              className={`w-full py-3 text-center font-semibold ${jobType === 'Internship' ? 'text-white' : 'text-gray-600'}`}
+            >
+              Internship
+            </button>
+          </motion.div>
+        </motion.div>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <motion.form 
+          className="space-y-4" 
+          onSubmit={handleSubmit}
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
           {/* Internship Role */}
-          <div>
+          <motion.div variants={formFieldVariants}>
             <label className="block text-gray-700 font-bold">Internship Role</label>
-            <input
+            <motion.input
               type="text"
               value={internshipRole}
               onChange={(e) => setInternshipRole(e.target.value)}
               placeholder="e.g., Software Developer"
               className="w-full p-2 border border-gray-300 rounded"
               required
+              whileFocus={{ borderColor: '#5F9D08', boxShadow: '0 0 0 2px rgba(95, 157, 8, 0.2)' }}
             />
-          </div>
+          </motion.div>
 
           {/* Stipend */}
-          <div>
+          <motion.div variants={formFieldVariants}>
             <label className="block text-gray-700 font-bold">Stipend</label>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-              <label className="flex items-center">
+            <motion.div 
+              className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { 
+                  opacity: 1,
+                  transition: { staggerChildren: 0.05, delayChildren: 0.1 }
+                }
+              }}
+            >
+              <motion.label 
+                className="flex items-center"
+                variants={{ hidden: { opacity: 0, x: -5 }, visible: { opacity: 1, x: 0 } }}
+                whileHover={{ scale: 1.05 }}
+              >
                 <input
                   type="radio"
                   name="stipendType"
@@ -123,8 +217,12 @@ function PostJob_Internship() {
                   className="mr-2"
                 />{' '}
                 Fixed
-              </label>
-              <label className="flex items-center">
+              </motion.label>
+              <motion.label 
+                className="flex items-center"
+                variants={{ hidden: { opacity: 0, x: -5 }, visible: { opacity: 1, x: 0 } }}
+                whileHover={{ scale: 1.05 }}
+              >
                 <input
                   type="radio"
                   name="stipendType"
@@ -133,8 +231,12 @@ function PostJob_Internship() {
                   className="mr-2"
                 />{' '}
                 Performance Based
-              </label>
-              <label className="flex items-center">
+              </motion.label>
+              <motion.label 
+                className="flex items-center"
+                variants={{ hidden: { opacity: 0, x: -5 }, visible: { opacity: 1, x: 0 } }}
+                whileHover={{ scale: 1.05 }}
+              >
                 <input
                   type="radio"
                   name="stipendType"
@@ -143,37 +245,55 @@ function PostJob_Internship() {
                   className="mr-2"
                 />{' '}
                 Unpaid
-              </label>
-            </div>
-            <div className="mt-2">
-              <input
+              </motion.label>
+            </motion.div>
+            <motion.div 
+              className="mt-2"
+              variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+            >
+              <motion.input
                 type="number"
                 value={stipendAmount}
                 onChange={(e) => setStipendAmount(e.target.value)}
                 placeholder="Enter Amount"
                 className="w-full p-2 border border-gray-300 rounded"
                 required
+                whileFocus={{ borderColor: '#5F9D08', boxShadow: '0 0 0 2px rgba(95, 157, 8, 0.2)' }}
               />
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Skills Required */}
-          <div>
+          <motion.div variants={formFieldVariants}>
             <label className="block text-gray-700 font-bold">Skills Required</label>
-            <input
+            <motion.input
               type="text"
               value={skillsRequired}
               onChange={(e) => setSkillsRequired(e.target.value)}
               placeholder="e.g., Java, SQL, DSA"
               className="w-full p-2 border border-gray-300 rounded"
+              whileFocus={{ borderColor: '#5F9D08', boxShadow: '0 0 0 2px rgba(95, 157, 8, 0.2)' }}
             />
-          </div>
+          </motion.div>
 
           {/* Internship Type */}
-          <div>
+          <motion.div variants={formFieldVariants}>
             <label className="block text-gray-700 font-bold">Internship Type</label>
-            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-              <label className="flex items-center">
+            <motion.div 
+              className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { 
+                  opacity: 1,
+                  transition: { staggerChildren: 0.05, delayChildren: 0.1 }
+                }
+              }}
+            >
+              <motion.label 
+                className="flex items-center"
+                variants={{ hidden: { opacity: 0, x: -5 }, visible: { opacity: 1, x: 0 } }}
+                whileHover={{ scale: 1.05 }}
+              >
                 <input
                   type="radio"
                   name="internshipType"
@@ -182,8 +302,12 @@ function PostJob_Internship() {
                   className="mr-2"
                 />{' '}
                 Full-Time
-              </label>
-              <label className="flex items-center">
+              </motion.label>
+              <motion.label 
+                className="flex items-center"
+                variants={{ hidden: { opacity: 0, x: -5 }, visible: { opacity: 1, x: 0 } }}
+                whileHover={{ scale: 1.05 }}
+              >
                 <input
                   type="radio"
                   name="internshipType"
@@ -192,71 +316,90 @@ function PostJob_Internship() {
                   className="mr-2"
                 />{' '}
                 Part-Time
-              </label>
-            </div>
-          </div>
+              </motion.label>
+            </motion.div>
+          </motion.div>
 
           {/* Internship Duration */}
-          <div className="flex items-center space-x-4">
-            <div className="flex-1">
+          <motion.div className="flex items-center space-x-4" variants={formFieldVariants}>
+            <motion.div className="flex-1">
               <label className="block text-gray-700 font-bold">Internship Duration</label>
-              <input
+              <motion.input
                 type="text"
                 value={internshipDuration}
                 onChange={(e) => setInternshipDuration(e.target.value)}
                 placeholder="e.g., 3"
                 className="w-full p-2 border border-gray-300 rounded"
                 required
+                whileFocus={{ borderColor: '#5F9D08', boxShadow: '0 0 0 2px rgba(95, 157, 8, 0.2)' }}
               />
-              <span className="text-gray-500">months</span>
-            </div>
-          </div>
+              <motion.span 
+                className="text-gray-500"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                months
+              </motion.span>
+            </motion.div>
+          </motion.div>
 
           {/* Location */}
-          <div>
+          <motion.div variants={formFieldVariants}>
             <label className="block text-gray-700 font-bold">Location</label>
-            <input
+            <motion.input
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="e.g., Remote, Pune"
               className="w-full p-2 border border-gray-300 rounded"
+              whileFocus={{ borderColor: '#5F9D08', boxShadow: '0 0 0 2px rgba(95, 157, 8, 0.2)' }}
             />
-          </div>
+          </motion.div>
 
           {/* Attach Document */}
-          <div>
+          <motion.div variants={formFieldVariants}>
             <label className="block text-gray-700 font-bold">Attach Document</label>
-            <input
+            <motion.input
               type="file"
               onChange={handleFileUpload}
               className="w-full p-2 border border-gray-300 rounded"
               multiple
+              whileHover={{ backgroundColor: '#f9fafb' }}
             />
-          </div>
+          </motion.div>
 
           {/* Eligibility Criteria */}
-          <div>
+          <motion.div variants={formFieldVariants}>
             <label className="block text-gray-700 font-bold">Eligibility Criteria</label>
-            <textarea
+            <motion.textarea
               value={eligibilityCriteria}
               onChange={(e) => setEligibilityCriteria(e.target.value.split(', '))}
               placeholder="Enter eligibility criteria separated by commas"
               className="w-full p-2 border border-gray-300 rounded"
+              whileFocus={{ borderColor: '#5F9D08', boxShadow: '0 0 0 2px rgba(95, 157, 8, 0.2)' }}
             />
-          </div>
+          </motion.div>
 
-          <div className="flex justify-center mt-6">
-            <button
+          <motion.div 
+            className="flex justify-center mt-6"
+            variants={formFieldVariants}
+          >
+            <motion.button
               type="submit"
               className="py-2 px-6 bg-[#5F9D08] text-white rounded-lg hover:bg-[#4f8d07] w-full sm:w-auto"
+              whileHover={{ scale: 1.05, backgroundColor: '#4f8d07' }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, type: 'spring' }}
             >
               Post Internship
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+            </motion.button>
+          </motion.div>
+        </motion.form>
+      </motion.div>
+    </motion.div>
   );
 }
 
