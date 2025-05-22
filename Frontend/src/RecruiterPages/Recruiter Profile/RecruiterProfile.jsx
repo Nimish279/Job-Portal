@@ -4,6 +4,7 @@ import recruiterData from '../RecruiterData/recruiterProfile.json';
 import Navbar from '../Notifications/Navbar';
 import CompanyProfileForm from './CompanyProfileForm';
 import AmazonLogo from '../../assets/images/AmazonLogo.png';
+import { motion } from 'framer-motion';
 
 const RecruiterProfile = () => {
   const { recruiter } = recruiterData;
@@ -44,10 +45,20 @@ const RecruiterProfile = () => {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row p-4 lg:p-8 bg-gray-100 min-h-screen">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="flex flex-col lg:flex-row p-4 lg:p-8 bg-gray-100 min-h-screen"
+    >
               <Navbar pageName="Company Profile" />
       {/* Left Section */}
-      <div className="w-full lg:w-2/3 p-4 lg:p-6 bg-white rounded-md shadow-lg mb-4 mt-10 lg:mt-4 lg:mb-0 lg:mr-6">
+      <motion.div 
+        initial={{ x: -50, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="w-full lg:w-2/3 p-4 lg:p-6 bg-white rounded-md shadow-lg mb-4 mt-10 lg:mt-4 lg:mb-0 lg:mr-6"
+      >
         <div className="flex items-center mb-4">
         <img
             src={AmazonLogo} // Replace with Amazon logo
@@ -69,11 +80,16 @@ const RecruiterProfile = () => {
         
         {/* Form Fields */}
         <CompanyProfileForm />
-      </div>
+      </motion.div>
 
     
      {/* Right Section (Recruiter Profile) */}
-     <div className="w-full lg:w-1/3 p-4 lg:p-6 bg-white rounded-md shadow-lg h-auto lg:h-[500px] flex flex-col items-center sticky top-0  lg:mt-4 lg:mt-0">
+     <motion.div 
+       initial={{ x: 50, opacity: 0 }}
+       animate={{ x: 0, opacity: 1 }}
+       transition={{ duration: 0.6, delay: 0.4 }}
+       className="w-full lg:w-1/3 p-4 lg:p-6 bg-white rounded-md shadow-lg h-auto lg:h-[500px] flex flex-col items-center sticky top-0 lg:mt-4 lg:mt-0"
+     >
         <div className="text-lg lg:text-xl font-bold mb-4">Recruiter Profile</div>
 
         {/* <div className="flex flex-col items-center mb-4">
@@ -164,8 +180,8 @@ const RecruiterProfile = () => {
           <p className="hover:underline">Sign Out</p>
           </Link>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

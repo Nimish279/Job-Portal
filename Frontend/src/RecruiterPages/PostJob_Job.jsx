@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "./Notifications/Navbar";
+import { motion } from "framer-motion";
 
 function PostJob_Job() {
   const [jobType, setJobType] = useState("Job");
@@ -112,11 +113,23 @@ function PostJob_Job() {
   };
 
   return (
-    <div className="flex flex-col items-center p-8 bg-gray-100 min-h-screen">
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      transition={{ duration: 0.5 }}
+      className="flex flex-col items-center p-8 bg-gray-100 min-h-screen">
       <Navbar pageName="Post Job" />
-      <h2 className="text-2xl font-semibold mb-6">Post Job</h2>
+      <motion.h2 
+        initial={{ y: -20, opacity: 0 }} 
+        animate={{ y: 0, opacity: 1 }} 
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="text-2xl font-semibold mb-6">Post Job</motion.h2>
 
-      <div className="w-full max-w-3xl bg-white p-6 rounded shadow-md">
+      <motion.div 
+        initial={{ y: 50, opacity: 0 }} 
+        animate={{ y: 0, opacity: 1 }} 
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="w-full max-w-3xl bg-white p-6 rounded shadow-md">
         <div className="flex border-b-2 mb-4 sm:mb-6">
           <Link
             to="/recruiters/postJob"
@@ -138,8 +151,13 @@ function PostJob_Job() {
           </Link>
         </div>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
-        <div>
+        <motion.form 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          transition={{ duration: 0.5, delay: 0.5 }}
+          onSubmit={handleSubmit} 
+          className="space-y-4">
+          <div>
             <label className="block text-gray-700 font-bold">Job Role</label>
             <input
               type="text"
@@ -253,15 +271,17 @@ function PostJob_Job() {
             <input type="file" multiple onChange={handleFileUpload} />
           </div>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             type="submit"
             className="w-full py-2 bg-green-500 text-white rounded mt-6"
           >
             {isUploading ? "Uploading..." : "Submit Job"}
-          </button>
-        </form>
-      </div>
-    </div>
+          </motion.button>
+        </motion.form>
+      </motion.div>
+    </motion.div>
   );
 }
 

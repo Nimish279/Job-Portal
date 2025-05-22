@@ -7,6 +7,7 @@ import ProfileImage from '../assets/images/Profile_pics/1.jpg';
 import JobCard from './components/JobCard';
 import{ toast }from 'react-toastify';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 function JobPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,9 +57,17 @@ function JobPage() {
   
 
   return (
-    <div className="h-screen flex bg-gray-100 flex-col">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="h-screen flex bg-gray-100 flex-col">
       {/* Top Navigation Bar */}
-      <div className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full">
+      <motion.div 
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full">
         <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto">
           <img src={Search} alt="Search Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
           <input
@@ -78,16 +87,32 @@ function JobPage() {
           <span className="text-sm sm:text-base">{userName || 'Loading...'}</span> 
           </Link>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="flex flex-1 flex-col sm:flex-row">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="flex flex-1 flex-col sm:flex-row">
         {/* Sidebar */}
         <Sidebar />
 
         {/* Main Content */}
-        <div className="flex-1 p-4 bg-gray-100">
-          <h2 className="text-lg sm:text-2xl font-semibold mb-2">All Jobs</h2>
-          <h3 className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Active Jobs</h3>
+        <motion.div 
+          initial={{ x: 50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="flex-1 p-4 bg-gray-100">
+          <motion.h2 
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="text-lg sm:text-2xl font-semibold mb-2">All Jobs</motion.h2>
+          <motion.h3 
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+            className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Active Jobs</motion.h3>
 
           {loading ? (
             <div className="text-center">
@@ -99,9 +124,19 @@ function JobPage() {
           ) : jobs.length === 0 ? (
             <p>No active jobs found.</p>
           ) : (
-            <div className="space-y-4">
-              {jobs.map((job) => (
-                <JobCard
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="space-y-4">
+              {jobs.map((job, index) => (
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 0.2 * index }}
+                  key={job._id}
+                >
+                  <JobCard
                   key={job._id}
                   jobTitle={job.jobRole}
                   location={job.location}
@@ -117,12 +152,13 @@ function JobPage() {
                   onSecondaryButtonClick={() => console.log(`Closing job ${job._id}`)}
                   statusText={job.status === 1 ? 'Active' : 'Inactive'}
                 />
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           )}
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }
 
