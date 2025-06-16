@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaBell, FaHome, FaCaretDown } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -8,6 +8,26 @@ const ProfileGreen = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userName, setUserName] = useState('');
   const location = useLocation();
+  const dropdownRef = useRef(null);
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    // Add event listener when dropdown is open
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Cleanup event listener
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -43,7 +63,7 @@ const ProfileGreen = () => {
             <FaHome className="text-2xl cursor-pointer hover:text-gray-300" style={{ color: '#5F9D08' }} />
           </Link>
         </li>
-        <li className="relative z-1">
+        <li className="relative" ref={dropdownRef}>
           <button
             onClick={toggleDropdown}
             className="flex items-center text-lg font-bold text-black hover:text-[#5F9D08] space-x-2"
@@ -52,7 +72,7 @@ const ProfileGreen = () => {
             <FaCaretDown className="text-lg" style={{ color: '#5F9D08' }} />
           </button>
           {dropdownOpen && (
-            <ul className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md z-10">
+            <ul className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md z-[200]">
               {location.pathname !== '/recruiters/getProfile' && (
                 <li>
                   <Link

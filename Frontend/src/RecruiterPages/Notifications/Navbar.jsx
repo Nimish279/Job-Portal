@@ -98,7 +98,7 @@ const Navbar = ({ pageName }) => {
       </div>
 
       {/* Profile icon */}
-      <div className="ml-auto mr-4 pt-5 -mt-4 flex items-center">
+      <div className="ml-auto mr-4 pt-5 -mt-4 flex items-center relative z-[300]">
         <ProfileGreen />
       </div>
     </nav>

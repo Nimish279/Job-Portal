@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../RecruiterPages/Notifications/Navbar';
+import UserNavbar from '../components/Header/UserNavbar';
 import jobsData from '../data/jobsData.json'; // Import the jobs data from JSON
 import { motion } from 'framer-motion'; // Import framer-motion for animations
 
@@ -25,10 +25,10 @@ const JobRecommendations = () => {
   return (
     <div className="md:px-5 lg:px-6 font-sans bg-gray-50 min-h-screen">
       {/* Header Component */}
-      <Navbar pageName="Job Recs" />
+      <UserNavbar pageName="Job Recs" />
 
       {/* Filters */}
-      <div className="flex flex-wrap justify-between items-center bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] p-3 mt-14 rounded-lg shadow-md">
+      <div className="flex flex-wrap justify-between items-center bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] p-3 mt-14 rounded-lg shadow-md z-5 relative">
         <div className="font-bold text-white text-lg mr-4">Filter By</div>
 
         {/* Hamburger Button for small screens */}
@@ -46,7 +46,7 @@ const JobRecommendations = () => {
             <button className="w-full bg-[#5F9D08] text-white p-2 rounded-lg flex justify-between items-center hover:bg-[#4A8B07] transition duration-300 shadow-sm hover:shadow-md">
               Location <span className="ml-2 transition-transform duration-300 group-hover:rotate-180">▼</span>
             </button>
-            <div className="absolute bg-white shadow-xl z-10 mt-1 rounded-lg w-40 hidden group-hover:block transition-all duration-300 ease-in-out transform origin-top scale-95 group-hover:scale-100">
+            <div className="absolute bg-white shadow-xl z-50 mt-1 rounded-lg w-40 hidden group-hover:block transition-all duration-300 ease-in-out transform origin-top scale-95 group-hover:scale-100">
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150 rounded-t-lg">Bangalore</a>
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150">Pune</a>
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150 rounded-b-lg">Mumbai</a>
@@ -58,7 +58,7 @@ const JobRecommendations = () => {
             <button className="w-full bg-[#5F9D08] text-white p-2 rounded-lg flex justify-between items-center hover:bg-[#4A8B07] transition duration-300 shadow-sm hover:shadow-md">
               Skills <span className="ml-2 transition-transform duration-300 group-hover:rotate-180">▼</span>
             </button>
-            <div className="absolute bg-white shadow-xl z-10 mt-1 rounded-lg w-40 hidden group-hover:block transition-all duration-300 ease-in-out transform origin-top scale-95 group-hover:scale-100">
+            <div className="absolute bg-white shadow-xl z-50 mt-1 rounded-lg w-40 hidden group-hover:block transition-all duration-300 ease-in-out transform origin-top scale-95 group-hover:scale-100">
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150 rounded-t-lg">React</a>
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150">Node.js</a>
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150 rounded-b-lg">Java</a>
@@ -70,7 +70,7 @@ const JobRecommendations = () => {
             <button className="w-full bg-[#5F9D08] text-white p-2 rounded-lg flex justify-between items-center hover:bg-[#4A8B07] transition duration-300 shadow-sm hover:shadow-md">
               Domains <span className="ml-2 transition-transform duration-300 group-hover:rotate-180">▼</span>
             </button>
-            <div className="absolute bg-white shadow-xl z-10 mt-1 rounded-lg w-40 hidden group-hover:block transition-all duration-300 ease-in-out transform origin-top scale-95 group-hover:scale-100">
+            <div className="absolute bg-white shadow-xl z-50 mt-1 rounded-lg w-40 hidden group-hover:block transition-all duration-300 ease-in-out transform origin-top scale-95 group-hover:scale-100">
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150 rounded-t-lg">IT</a>
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150">HR</a>
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150 rounded-b-lg">Graphic Design</a>
@@ -82,7 +82,7 @@ const JobRecommendations = () => {
             <button className="w-full bg-[#5F9D08] text-white p-2 rounded-lg flex justify-between items-center hover:bg-[#4A8B07] transition duration-300 shadow-sm hover:shadow-md">
               Salary <span className="ml-2 transition-transform duration-300 group-hover:rotate-180">▼</span>
             </button>
-            <div className="absolute bg-white shadow-xl z-10 mt-1 rounded-lg w-40 hidden group-hover:block transition-all duration-300 ease-in-out transform origin-top scale-95 group-hover:scale-100">
+            <div className="absolute bg-white shadow-xl z-50 mt-1 rounded-lg w-40 hidden group-hover:block transition-all duration-300 ease-in-out transform origin-top scale-95 group-hover:scale-100">
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150 rounded-t-lg">40,000 LPA</a>
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150">60,000 LPA</a>
               <a href="#" className="block p-2 hover:bg-green-50 hover:text-[#5F9D08] transition duration-150 rounded-b-lg">80,000 LPA</a>
@@ -92,7 +92,7 @@ const JobRecommendations = () => {
       </div>
 
       {/* Job list */}
-      <div className="lg:mt-6 md:mt-6 mt-4 px-2">
+      <div className="lg:mt-6 md:mt-6 mt-4 px-2 relative z-0">
         {jobsData.map((job, index) => (
           <motion.div 
             key={index} 

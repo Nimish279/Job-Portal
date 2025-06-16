@@ -51,13 +51,16 @@ const JobCard = ({ job }) => {
             </div>
           )}
           
-          <div className="mt-4 flex justify-end">
+          <div className="mt-4 flex justify-between items-center">
+            <div className="text-sm text-gray-500">
+              {job.posted && `Posted: ${formatDate(job.posted)}`}
+            </div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link 
-                to={`/job/${job.id || job._id || 'undefined'}`} 
+                to={`/users/job/${job.id || job._id || 'undefined'}`} 
                 className="bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] text-white px-4 py-2 rounded-lg inline-block font-medium hover:shadow-md transition-all duration-300"
               >
-                Apply Now
+                View Details
               </Link>
             </motion.div>
           </div>

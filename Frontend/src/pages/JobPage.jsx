@@ -1,24 +1,234 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import jobData from '../components/jobData.json';
+import savedJobsData from '../data/saved.json';
 import Navbar from '../RecruiterPages/Notifications/Navbar';
 import amazonLogo from '../assets/images/amazon-logo.svg';
 import pdfIcon from '../assets/images/pdf00.png';
 import { motion } from 'framer-motion';
+import JobApplicationForm from '../components/JobApplicationForm';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const JobPage = () => {
   const { id } = useParams();
-  const job = jobData.find((job) => job.id === parseInt(id));
   const navigate = useNavigate();
-  
+  const [job, setJob] = useState(null);
   const [activeSection, setActiveSection] = useState('description');
+  const [showApplicationForm, setShowApplicationForm] = useState(false);
+  const [isApplied, setIsApplied] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [resumeFile, setResumeFile] = useState(null);
+  const [resumeName, setResumeName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [coverLetter, setCoverLetter] = useState('');
+  const [formErrors, setFormErrors] = useState({});
+  const [applicationStatus, setApplicationStatus] = useState('');
+  const [isSaved, setIsSaved] = useState(false);
 
-  const handleSectionChange = (section) => {
+  const findJob = useCallback(() => {
+    if (!id) {
+      console.log('No ID provided');
+      return null;
+    }
+
+    // 1. Check if it's a MongoDB-style ID (24 hex chars)
+    if (/^[0-9a-fA-F]{24}$/.test(id)) {
+      console.log('MongoDB-style ID detected');
+      const hash = id.split('').reduce((acc, char) => {
+        return (acc << 5) - acc + char.charCodeAt(0);
+      }, 0);
+      const index = Math.abs(hash) % jobData.length;
+      const job = jobData[index];
+      console.log(`Using job at index ${index} as fallback:`, job?.title);
+      return job || null;
+    }
+    
+    // 2. Check in saved jobs (they have string IDs like 'savedJob1')
+    if (id.startsWith('savedJob')) {
+      const savedJob = savedJobsData.find(job => job.id === id);
+      console.log('Looking for saved job:', id, 'Found:', !!savedJob);
+      return savedJob || null;
+    }
+    
+    // 3. Check in regular job data by numeric ID (only if ID is a small number)
+    if (/^\d{1,3}$/.test(id)) {
+      const numId = parseInt(id, 10);
+      const jobById = jobData.find(job => job.id === numId);
+      console.log('Looking for job by numeric ID:', numId, 'Found:', !!jobById);
+      return jobById || null;
+    }
+    
+    console.log('No matching job found for ID:', id);
+    return null;
+  }, [id]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    
+    const foundJob = findJob();
+    console.log('Found job:', foundJob);
+    
+    if (!foundJob) {
+      console.log('Job not found in any dataset, showing error state');
+      setError('Job not found');
+      setIsLoading(false);
+      return;
+    }
+    
+    // Format the job data to match our expected structure
+    const formattedJob = {
+      ...foundJob,
+      type: foundJob.type || 'Full time',
+      posted: foundJob.posted || foundJob.postedDate || 'Recently',
+      description: foundJob.description || 'No description available',
+      skillsRequired: foundJob.skillsRequired || 'Not specified',
+      ctc: foundJob.ctc || 'Not specified',
+      company: foundJob.company || 'Company not specified',
+      location: foundJob.location || 'Location not specified',
+      jobRole: foundJob.jobRole || 'Role not specified',
+      link: foundJob.link || '#',
+      status: foundJob.status || 0
+    };
+    
+    setJob(formattedJob);
+    setIsLoading(false);
+  }, [findJob]);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#5F9D08] mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading job details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error || !job) {
+    const isSavedJobError = id && id.startsWith('savedJob');
+    
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+        <div className="text-center max-w-md w-full p-8 bg-white rounded-xl shadow-md">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            {isSavedJobError ? 'Saved Job Not Found' : 'Job Not Found'}
+          </h2>
+          <p className="text-gray-600 mb-6">
+            {isSavedJobError 
+              ? "This saved job might have been removed or is no longer available."
+              : "The job you're looking for might have been removed or is no longer available."
+            }
+          </p>
+          <button
+            onClick={() => navigate('/users/dashboard')}
+            className="mt-6 px-6 py-2 bg-[#5F9D08] text-white rounded-lg hover:bg-[#4A8B07] transition-colors"
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const handleSectionChange = useCallback((section) => {
     setActiveSection(section);
+  }, []);
+
+  const handleApplyNow = useCallback(() => {
+    setShowApplicationForm(true);
+  }, []);
+
+  const handleCloseApplication = useCallback(() => {
+    setShowApplicationForm(false);
+  }, []);
+
+  const handleApplicationSubmit = useCallback(async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Basic form validation
+    const errors = {};
+    if (!resumeFile) errors.resume = 'Please upload your resume';
+    if (!coverLetter.trim()) errors.coverLetter = 'Please write a cover letter';
+    
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      setIsSubmitting(false);
+      return;
+    }
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // On success
+      setIsApplied(true);
+      setShowApplicationForm(false);
+      setApplicationStatus('submitted');
+      toast.success('Application submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      toast.error('Failed to submit application. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [resumeFile, coverLetter]);
+
+  const handleResumeChange = useCallback((e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setResumeFile(file);
+      setResumeName(file.name);
+      setFormErrors(prev => ({ ...prev, resume: '' }));
+    }
+  }, []);
+
+  const handleSaveJob = useCallback(() => {
+    setIsSaved(prev => !prev);
+    toast.success(isSaved ? 'Job removed from saved' : 'Job saved successfully!');
+  }, [isSaved]);
+
+  const handleSubmitApplication = (formData) => {
+    // In a real app, you would send this data to your backend
+    console.log('Application submitted:', { jobId: job.id, ...formData });
+    
+    // Show success message
+    toast.success('Application submitted successfully!', {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+    
+    setShowApplicationForm(false);
+    setIsApplied(true);
   };
 
   if (!job) {
-    return <div>Job not found.</div>;
+    return <div className="flex items-center justify-center h-screen">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-700">Job not found</h2>
+        <button 
+          onClick={() => navigate('/jobs')} 
+          className="mt-4 px-4 py-2 bg-[#5F9D08] text-white rounded-lg hover:bg-[#4A8B07] transition-colors"
+        >
+          Browse Jobs
+        </button>
+      </div>
+    </div>;
   }
 
   const workflowSteps = [
@@ -40,26 +250,58 @@ const JobPage = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="border-t border-gray-300 mb-4"></div>
-        <div className="flex flex-wrap md:flex-nowrap items-center mb-4 bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
-          <div className="bg-white p-2 rounded-lg shadow-sm mr-4 flex items-center justify-center">
-            <img src={amazonLogo} alt="Amazon Logo" className="w-14 h-14 object-contain" />
+        <div className="flex flex-wrap md:flex-nowrap items-center mb-4 bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-white p-2 rounded-lg shadow-sm mr-6 flex items-center justify-center">
+            <img src={amazonLogo} alt="Amazon Logo" className="w-16 h-16 object-contain" />
           </div>
           <div className="flex flex-col flex-grow">
             <h2 className="text-2xl font-bold text-gray-800">{job.title}</h2>
-            <p className="text-[#5F9D08] font-medium">{job.company}</p>
-            <p className="text-gray-600 text-sm mt-1 flex flex-wrap gap-2">
-              <span className="inline-flex items-center"><span className="w-2 h-2 bg-blue-500 rounded-full mr-1"></span>{job.location}</span> | 
-              <span className="inline-flex items-center"><span className="w-2 h-2 bg-green-500 rounded-full mx-1"></span>{job.type}</span>
-            </p>
+            <p className="text-[#5F9D08] font-medium text-lg">{job.company}</p>
+            <div className="flex flex-wrap items-center gap-4 mt-2">
+              <span className="inline-flex items-center text-sm text-gray-600">
+                <svg className="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {job.location}
+              </span>
+              <span className="inline-flex items-center text-sm text-gray-600">
+                <svg className="w-4 h-4 mr-1 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M12 18h.01" />
+                </svg>
+                {job.type}
+              </span>
+              {job.salary && (
+                <span className="inline-flex items-center text-sm text-gray-600">
+                  <svg className="w-4 h-4 mr-1 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {job.salary}
+                </span>
+              )}
+              {job.deadline && (
+                <span className="inline-flex items-center text-sm text-gray-600">
+                  <svg className="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Apply by {new Date(job.deadline).toLocaleDateString()}
+                </span>
+              )}
+            </div>
           </div>
-          <motion.a 
-            href={job.link} 
-            className="mt-2 md:mt-0 ml-auto block text-sm text-white bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] px-4 py-2 rounded-lg font-medium hover:shadow-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <motion.button 
+            onClick={handleApplyClick}
+            disabled={isApplied}
+            className={`mt-4 md:mt-0 ml-auto block text-sm text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-colors ${
+              isApplied 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] hover:from-[#4A8B07] hover:to-[#3A7A00]'
+            }`}
+            whileHover={!isApplied ? { scale: 1.05 } : {}}
+            whileTap={!isApplied ? { scale: 0.95 } : {}}
           >
-            Apply Now
-          </motion.a>
+            {isApplied ? 'Applied ✓' : 'Apply Now'}
+          </motion.button>
         </div>
 
         <div className="flex justify-between mb-2 bg-white rounded-lg shadow-sm p-2">
@@ -244,6 +486,20 @@ const JobPage = () => {
             </div>
           </motion.div>
         )}
+
+        {/* Application Form Modal */}
+        <AnimatePresence>
+          {showApplicationForm && (
+            <JobApplicationForm 
+              job={job} 
+              onClose={handleCloseApplication} 
+              onSubmit={handleSubmitApplication}
+            />
+          )}
+        </AnimatePresence>
+        
+        {/* Toast Notifications */}
+        <ToastContainer />
       </motion.div>
     </div>
   );
