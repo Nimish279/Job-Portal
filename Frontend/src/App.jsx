@@ -48,7 +48,7 @@ function App() {
         <Route path='/recruiters/logout' element={<RecruiterLogout/>} />
         <Route path='/recruiters/jobs/active' element={<AllJobs_ActiveJobs/>}/>
         <Route path='/recruiters/jobs/closed' element={<AllJobs_ClosedJobs/>}/>
-        <Route path='/recruiters/notifications' element={<NotificationsRecr/>} />
+        <Route path='/recruiters/notifications' element={<NotificationsRecr />} />
         <Route path='/recruiters/getProfile' element={<RecruiterProfile/>} />
         <Route path='/recruiters/postJob' element={<PostJob_Job/>}/>
         <Route path='/recruiters/postInternship' element={<PostJob_Internship/>} />
@@ -56,6 +56,8 @@ function App() {
         <Route path='/recruiters/applicants' element={<Applicants/>} />
         <Route path='/recruiters/updateRecruiter' element={<UpdateRecruiter/>}/>
         <Route path='/recruiters/applicantsProfile/:id' element={<ApplicantsProfile/>} />
+        <Route path='/recruiters/post-job/job' element={<PostJob_Job/>}/>
+        <Route path='/recruiters/post-job/internship' element={<PostJob_Internship/>}/>
       </Routes>
     </Router>
   )

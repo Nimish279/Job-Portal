@@ -77,7 +77,7 @@ function JobPage() {
           />
         </div>
         <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
-          <Link to="/notifications">
+          <Link to="/recruiters/notifications">
             <img src={Notifications} alt="Notifications Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
           </Link>
           <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8">

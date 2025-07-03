@@ -23,15 +23,18 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 justify-center items-center">
-      <div className="relative flex w-full max-w-7xl mt-24 mb-24 lg:mr-96">
-        <div className="w-full bg-white rounded-lg shadow-lg min-h-[600px] flex">
+    <div className="flex min-h-screen bg-gradient-to-r from-gray-100 to-gray-50 justify-center items-center">
+      <div className="relative flex w-full max-w-7xl">
+          <div className="w-full bg-white rounded-2xl shadow-xl min-h-[600px] flex items-center justify-center">
           <div className="hidden lg:flex w-1/6 bg-[#5F9D08] text-white items-center justify-center h-full">
-            {/* Placeholder */}
+            <div className="text-center">
+              <h3 className="text-xl font-semibold mb-4">Welcome Back</h3>
+              <p className="text-sm text-gray-300">Find your dream job today</p>
+            </div>
           </div>
-          <div className="w-full lg:w-5/6 p-8">
-            <h2 className="text-2xl font-bold text-[#5F9D08] mb-6 text-center">Login</h2>
-            <form className="flex flex-col items-center" onSubmit={handleSubmit}>
+          <div className="w-full lg:w-5/6 p-10 max-w-md mx-auto space-y-6">
+            <h2 className="text-3xl font-bold text-[#5F9D08] mb-8 text-center">Login</h2>
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="mb-4 w-full">
                 <label className="block text-gray-700 mb-2 text-left">Email</label>
                 <input
@@ -52,16 +55,16 @@ const Login = () => {
               </div>
               <button
                 type="submit"
-                className="w-full bg-[#5F9D08] text-white p-2 rounded hover:bg-[#0041b3] transition duration-300"
+                className="w-full bg-[#5F9D08] text-white py-3 px-4 rounded-lg hover:bg-[#0041b3] transition-all duration-300 transform hover:scale-105 font-semibold"
               >
                 Login
               </button>
             </form>
 
-            <div className="mt-4 text-center">
-              <p className="text-sm text-gray-700">
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600">
                 Don't have an account?{' '}
-                <Link to="/users/register" className="text-[#5F9D08] font-semibold hover:underline">
+                <Link to="/users/register" className="text-[#5F9D08] font-semibold hover:underline hover:text-[#0041b3] transition-colors">
                   Register
                 </Link>
               </p>
@@ -69,7 +72,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      <ToastContainer position="top-center" theme="colored" />
     </div>
   );
 };
