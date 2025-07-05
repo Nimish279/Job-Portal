@@ -1,5 +1,5 @@
 import express from 'express';
-import {deleteJob, getProfile, loginRecruiter,  myJobs, postInternship, postJob, recruiterLogout, registerRecruiter,seeCandidates, updateJob, updateJobDocs} from '../controllers/recruiterController.js';
+import {deleteJob, getProfile, loginRecruiter,  myJobs, postInternship, postJob, recruiterLogout, registerRecruiter,seeCandidates, updateJob} from '../controllers/recruiterController.js';
 import { isRecruiter, protect } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/multer.js';
 
@@ -21,7 +21,7 @@ router.put('/updateJob/:id',protect,
 router.delete('/deleteJob/:id',protect,
     isRecruiter,
     deleteJob) // WOrking
-router.put('/job/:id/uploadDocs',protect,isRecruiter,updateJobDocs)
+router.put('/job/:id/uploadDocs',protect,isRecruiter)
 router.get('/myJobs',protect,isRecruiter,myJobs) // WOrking
 router.get('/getProfile',protect,isRecruiter,getProfile)// WOrking
 router.post('/logout',protect,isRecruiter,recruiterLogout)
