@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '../RecruiterPages/Notifications/Navbar';  // Updated Navbar import path
+import UserNavbar from '../components/Header/UserNavbar';  // Updated to use user-specific Navbar
 import JobCard from '../components/JobCard';  // Import the existing JobCard component
 import saved from '../data/saved.json';  // This file will contain your saved job data
 import { motion } from 'framer-motion';
@@ -19,7 +19,7 @@ const SavedJobs = () => {
   return (
     <div className='bg-gray-50 min-h-screen pt-16'>
       {/* Navbar */}
-      <Navbar pageName="Saved Jobs" />
+      <UserNavbar pageName="Saved Jobs" />
 
       {/* Header */}
       <motion.div 

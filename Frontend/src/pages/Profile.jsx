@@ -1,4 +1,4 @@
-import Navbar from '../RecruiterPages/Notifications/Navbar';
+import UserNavbar from '../components/Header/UserNavbar';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiEdit, FiMail, FiMapPin, FiGithub, FiBriefcase, FiUser, FiLock, FiLogOut } from 'react-icons/fi';
@@ -58,7 +58,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar pageName="Profile" />
+      <UserNavbar pageName="Profile" />
       
       <motion.div 
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-8"

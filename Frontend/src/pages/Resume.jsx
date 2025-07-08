@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Navbar from '../RecruiterPages/Notifications/Navbar';
+import UserNavbar from '../components/Header/UserNavbar';
 
 const Resume = () => {
   const [pdfs, setPdfs] = useState([]);
@@ -46,7 +46,7 @@ const Resume = () => {
   return (
     <div className="bg-gray-50 min-h-screen pt-16">
       {/* Navbar */}
-      <Navbar pageName="Resume" />
+      <UserNavbar pageName="Resume" />
       
       <motion.div 
         className="max-w-5xl mx-auto px-6 py-8"
