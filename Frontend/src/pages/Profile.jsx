@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import { FiEdit, FiMail, FiMapPin, FiGithub, FiBriefcase, FiUser, FiLock, FiLogOut } from 'react-icons/fi';
 import { FaLinkedin, FaTwitter, FaGlobe } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+// import Navbar from '../components/Header/UserNavbar'; // ya jahan bhi User Navbar ka path ho
+
+
 
 const Profile = () => {
   const [profileData, setProfileData] = useState({
