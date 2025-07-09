@@ -23,12 +23,12 @@ const JobRecommendations = () => {
   }, []); // Empty dependency array to run once when the component mounts
 
   return (
-    <div className="md:px-5 lg:px-6 font-sans bg-gray-50 min-h-screen">
+    <div className="md:px-5 lg:px-6 font-sans bg-gray-50 min-h-screen pt-16">
       {/* Header Component */}
       <UserNavbar pageName="Job Recs" />
 
       {/* Filters */}
-      <div className="flex flex-wrap justify-between items-center bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] p-3 mt-14 rounded-lg shadow-md z-5 relative">
+      <div className="hidden">
         <div className="font-bold text-white text-lg mr-4">Filter By</div>
 
         {/* Hamburger Button for small screens */}

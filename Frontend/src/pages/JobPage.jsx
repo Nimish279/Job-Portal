@@ -2,10 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import jobData from '../components/jobData.json';
 import savedJobsData from '../data/saved.json';
-import Navbar from '../RecruiterPages/Notifications/Navbar';
+import UserNavbar from '../components/Header/UserNavbar';
 import amazonLogo from '../assets/images/amazon-logo.svg';
 import pdfIcon from '../assets/images/pdf00.png';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import JobApplicationForm from '../components/JobApplicationForm';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -97,6 +97,85 @@ const JobPage = () => {
     setIsLoading(false);
   }, [findJob]);
 
+  // ============================
+  // Callbacks and Handlers (keep before conditional returns to follow Rules of Hooks)
+  // ============================
+  const handleSectionChange = useCallback((section) => {
+    setActiveSection(section);
+  }, []);
+
+  const handleApplyNow = useCallback(() => {
+    setShowApplicationForm(true);
+  }, []);
+
+  const handleCloseApplication = useCallback(() => {
+    setShowApplicationForm(false);
+  }, []);
+
+  const handleApplicationSubmit = useCallback(async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Basic form validation
+    const errors = {};
+    if (!resumeFile) errors.resume = 'Please upload your resume';
+    if (!coverLetter.trim()) errors.coverLetter = 'Please write a cover letter';
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // On success
+      setIsApplied(true);
+      setShowApplicationForm(false);
+      setApplicationStatus('submitted');
+      toast.success('Application submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      toast.error('Failed to submit application. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [resumeFile, coverLetter]);
+
+  const handleResumeChange = useCallback((e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setResumeFile(file);
+      setResumeName(file.name);
+      setFormErrors(prev => ({ ...prev, resume: '' }));
+    }
+  }, []);
+
+  const handleSaveJob = useCallback(() => {
+    setIsSaved(prev => !prev);
+    toast.success(isSaved ? 'Job removed from saved' : 'Job saved successfully!');
+  }, [isSaved]);
+
+  const handleSubmitApplication = (formData) => {
+    // In a real app, you would send this data to your backend
+    console.log('Application submitted:', { jobId: job?.id, ...formData });
+
+    toast.success('Application submitted successfully!', {
+      position: 'top-center',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+
+    setShowApplicationForm(false);
+    setIsApplied(true);
+  };
+
+
   // Show loading state
   if (isLoading) {
     return (
@@ -141,81 +220,6 @@ const JobPage = () => {
     );
   }
 
-  const handleSectionChange = useCallback((section) => {
-    setActiveSection(section);
-  }, []);
-
-  const handleApplyNow = useCallback(() => {
-    setShowApplicationForm(true);
-  }, []);
-
-  const handleCloseApplication = useCallback(() => {
-    setShowApplicationForm(false);
-  }, []);
-
-  const handleApplicationSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Basic form validation
-    const errors = {};
-    if (!resumeFile) errors.resume = 'Please upload your resume';
-    if (!coverLetter.trim()) errors.coverLetter = 'Please write a cover letter';
-    
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      setIsSubmitting(false);
-      return;
-    }
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // On success
-      setIsApplied(true);
-      setShowApplicationForm(false);
-      setApplicationStatus('submitted');
-      toast.success('Application submitted successfully!');
-    } catch (error) {
-      console.error('Error submitting application:', error);
-      toast.error('Failed to submit application. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [resumeFile, coverLetter]);
-
-  const handleResumeChange = useCallback((e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setResumeFile(file);
-      setResumeName(file.name);
-      setFormErrors(prev => ({ ...prev, resume: '' }));
-    }
-  }, []);
-
-  const handleSaveJob = useCallback(() => {
-    setIsSaved(prev => !prev);
-    toast.success(isSaved ? 'Job removed from saved' : 'Job saved successfully!');
-  }, [isSaved]);
-
-  const handleSubmitApplication = (formData) => {
-    // In a real app, you would send this data to your backend
-    console.log('Application submitted:', { jobId: job.id, ...formData });
-    
-    // Show success message
-    toast.success('Application submitted successfully!', {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-    
-    setShowApplicationForm(false);
-    setIsApplied(true);
-  };
 
   if (!job) {
     return <div className="flex items-center justify-center h-screen">
@@ -241,7 +245,7 @@ const JobPage = () => {
 
   return (
     <div className="flex min-h-screen pt-10 bg-gray-50">
-      <Navbar pageName={"Job Page"}/>
+      <UserNavbar pageName={"Job Page"}/>
 
       <motion.div 
         className="flex flex-col w-full p-6 bg-transparent"
@@ -290,7 +294,7 @@ const JobPage = () => {
             </div>
           </div>
           <motion.button 
-            onClick={handleApplyClick}
+            onClick={handleApplyNow}
             disabled={isApplied}
             className={`mt-4 md:mt-0 ml-auto block text-sm text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-colors ${
               isApplied 

@@ -43,7 +43,7 @@ const ProfileGreen = () => {
               </li>
               <li>
               <Link 
-                  to="/editProfile"  // Navigate to the profile page
+                  to="/users/edit-profile"  // Navigate to the profile page
                   className="block px-4 py-2 hover:bg-gray-200" 
                   style={{ color: '#5F9D08' }}
                 >

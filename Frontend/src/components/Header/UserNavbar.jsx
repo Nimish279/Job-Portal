@@ -43,7 +43,7 @@ const UserNavbar = ({ pageName }) => {
   const toggleSearchInput = () => setShowSearchInput(!showSearchInput);
 
   return (
-    <nav className="fixed top-0 left-0 w-full m-0 flex items-center text-white">
+    <nav className="fixed top-0 left-0 w-full m-0 flex items-center text-white z-50">
       <div className="sm:text-1xl font-bold bg-[#5F9D08] text-[#E5E5E5] ml-2 py-2 pt-4 px-4 lg:-mt-4 md:-mt-4 rounded-b-lg flex-none">
         {pageName}
       </div>
