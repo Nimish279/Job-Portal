@@ -21,11 +21,11 @@ const SideBar = ({ isOpen, onClose }) => {
     <>
       {isMobile && (
         <div
-          className={`fixed inset-0 bg-black bg-opacity-50 z-40 ${isOpen ? 'block' : 'hidden'}`}
+          className={`fixed inset-0 bg-white bg-opacity-50 z-40 ${isOpen ? 'block' : 'hidden'}`}
           onClick={onClose}
         >
           <div
-            className={`fixed top-0 left-0 h-full w-64 bg-[#5F9D08] text-white p-4 shadow-lg transform ${
+            className={`fixed top-0 left-0 h-full mt-16 w-64 bg-[#5F9D08] text-white p-4 shadow-lg transform ${
               isOpen ? 'translate-x-0' : '-translate-x-full'
             } transition-transform duration-300 ease-in-out z-50`}
             onClick={(e) => e.stopPropagation()}
@@ -33,18 +33,19 @@ const SideBar = ({ isOpen, onClose }) => {
             <ul className="space-y-4">
                           {/* for small devices */}
 
-              <li className="flex items-center pt-16 p-1 hover:bg-gray-700 text-md">
+              {/* <li className="flex items-center pt-16 p-1 hover:bg-gray-700 text-md"> */}
+              <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
                 <Link to="/users/saved-jobs" className="flex items-center">
                   <FaBookmark className="mr-2" /> Saved Jobs
                 </Link>
               </li>
-              <li className="flex items-center  p-1 hover:bg-gray-700 text-md">
+              <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
                 <Link to="/users/job-recommendations" className="flex items-center">
                   <FaStar     className="mr-2" />Job Recommendations
                 </Link>
               </li>
              
-              <li className="flex items-center p-1 hover:bg-gray-700 text-md">
+              <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
               <Link to="/users/resume" className="flex items-center">
                   <FaFileAlt     className="mr-2" />Resume
                 </Link>
@@ -56,23 +57,24 @@ const SideBar = ({ isOpen, onClose }) => {
 
       {!isMobile && (
         <div
-          className={`fixed left-0 w-52 lg:w-72 h-auto md:h-[670px] bg-[#5F9D08] text-white mt-16 md:mt-20 p-4 rounded-tr-2xl shadow-lg transition-all duration-300 ease-in-out z-10`}
+          className={`fixed left-0 w-52 lg:w-72 h-[calc(100vh-64px)] bg-[#5F9D08] text-white mt-16 md:mt-20 p-4 rounded-tr-2xl shadow-lg transition-all duration-300 ease-in-out z-10`}
         >
           <ul className="space-y-4">
                                     {/* for large devices */}
 
-            <li className="flex items-center lg:p-2 hover:bg-gray-700 text-md lg:text-xl md:text-sm">
+            {/* <li className="flex items-center lg:p-2 hover:bg-gray-700 text-md lg:text-xl md:text-sm"> */}
+            <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
               <Link to="/users/saved-jobs" className="flex items-center">
                 <FaBookmark className="mr-2" /> Saved Jobs
               </Link>
             </li>
-            <li className="flex items-center  lg:p-2 hover:bg-gray-700 text-md lg:text-xl md:text-sm">
+            <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
                 <Link to="/users/job-recommendations" className="flex items-center">
                   <FaStar     className="mr-2" /> Job Recommendations
                 </Link>
               </li>
           
-            <li className="flex items-center lg:p-2 hover:bg-gray-700 text-md lg:text-xl md:text-sm">
+            <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
               <Link to="/users/resume" className="flex items-center">
                 <FaFileAlt className="mr-2" />Resume
               </Link>
