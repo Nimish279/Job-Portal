@@ -62,19 +62,12 @@ const NotificationsPage = () => {
   const isMobile = windowWidth < 768;
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className={`flex h-screen bg-gray-100 relative ${isSidebarOpen ? 'overflow-hidden' : ''}`}>
       {/* Sidebar
       <Sidebar activePage="notifications" /> */}
 
       {/* Sidebar */}
-      {!isMobile ? (
-        <Sidebar activePage="notifications" />
-      ) : (
-        <Sidebar
-          isOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
-        />
-      )}
+      <Sidebar activePage="notifications" isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)}  />
 
       {/* Main Content */}
       {/* <div className="flex-1 flex flex-col overflow-hidden"> */}

@@ -4,8 +4,9 @@ import recruiterData from '../RecruiterData/recruiterProfile.json';
 import Navbar from '../Notifications/Navbar';
 import CompanyProfileForm from './CompanyProfileForm';
 import AmazonLogo from '../../assets/images/AmazonLogo.png';
-import { motion } from 'framer-motion';
-
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiMenu } from 'react-icons/fi';
+import Sidebar from '../../components/SideBar_Recr';
 const RecruiterProfile = () => {
   const { recruiter } = recruiterData;
   const [logo_url, setlogo_url] = useState('');
@@ -19,6 +20,7 @@ const RecruiterProfile = () => {
   const [address, setAddress] = useState('');
   const [industryType, setIndustryType] = useState('');
   const [company_name, setcompany_name] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -40,127 +42,114 @@ const RecruiterProfile = () => {
   }, []);
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col lg:flex-row p-4 lg:p-8 bg-gray-100 min-h-screen"
+      className="bg-gray-100 min-h-screen"
     >
       <Navbar pageName="Company Profile" />
 
-      {/* Left Section */}
-      <motion.div 
-        initial={{ x: -50, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="w-full lg:w-2/3 p-4 lg:p-6 bg-white rounded-md shadow-lg mb-4 mt-10 lg:mt-4 lg:mb-0 lg:mr-6"
-      >
-        <div className="flex items-center mb-4">
-          <img
-            src={AmazonLogo}
-            alt="Amazon Logo"
-            className="w-12 h-12 mr-4"
-          />
-          <div>
-            <h2 className="text-lg lg:text-xl font-bold">{"Amazon" || 'Loading...'}</h2>
-            {website && (
-              <a href="https://www.amazon.com" className="text-blue-500">
-                {website}
-              </a>
-            )}
+      {/* Sidebar + Hamburger */}
+      <div className="flex">
+        {/* Mobile Hamburger */}
+        <div className="lg:hidden absolute top-16 left-4 z-50">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="text-3xl text-[#5F9D08]"
+          >
+            <FiMenu />
+          </button>
+        </div>
+
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:block mt-6 ml-4">
+          <Sidebar isOpen={true} isMobile={false} />
+        </div>
+
+        {/* Animated Sidebar for Mobile */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <Sidebar
+              isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+              isMobile
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Page Content */}
+        <div className="flex-1 p-4 lg:pl-8 mt-20 lg:mt-6">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Left Section - Company Info */}
+            <motion.div
+              initial={{ x: -50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="w-full lg:w-2/3 bg-white rounded-md shadow-md p-6"
+            >
+              <div className="flex items-center mb-6">
+                <img src={AmazonLogo} alt="Amazon Logo" className="w-12 h-12 mr-4" />
+                <div>
+                  <h2 className="text-xl font-bold">Amazon</h2>
+                  {website && (
+                    <a href={website} target="_blank" rel="noopener noreferrer" className="text-blue-500 text-sm hover:underline">
+                      {website}
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              <h3 className="text-lg font-semibold mb-4">About Us</h3>
+              <CompanyProfileForm />
+            </motion.div>
+
+            {/* Right Section - Recruiter Info */}
+            <motion.div
+              initial={{ x: 50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="w-full lg:w-1/3 bg-white rounded-md shadow-md p-6 h-fit sticky top-24"
+            >
+              <h3 className="text-xl font-bold mb-6 text-center">Recruiter Profile</h3>
+
+              <div className="space-y-3 text-sm text-gray-800">
+                {userName && <InfoRow label="Name" value={userName} />}
+                {email && <InfoRow label="Email" value={email} />}
+                {designation && <InfoRow label="Job Title" value={designation} />}
+                {linkedin && <InfoRow label="LinkedIn" value={linkedin} />}
+                {phone && <InfoRow label="Phone" value={phone} />}
+                {companyName && <InfoRow label="Company" value={companyName} />}
+                {website && <InfoRow label="Website" value={website} isLink />}
+                {address && <InfoRow label="Address" value={address} />}
+                {industryType && <InfoRow label="Industry" value={industryType} />}
+              </div>
+
+              <hr className="my-6 border-gray-300" />
+
+              <div className="space-y-2 text-sm text-gray-600">
+                <p className="hover:underline cursor-pointer">Change Password</p>
+                <Link to="/update-recruiter" className="block hover:underline">Update Recruiter</Link>
+                <Link to="/recruiters/logout" className="block hover:underline">Sign Out</Link>
+              </div>
+            </motion.div>
           </div>
         </div>
-
-        <div className="text-lg font-semibold mb-4">About Us</div>
-
-        {/* Form Fields */}
-        <CompanyProfileForm />
-      </motion.div>
-
-      {/* Right Section (Recruiter Profile) */}
-      <motion.div 
-        initial={{ x: 50, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="w-full lg:w-1/3 p-4 lg:p-6 bg-white rounded-md shadow-lg h-auto lg:h-[500px] flex flex-col items-center sticky top-0 lg:mt-4 lg:mt-0"
-      >
-        <div className="text-lg lg:text-xl font-bold mb-4">Recruiter Profile</div>
-
-        <div className="space-y-2 w-full">
-          {userName && (
-            <div className="flex w-full">
-              <span className="font-semibold mr-1">Name:</span>
-              <span className="text-gray-700">{userName}</span>
-            </div>
-          )}
-          {email && (
-            <div className="flex w-full">
-              <span className="font-semibold mr-1">Email:</span>
-              <span className="text-gray-700">{email}</span>
-            </div>
-          )}
-          {designation && (
-            <div className="flex w-full">
-              <span className="font-semibold mr-1">Job Title:</span>
-              <span className="text-gray-700">{designation}</span>
-            </div>
-          )}
-          {linkedin && (
-            <div className="flex w-full">
-              <span className="font-semibold mr-1">LinkedIn:</span>
-              <span className="text-gray-700">{linkedin}</span>
-            </div>
-          )}
-          {phone && (
-            <div className="flex w-full">
-              <span className="font-semibold mr-1">Phone:</span>
-              <span className="text-gray-700">{phone}</span>
-            </div>
-          )}
-          {companyName && (
-            <div className="flex w-full">
-              <span className="font-semibold mr-1">Company Name:</span>
-              <span className="text-gray-700">{companyName}</span>
-            </div>
-          )}
-          {website && (
-            <div className="flex w-full">
-              <span className="font-semibold mr-1">Website:</span>
-              <a href={website} className="text-blue-500">{website}</a>
-            </div>
-          )}
-          {address && (
-            <div className="flex w-full">
-              <span className="font-semibold mr-1">Address:</span>
-              <span className="text-gray-700">{address}</span>
-            </div>
-          )}
-          {industryType && (
-            <div className="flex w-full">
-              <span className="font-semibold mr-1">Industry Type:</span>
-              <span className="text-gray-700">{industryType}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Horizontal Line */}
-        <div className="w-full h-px bg-gray-300 my-4"></div>
-
-        {/* Clickable Text Options */}
-        <div className="mt-4 space-y-2 text-gray-500 cursor-pointer text-left w-full">
-          <Link to="/recruiters/change-password">
-            <p className="hover:underline">Change Password</p>
-          </Link>
-          <Link to="/update-recruiter">
-            <p className="hover:underline">Update Recruiter</p>
-          </Link>
-          <Link to="/recruiters/logout">
-            <p className="hover:underline">Sign Out</p>
-          </Link>
-        </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 };
+
+// Small reusable component to reduce repetition
+const InfoRow = ({ label, value, isLink }) => (
+  <div className="flex">
+    <span className="font-medium w-32">{label}:</span>
+    {isLink ? (
+      <a href={value} className="text-blue-500 hover:underline truncate">{value}</a>
+    ) : (
+      <span className="truncate">{value}</span>
+    )}
+  </div>
+);
 
 export default RecruiterProfile;

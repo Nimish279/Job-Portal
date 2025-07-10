@@ -52,10 +52,11 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <motion.div 
-        className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.4 }}
       >
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
@@ -81,6 +82,7 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
                   onChange={handleChange}
                   className={`w-full p-2 border rounded-lg ${errors.fullName ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="John Doe"
+                  required
                 />
                 {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
               </div>
@@ -94,6 +96,7 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
                   onChange={handleChange}
                   className={`w-full p-2 border rounded-lg ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="john@example.com"
+                  required
                 />
                 {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
               </div>
@@ -107,6 +110,7 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
                   onChange={handleChange}
                   className={`w-full p-2 border rounded-lg ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="+91 9876543210"
+                  required
                 />
                 {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
               </div>

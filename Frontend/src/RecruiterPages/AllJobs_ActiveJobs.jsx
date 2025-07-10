@@ -7,12 +7,14 @@ import ProfileImage from '../assets/images/Profile_pics/1.jpg';
 import JobCard from './components/JobCard';
 import{ toast }from 'react-toastify';
 import axios from 'axios';
-import { motion } from 'framer-motion';
+import { motion ,AnimatePresence} from 'framer-motion';
+import { FiMenu } from 'react-icons/fi';
 function JobPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
    useEffect(() => {
     const fetchJobs = async () => {
@@ -80,10 +82,11 @@ function JobPage() {
           <Link to="/recruiters/notifications">
             <img src={Notifications} alt="Notifications Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
           </Link>
+          <Link to="/recruiters/getProfile" className='flex flex-row items-center gap-2'>
           <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8">
-            <img src={ProfileImage} alt="" />
+            <img src={ProfileImage} alt="" className="w-full h-full rounded-full" />
           </div>
-          <Link to="/recruiters/getProfile">
+          
           <span className="text-sm sm:text-base">{userName || 'Loading...'}</span> 
           </Link>
         </div>
@@ -92,16 +95,39 @@ function JobPage() {
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
+        transition={{ duration: 0.5 }}
         className="flex flex-1 flex-col sm:flex-row">
         {/* Sidebar */}
-        <Sidebar />
+         <div className="lg:hidden p-4">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="text-3xl text-[#5F9D08] cursor-pointer"
+          >
+            <FiMenu />
+          </button>
+        </div>
+
+        {/* Sidebar for large screens */}
+        <div className="hidden lg:block mt-6 ml-4">
+          <Sidebar isOpen={true} isMobile={false} />
+        </div>
+
+        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <Sidebar
+              isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+              isMobile
+            />
+          )}
+        </AnimatePresence>
 
         {/* Main Content */}
         <motion.div 
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: 0.5 }}
           className="flex-1 p-4 bg-gray-100">
           <motion.h2 
             initial={{ x: -20, opacity: 0 }}
