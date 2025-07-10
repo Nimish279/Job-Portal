@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'; 
+import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom'; 
 import LandingPage from './pages/LandingPage';
 import RecruiterLogin from './RecruiterPages/Login_SignUp/RecruiterLogin';
 import RecruiterRegister from './RecruiterPages/Login_SignUp/RecruiterRegister';
@@ -29,6 +29,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="*" element={<Navigate to="/" replace />} />
         <Route path='/' element={<LandingPage/>} />
         <Route path='/users/register' element={<Register/>}/>
         <Route path='/users/login' element={<Login/>}/>
