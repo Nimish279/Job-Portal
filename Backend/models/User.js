@@ -9,10 +9,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+        match: [/^\S+@\S+\.\S+$/, 'Invalid email format'],
     },
     password: {
         type: String,
         required: true,
+        minlength: 6,
     },
     role: {
         type: String,
@@ -24,20 +26,23 @@ const userSchema = new mongoose.Schema({
         enum: ["Active", "Inactive"],
         default: "Active",
     },
-    university:{type:String},
-    city:{type:String},
-    degree:{type:String},
-    github:{type:String},
-    about:{type:String},
+    university: { type: String },
+    city: { type: String },
+    degree: { type: String },
+    github: { type: String },
+    about: { type: String },
     appliedJobs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Job"
     }],
-},
-
-
-{
-    timestamps: true
-})
+}, {
+    timestamps: true,
+    toJSON: {
+        transform(doc, ret) {
+            delete ret.password;  // Exclude password from output
+            return ret;
+        }
+    }
+});
 
 export const User = mongoose.model("User", userSchema);

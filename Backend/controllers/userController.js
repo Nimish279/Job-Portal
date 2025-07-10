@@ -20,7 +20,11 @@ export const loginUser = async (req, res) => {
             sameSite: "Strict",
             maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
           });
-        res.status(200).json({success:true,message:"User login successful"});
+          res.status(200).json({ 
+            success: true, 
+            message: "User login successful", 
+            user: existingUser.toJSON() 
+          });          
     } catch(err){
         res.status(500).json({error: err.message});
     }
@@ -35,7 +39,18 @@ export const registerUser = async (req, res) => {
         const hashed = await bcrypt.hash(password, 10);
         const newUser = new User({name, email, password: hashed});
         await newUser.save();
-        res.status(201).json({message: 'User created successfully'});
+        res.status(201).json({
+            success: true,
+            message: "User created successfully",
+            user: {
+              _id: newUser._id,
+              name: newUser.name,
+              email: newUser.email,
+              role: newUser.role,
+              status: newUser.status,
+              createdAt: newUser.createdAt
+            }
+          });          
     } catch(err){
         res.status(500).json({error: err.message});
     }
@@ -44,11 +59,11 @@ export const registerUser = async (req, res) => {
 
 export const editProfile=async (req,res) => {
     try {
-        const user=await User.findById(req.user.id)
-        console.log(user)
+        const user = await User.findById(req.user.id).select('-password')
+        console.log("Editing user:", user.email);
         const {name,github,degree,university,email,city,about}=req.body
         const updatedFields=['name','github',"degree",'city','university','email','about']
-        console.log(req.body.github)
+        console.log("Updating GitHub to:", req.body.github);
         
         updatedFields.forEach(field=>{
             if(req.body[field]){
@@ -130,7 +145,11 @@ export const getAppliedJobs=async (req,res) => {
     try {
         const userId=req.user._id
         const user=await User.findById(userId).populate("appliedJobs")
-        console.log(user?.appliedJobs)
+        if (user?.appliedJobs?.length === 0) {
+            console.log("User has not applied to any jobs.");
+          } else {
+            console.log("User's applied jobs:", user.appliedJobs);
+          }          
         if(user.appliedJobs.length === 0 || !user){
         return res.status(203).json({
          success: false,

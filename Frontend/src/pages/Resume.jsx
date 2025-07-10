@@ -22,9 +22,16 @@ const Resume = () => {
   };
 
   // Upload PDF
+  // Download and View PDF - By Wafiya Shaikh
   const handleUpload = () => {
     if (newPdf.file && newPdf.fileName) {
-      setPdfs([...pdfs, newPdf]);
+      const url = URL.createObjectURL(newPdf.file);
+      const pdfData = {
+        fileName: newPdf.fileName,
+        file: newPdf.file,
+        url,
+      }
+      setPdfs([...pdfs, pdfData]);
       setNewPdf({ fileName: '', file: null });
       toggleModal();
     }
@@ -111,14 +118,19 @@ const Resume = () => {
               </div>
               
               <div className="mt-4 flex justify-between items-center">
-                <button className="text-[#5F9D08] text-sm font-medium hover:underline flex items-center">
+                <a 
+                href = {pdfItem.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#5F9D08] text-sm font-medium hover:underline flex items-center"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
                   View
-                </button>
-                
+                </a>
+                {/*Updated logic for viewing the pdf - Wafiya Shaikh */}
                 <button
                   onClick={() => toggleDropdown(index)}
                   className="p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors"
@@ -138,14 +150,16 @@ const Resume = () => {
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <button
+                    <a
+                      href={pdfItem.url}
+                      download={pdfItem.fileName}
                       className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                       </svg>
                       Download
-                    </button>
+                    </a>
                     <button
                       onClick={() => handleDelete(index)}
                       className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"

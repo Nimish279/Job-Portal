@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaUserEdit, FaSave } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -13,10 +15,9 @@ const EditProfile = () => {
     about: ''
   });
 
-  // Load saved profile data on component mount
   useEffect(() => {
     const savedProfile = JSON.parse(localStorage.getItem('profileData')) || {};
-    setFormData(prev => ({
+    setFormData({
       name: savedProfile.name || '',
       degree: savedProfile.degree || '',
       university: savedProfile.university || '',
@@ -24,7 +25,7 @@ const EditProfile = () => {
       city: savedProfile.city || '',
       github: savedProfile.github || '',
       about: savedProfile.about || ''
-    }));
+    });
   }, []);
 
   const handleChange = (e) => {
@@ -37,101 +38,87 @@ const EditProfile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Save to local storage
     const savedProfile = JSON.parse(localStorage.getItem('profileData')) || {};
     const updatedProfile = { ...savedProfile, ...formData };
     localStorage.setItem('profileData', JSON.stringify(updatedProfile));
-    // Navigate back to profile
     navigate('/users/profile');
   };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 py-20 sm:py-20">
-      <div className="bg-white border border-[#808080] rounded-lg shadow-md p-4 sm:p-6 w-full sm:w-3/4 lg:w-1/2 max-w-xl">
-        <h2 className="text-center text-lg sm:text-xl font-bold mb-4">Edit Profile</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#f0fdf4] to-[#d9f99d] py-20 px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="bg-white border border-gray-200 rounded-2xl shadow-2xl p-6 sm:p-10 w-full sm:w-3/4 lg:w-1/2 max-w-2xl"
+      >
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-[#5F9D08] flex justify-center items-center gap-2">
+            <FaUserEdit /> Edit Your Profile
+          </h2>
+        </div>
 
-        {/* Fields with input on the same line */}
-        <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center">
-          <label className="block text-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0" htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="border border-[#808080] rounded w-full sm:w-3/4 p-2 font-bold"
+        {/* Avatar */}
+        <div className="flex justify-center mb-6">
+          <img
+            src="https://ui-avatars.com/api/?name=User"
+            alt="Avatar"
+            className="w-20 h-20 rounded-full border-4 border-[#5F9D08]"
           />
         </div>
 
-        <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center">
-          <label className="block text-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0" htmlFor="degree">Degree:</label>
-          <input
-            type="text"
-            id="degree"
-            value={formData.degree}
-            onChange={handleChange}
-            className="border border-[#808080] rounded w-full sm:w-3/4 p-2 font-bold"
-          />
-        </div>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {[
+            { id: 'name', label: 'Name' },
+            { id: 'degree', label: 'Degree' },
+            { id: 'university', label: 'University' },
+            { id: 'email', label: 'Email' },
+            { id: 'city', label: 'City' },
+            { id: 'github', label: 'GitHub' }
+          ].map(field => (
+            <div key={field.id}>
+              <label htmlFor={field.id} className="block text-gray-700 font-medium mb-1">
+                {field.label}
+              </label>
+              <input
+                type="text"
+                id={field.id}
+                value={formData[field.id]}
+                onChange={handleChange}
+                placeholder={`Enter your ${field.label.toLowerCase()}`}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#5F9D08] transition"
+              />
+            </div>
+          ))}
 
-        <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center">
-          <label className="block text-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0" htmlFor="university">University:</label>
-          <input
-            type="text"
-            id="university"
-            value={formData.university}
-            onChange={handleChange}
-            className="border border-[#808080] rounded w-full sm:w-3/4 p-2 font-bold"
-          />
-        </div>
+          {/* About (Full width) */}
+          <div className="sm:col-span-2">
+            <label htmlFor="about" className="block text-gray-700 font-medium mb-1">
+              About
+            </label>
+            <textarea
+              id="about"
+              rows="4"
+              value={formData.about}
+              onChange={handleChange}
+              placeholder="Tell us a bit about yourself..."
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#5F9D08] transition"
+            />
+          </div>
 
-        <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center">
-          <label className="block text-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0" htmlFor="email">Email:</label>
-          <input
-            
-            className="border border-[#808080] rounded w-full sm:w-3/4 p-2 font-bold"
-          />
-        </div>
-
-        <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center">
-          <label className="block text-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0" htmlFor="city">City:</label>
-          <input
-            type="text"
-            id="city"
-            value={formData.city}
-            onChange={handleChange}
-            className="border border-[#808080] rounded w-full sm:w-3/4 p-2 font-bold"
-          />
-        </div>
-
-        <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center">
-          <label className="block text-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0" htmlFor="github">GitHub:</label>
-          <input
-            type="text"
-            id="github"
-            value={formData.github}
-            onChange={handleChange}
-            className="border border-[#808080] rounded w-full sm:w-3/4 p-2 font-bold"
-          />
-        </div>
-
-        <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center">
-          <label className="block text-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0" htmlFor="about">About:</label>
-          <textarea
-            id="about"
-            rows="4"
-            value={formData.about}
-            onChange={handleChange}
-            className="border border-[#808080] rounded w-full sm:w-3/4 p-2 font-bold"
-          />
-        </div>
-
-        <button 
-          type="button" 
-          onClick={handleSubmit}
-          className="bg-[#5F9D08] text-white rounded-full py-2 w-full hover:bg-green-700 transition-colors"
-        >
-          Update Profile
-        </button>
-      </div>
+          {/* Submit button */}
+          <div className="sm:col-span-2">
+            <button
+              type="submit"
+              className="w-full bg-[#5F9D08] hover:bg-[#4e7c07] text-white py-3 rounded-full font-bold transition-colors flex items-center justify-center gap-2"
+            >
+              <FaSave /> Update Profile
+            </button>
+          </div>
+        </form>
+      </motion.div>
     </div>
   );
 };
