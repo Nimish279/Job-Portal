@@ -1,15 +1,22 @@
-import mongoose from "mongoose";
+import { connection } from '../config/db.js';
 
-const internshipSchema = new mongoose.Schema({
-  internshipRole: { type: String, required: true },
-  stipendType: { type: String, enum: ["Fixed", "Performance Based", "Unpaid"], required: true },
-  stipendAmount: { type: String },
-  skillsRequired: { type: String },
-  internshipType: { type: String, enum: ["Full-Time", "Part-Time"], required: true },
-  internshipDuration: { type: String },
-  location: { type: String },
-  eligibilityCriteria: { type: String },
-  recruiter: { type: mongoose.Schema.Types.ObjectId, ref: "Recruiter" } // optional
-}, { timestamps: true });
-
-export const Internship = mongoose.model("Internship", internshipSchema);
+export const createInternshipTable = async () => {
+  const query = `
+    CREATE TABLE IF NOT EXISTS Internships (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      internshipRole VARCHAR(255) NOT NULL,
+      stipendType ENUM('Fixed', 'Performance Based', 'Unpaid') NOT NULL,
+      stipendAmount VARCHAR(255),
+      skillsRequired TEXT,
+      internshipType ENUM('Full-Time', 'Part-Time') NOT NULL,
+      internshipDuration VARCHAR(255),
+      location VARCHAR(255),
+      eligibilityCriteria TEXT,
+      recruiterId INT,
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (recruiterId) REFERENCES Recruiters(id) ON DELETE CASCADE
+    )
+  `;
+  await connection.execute(query);
+};
