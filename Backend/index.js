@@ -10,27 +10,33 @@ import cookieParser from 'cookie-parser';
 dotenv.config();
 const app = express();
 
-// Common Middlewares
+// ✅ Allow multiple Vite dev ports to avoid CORS issues
 app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true
-    }
-));
-app.use(cookieParser())
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+    origin: [
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175"
+    ],
+    credentials: true
+}));
 
-app.use('/api/recruiters', recruiterRoutes)
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/api/recruiters', recruiterRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/upload', upload);
 
-const PORT = process.env.PORT || 8001;
+const PORT = process.env.PORT || 8000;
 
-connectDB().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Server is listening on the ${PORT}`);
+connectDB()
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`✅ Server is listening on port ${PORT}`);
+        });
     })
-}).catch((error) => {
-    console.log("Database Connection Error", error);
-    process.exit(1);
-})
+    .catch((error) => {
+        console.error("❌ Database Connection Error:", error);
+        process.exit(1);
+    });
