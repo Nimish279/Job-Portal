@@ -9,17 +9,47 @@ const Login = () => {
   const passwordRef = useRef();
   const navigate = useNavigate();
   const { login, loading } = useUserStore();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const result = await login({
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
-    });
+ 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const result = await login({
+  //     email: emailRef.current.value,
+  //     password: passwordRef.current.value,
+  //   });
 
-    if (result.success) {
-      navigate("/users/dashboard");
-    }
-  };
+  //   if (result.success) {
+  //     navigate("/users/dashboard");
+  //   }
+  // };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const email = emailRef.current.value.trim();
+  const password = passwordRef.current.value;
+
+  // Email format check
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    toast.error("Please enter a valid email address.");
+    return;
+  }
+
+  // Password length check
+  if (password.length < 6) {
+    toast.error("Password must be at least 6 characters.");
+    return;
+  }
+
+  // Proceed to login if validations pass
+  const result = await login({ email, password });
+
+  if (result.success) {
+    navigate("/users/dashboard");
+  } else {
+    toast.error(result.message || "Login failed");
+  }
+};
+
 
   return (
     <div className="flex min-h-screen bg-gradient-to-r from-gray-200 to-gray-50 justify-center items-center">
