@@ -23,9 +23,11 @@ const ProfileGreen = () => {
         <li className="relative">
           <button 
             onClick={toggleDropdown} 
-            className="flex text-lg items-center text-black font-bold hover:text-[#5F9D08]"
+            // className="flex text-lg items-center text-black font-bold hover:text-[#5F9D08]"
+            className="flex text-lg items-center font-bold text-white hover:text-gray-300"
           >
-            Prachi <FaCaretDown className="ml-1" style={{ color: '#5F9D08' }} />
+            {/* Prachi <FaCaretDown className="ml-1" style={{ color: '#5F9D08' }} /> */}
+            Prachi <FaCaretDown className="ml-1"/>
           </button>
           {dropdownOpen && (
             <ul className="absolute right-full mt-2 w-48 bg-white text-black shadow-lg rounded-md z-10">

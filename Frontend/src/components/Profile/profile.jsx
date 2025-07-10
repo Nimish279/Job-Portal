@@ -49,7 +49,7 @@ const Profile = () => {
           <FaUser className="text-2xl cursor-pointer hover:text-gray-300" />
         </li>
         <li className="relative" ref={dropdownRef}>
-          <button onClick={toggleDropdown} className="flex text-xl items-center font-bold text-black hover:text-[#5F9D08]">
+          <button onClick={toggleDropdown} className="flex text-xl items-center font-bold text-white hover:text-gray-300 transition-colors duration-200">
             {userName} <FaCaretDown className="ml-1" />
           </button>
           {dropdownOpen && (

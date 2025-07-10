@@ -23,9 +23,9 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-r from-gray-100 to-gray-50 justify-center items-center">
+    <div className="flex min-h-screen bg-gradient-to-r from-gray-200 to-gray-50 justify-center items-center">
       <div className="relative flex w-full max-w-7xl">
-          <div className="w-full bg-white rounded-2xl shadow-xl min-h-[600px] flex items-center justify-center">
+          <div className="w-full bg-white border-2-gray rounded shadow-xl min-h-[600px] flex items-center justify-center">
           <div className="hidden lg:flex w-1/6 bg-[#5F9D08] text-white items-center justify-center h-full">
             <div className="text-center">
               <h3 className="text-xl font-semibold mb-4">Welcome Back</h3>
