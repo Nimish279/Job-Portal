@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route , Navigate} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import LandingPage from './pages/LandingPage';
 import RecruiterLogin from './RecruiterPages/Login_SignUp/RecruiterLogin';
@@ -25,9 +25,10 @@ import UpdateRecruiter from './RecruiterPages/UpdateRecruiter.jsx';
 import ApplicantsProfile from './RecruiterPages/ApplicantsProfile.jsx';
 import JobPage from './pages/JobPage.jsx';
 import NotificationsPage from './pages/NotificationsPage.jsx';
-
-// ✅ Corrected Import Based on Actual Folder
 import ChangePassword from './RecruiterPages/RecruiterData/ChangePassword.jsx';
+
+// ✅ NEW IMPORT for Apply Now Page
+import ApplyJob from './pages/ApplyJob.jsx';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path='/users/profile' element={<Profile />} />
         <Route path='/users/edit-profile' element={<EditProfile />} />
         <Route path='/users/job/:id' element={<JobPage />} />
+        <Route path='/users/apply/:id' element={<ApplyJob />} /> {/* ✅ NEW APPLY NOW PAGE */}
         <Route path='/users/notifications' element={<NotificationsPage />} />
 
         {/* Recruiters */}
@@ -63,8 +65,6 @@ function App() {
         <Route path='/recruiters/applicantsProfile/:id' element={<ApplicantsProfile />} />
         <Route path='/recruiters/post-job/job' element={<PostJob_Job />} />
         <Route path='/recruiters/post-job/internship' element={<PostJob_Internship />} />
-
-        {/* ✅ Change Password Page */}
         <Route path='/recruiters/change-password' element={<ChangePassword />} />
       </Routes>
     </Router>
