@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import UserNavbar from '../components/Header/UserNavbar';
-
+import Sidebar from '../components/SideBar';
+import { FiMenu } from 'react-icons/fi';
 const Resume = () => {
   const [pdfs, setPdfs] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newPdf, setNewPdf] = useState({ fileName: '', file: null });
   const [showDropdownIndex, setShowDropdownIndex] = useState(null);
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth)
   // Handle showing the modal
   const toggleModal = () => setShowModal(!showModal);
 
@@ -49,18 +51,54 @@ const Resume = () => {
   const toggleDropdown = (index) => {
     setShowDropdownIndex(showDropdownIndex === index ? null : index);
   };
+  useEffect(() => {
+      const handleResize = () => setScreenWidth(window.innerWidth);
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+  const isMobile = window.innerWidth < 768;
 
   return (
     <div className="bg-gray-50 min-h-screen pt-16">
       {/* Navbar */}
       <UserNavbar pageName="Resume" />
+      <div className='flex flex-row min-h-screen'>
+      <div className="p-4 mt-6 fixed top-5 z-50 lg:hidden">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="text-3xl text-[#5F9D08] focus:outline-none cursor-pointer"
+          >
+            <FiMenu />
+          </button>
+        </div>
+    
+
+      {/* Sidebar for large screens */}
+      {!isMobile && (
+        <div className="hidden lg:block top-20 left-0 z-30">
+          <Sidebar isOpen={true} isMobile={false} />
+        </div>
+      )}
+
+      {/* Sidebar for mobile (animated) */}
+      <AnimatePresence>
+        { isSidebarOpen && (
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            isMobile={true}
+          />
+        )}
+      </AnimatePresence>
       
       <motion.div 
-        className="max-w-5xl mx-auto px-6 py-8"
+        className="w-full mx-6 mt-6 p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
+        
         {/* Title and Add New Button */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <motion.div
@@ -293,6 +331,7 @@ const Resume = () => {
         )}
       </AnimatePresence>
       </motion.div>
+      </div>
     </div>
   );
 };

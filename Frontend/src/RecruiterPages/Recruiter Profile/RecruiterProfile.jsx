@@ -7,6 +7,7 @@ import AmazonLogo from '../../assets/images/AmazonLogo.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu } from 'react-icons/fi';
 import Sidebar from '../../components/SideBar_Recr';
+
 const RecruiterProfile = () => {
   const { recruiter } = recruiterData;
   const [logo_url, setlogo_url] = useState('');
@@ -50,7 +51,6 @@ const RecruiterProfile = () => {
     >
       <Navbar pageName="Company Profile" />
 
-      {/* Sidebar + Hamburger */}
       <div className="flex">
         {/* Mobile Hamburger */}
         <div className="lg:hidden absolute top-16 left-4 z-50">
@@ -127,10 +127,17 @@ const RecruiterProfile = () => {
 
               <hr className="my-6 border-gray-300" />
 
+              {/* ✅ UPDATED HERE */}
               <div className="space-y-2 text-sm text-gray-600">
-                <p className="hover:underline cursor-pointer">Change Password</p>
-                <Link to="/update-recruiter" className="block hover:underline">Update Recruiter</Link>
-                <Link to="/recruiters/logout" className="block hover:underline">Sign Out</Link>
+                <Link to="/recruiters/change-password" className="block hover:underline">
+                  Change Password
+                </Link>
+                <Link to="/update-recruiter" className="block hover:underline">
+                  Update Recruiter
+                </Link>
+                <Link to="/recruiters/logout" className="block hover:underline">
+                  Sign Out
+                </Link>
               </div>
             </motion.div>
           </div>
@@ -140,7 +147,6 @@ const RecruiterProfile = () => {
   );
 };
 
-// Small reusable component to reduce repetition
 const InfoRow = ({ label, value, isLink }) => (
   <div className="flex">
     <span className="font-medium w-32">{label}:</span>

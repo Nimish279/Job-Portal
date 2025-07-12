@@ -46,7 +46,9 @@ const Profile = () => {
           </Link>
         </li>
         <li>
-          <FaUser className="text-2xl cursor-pointer hover:text-gray-300" />
+          <Link to="/users/profile">
+                    <FaUser className="text-2xl cursor-pointer hover:text-gray-300" />
+</Link>
         </li>
         <li className="relative" ref={dropdownRef}>
           <button onClick={toggleDropdown} className="flex text-xl items-center font-bold text-white hover:text-gray-300 transition-colors duration-200">
