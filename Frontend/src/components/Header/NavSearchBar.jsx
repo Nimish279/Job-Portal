@@ -6,9 +6,9 @@ const NavSearchBar = ({ toggleSidebar }) => {
   return (
     <nav className="bg-[#5F9D08] fixed top-0 left-0 w-full p-2 flex justify-between items-center text-white z-50">
       <div className="flex items-center space-x-4">
-        <button className="md:hidden text-xl" onClick={toggleSidebar}>
+        {/* <button className="md:hidden text-xl" onClick={toggleSidebar}>
           <FaBars />
-        </button>
+        </button> */}
         <div className="hidden md:flex items-center space-x-2">
           <FaSearch className="text-xl md:text-2xl" />
           <input

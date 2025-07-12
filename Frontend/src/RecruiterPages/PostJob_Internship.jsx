@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from './Notifications/Navbar';
-
+import { AnimatePresence } from 'framer-motion';
+import { FiMenu } from 'react-icons/fi';
+import Sidebar from '../components/SideBar_Recr';
 function PostJob_Internship() {
   // Animation variants
   const fadeIn = {
@@ -54,6 +56,7 @@ function PostJob_Internship() {
   const [internshipType, setInternshipType] = useState('');
   const [location, setLocation] = useState('');
   const [eligibilityCriteria, setEligibilityCriteria] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const handleFileUpload = (e) => {
     // File upload handling logic
@@ -114,68 +117,102 @@ const resetForm = () => {
 };
   
   return (
-    <motion.div 
-      className="flex flex-col items-center p-4 sm:p-8 bg-gray-100 min-h-screen"
-      initial="hidden"
-      animate="visible"
-      variants={fadeIn}
-    >
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      {/* Navbar */}
       <Navbar pageName="Post Internship" />
-      <motion.h2 
-        className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-center"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
-      >
-        Post {jobType}
-      </motion.h2>
 
-      <motion.div 
-        className="w-full max-w-3xl bg-white p-4 sm:p-6 rounded shadow-md"
-        variants={slideUp}
-      >
-        <motion.div 
-          className="flex border-b-2 mb-4 sm:mb-6"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <motion.div 
-            className={`flex-1 ${jobType === 'Job' ? 'bg-[#5F9D08]' : 'hover:bg-gray-100'} rounded-t-md transition-colors duration-300`}
-            whileHover={{ scale: 1.02 }} 
-            whileTap={{ scale: 0.98 }}
+      {/* Page Layout */}
+      <div className="flex flex-col lg:flex-row w-full">
+        {/* Mobile Hamburger */}
+        <div className="lg:hidden p-4">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="text-3xl text-[#5F9D08] cursor-pointer"
           >
-            <Link
-              to="/recruiters/postJob"
-              onClick={() => setJobType('Job')}
-              className={`block w-full py-3 text-center font-semibold ${jobType === 'Job' ? 'text-white' : 'text-gray-600'}`}
-            >
-              Job
-            </Link>
-          </motion.div>
-          <motion.div 
-            className={`flex-1 ${jobType === 'Internship' ? 'bg-[#5F9D08]' : 'hover:bg-gray-100'} rounded-t-md transition-colors duration-300`}
-            whileHover={{ scale: 1.02 }} 
-            whileTap={{ scale: 0.98 }}
-          >
-            <button
-              onClick={() => setJobType('Internship')}
-              className={`w-full py-3 text-center font-semibold ${jobType === 'Internship' ? 'text-white' : 'text-gray-600'}`}
-            >
-              Internship
-            </button>
-          </motion.div>
-        </motion.div>
+            <FiMenu />
+          </button>
+        </div>
 
-        <motion.form 
-          className="space-y-4" 
-          onSubmit={handleSubmit}
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-        >
-          {/* Internship Role */}
-          <motion.div variants={formFieldVariants}>
+        {/* Sidebar for desktop */}
+        <div className="hidden lg:block mt-6 ml-4">
+          <Sidebar isOpen={true} isMobile={false} />
+        </div>
+
+        {/* Sidebar for mobile */}
+        <AnimatePresence>
+        {isSidebarOpen && (
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            isMobile
+          />
+        )}
+        </AnimatePresence>
+
+        {/* Main Content */}
+        <div className="flex-1 flex justify-center p-4 sm:p-8">
+          <motion.div
+            className="w-full max-w-3xl bg-white p-4 sm:p-6 rounded shadow-md"
+            initial="hidden"
+            animate="visible"
+            variants={fadeIn}
+          >
+            {/* Page Heading */}
+            <motion.h2
+              className="text-xl sm:text-2xl font-semibold mb-6 text-center"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
+            >
+              Post {jobType}
+            </motion.h2>
+
+            {/* Job Type Tabs */}
+            <motion.div
+              className="flex border-b-2 mb-6"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <motion.div
+                className={`flex-1 ${jobType === 'Job' ? 'bg-[#5F9D08]' : 'hover:bg-gray-100'} rounded-t-md transition-colors duration-300`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link
+                  to="/recruiters/postJob"
+                  onClick={() => setJobType('Job')}
+                  className={`block w-full py-3 text-center font-semibold ${jobType === 'Job' ? 'text-white' : 'text-gray-600'}`}
+                >
+                  Job
+                </Link>
+              </motion.div>
+              <motion.div
+                className={`flex-1 ${jobType === 'Internship' ? 'bg-[#5F9D08]' : 'hover:bg-gray-100'} rounded-t-md transition-colors duration-300`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <button
+                  onClick={() => setJobType('Internship')}
+                  className={`w-full py-3 text-center font-semibold ${jobType === 'Internship' ? 'text-white' : 'text-gray-600'}`}
+                >
+                  Internship
+                </button>
+              </motion.div>
+            </motion.div>
+
+            {/* Form */}
+            <motion.form
+              className="space-y-5"
+              onSubmit={handleSubmit}
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+            >
+              {/* Form Fields (reuse your existing motion.divs) */}
+              {/* Example for Internship Role */}
+              
+              <motion.div variants={formFieldVariants}>
             <label className="block text-gray-700 font-bold">Internship Role</label>
             <motion.input
               type="text"
@@ -378,26 +415,34 @@ const resetForm = () => {
             />
           </motion.div>
 
-          <motion.div 
-            className="flex justify-center mt-6"
-            variants={formFieldVariants}
-          >
-            <motion.button
-              type="submit"
-              className="py-2 px-6 bg-[#5F9D08] text-white rounded-lg hover:bg-[#4f8d07] w-full sm:w-auto"
-              whileHover={{ scale: 1.05, backgroundColor: '#4f8d07' }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, type: 'spring' }}
-            >
-              Post Internship
-            </motion.button>
+              {/* ...other fields (stipend, skills, type, duration, etc.) — already good */}
+
+              {/* Submit Button */}
+              <motion.div
+                className="flex justify-center pt-4"
+                variants={formFieldVariants}
+              >
+                <motion.button
+                  type="submit"
+                  className="w-full sm:w-auto py-2 px-6 bg-[#5F9D08] text-white rounded-lg hover:bg-[#4f8d07]"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, type: 'spring' }}
+                >
+                  Post Internship
+                </motion.button>
+              </motion.div>
+            </motion.form>
           </motion.div>
-        </motion.form>
-      </motion.div>
-    </motion.div>
+        </div>
+      </div>
+    </div>
   );
 }
 
 export default PostJob_Internship;
+
+
+

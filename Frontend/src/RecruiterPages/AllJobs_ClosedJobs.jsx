@@ -6,12 +6,16 @@ import Notifications from '../assets/images/notifications00.png';
 import JobCard from './components/JobCard';
 import{ toast }from 'react-toastify';
 import axios from 'axios';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiMenu } from 'react-icons/fi';
+import ProfileImage from '../assets/images/Profile_pics/1.jpg';
 
 function AllJobs_ClosedJobs() {
    const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
    useEffect(() => {
     const fetchJobs = async () => {
@@ -58,29 +62,58 @@ function AllJobs_ClosedJobs() {
   return (
     <div className="h-screen flex bg-gray-100 flex-col">
       {/* Top Navigation Bar */}
-      <div className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full">
-        <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto">
-          <img src={Search} alt="Search Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
-          <input
-            type="text"
-            placeholder="Search"
-            className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
-          />
-        </div>
-        <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
-          <Link to="/notifications">
-            <img src={Notifications} alt="Notifications Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
-          </Link>
-          <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8"></div>
-          <Link to="/recruiters/getProfile">
-          <span className="text-sm sm:text-base">{userName || 'Loading...'}</span> 
-          </Link>
-        </div>
-      </div>
+      <motion.div 
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full">
+              <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto">
+                <img src={Search} alt="Search Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
+                />
+              </div>
+              <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
+                <Link to="/recruiters/notifications">
+                  <img src={Notifications} alt="Notifications Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
+                </Link>
+                <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8">
+                  <img src={ProfileImage} alt="" className="w-full h-full rounded-full" />
+                </div>
+                <Link to="/recruiters/getProfile">
+                <span className="text-sm sm:text-base">{userName || 'Loading...'}</span> 
+                </Link>
+              </div>
+            </motion.div>
 
       <div className="flex flex-1 flex-col sm:flex-row">
         {/* Sidebar */}
-        <Sidebar />
+        <div className="lg:hidden p-4">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="text-3xl text-[#5F9D08] cursor-pointer"
+          >
+            <FiMenu />
+          </button>
+        </div>
+
+        {/* Sidebar for large screens */}
+        <div className="hidden lg:block mt-6 ml-4">
+          <Sidebar isOpen={true} isMobile={false} />
+        </div>
+
+        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <Sidebar
+              isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+              isMobile
+            />
+          )}
+        </AnimatePresence>
 
         {/* Main Content */}
         <div className="flex-1 p-4 bg-gray-100">

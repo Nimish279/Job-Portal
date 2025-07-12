@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavSearchBar from '../components/Header/NavSearchBar';
-import SideBar from '../components/SideBar';
+import Sidebar from '../components/SideBar';
 import JobCards from '../components/JobCards';
 import AppliedJobs from '../components/AppliedJobs';
 import useUserStore from '../store/userStore.js';
-
-
+import {motion,AnimatePresence} from 'framer-motion';
+import { FiMenu } from 'react-icons/fi';
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -54,11 +54,33 @@ const Dashboard = () => {
   return (
     <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex flex-col md:flex-row">
       <NavSearchBar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
-      <SideBar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <div className="flex flex-1 flex-col md:flex-row mt-16 md:mt-20">
-        {!isMobile && (
-          <div className="w-52 lg:w-72"></div> /* Spacer to account for fixed sidebar width */
-        )}
+      <div className="lg:hidden p-4 mt-10">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="text-3xl text-[#5F9D08] cursor-pointer"
+          >
+            <FiMenu />
+          </button>
+        </div>
+
+        {/* Sidebar for large screens */}
+        <div className="hidden lg:block mt-16">
+          <Sidebar isOpen={true} isMobile={false} />
+        </div>
+
+        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <Sidebar
+              isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+              isMobile
+            />
+          )}
+        </AnimatePresence>
+      <div className="flex flex-1 flex-col md:flex-row md:mt-20">
+      
+        
         <div className="flex-1 p-4 md:p-6">
           <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
             <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''}!</h1>

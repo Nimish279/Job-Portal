@@ -1,89 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link for navigation
-import { FaBookmark, FaStar   , FaComment, FaHourglassHalf, FaFileAlt, FaBriefcase } from 'react-icons/fa';
+// src/components/SideBar_Recr.jsx
+import React, { useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FiMenu, FiX } from 'react-icons/fi';
+import ActiveJobs from '../assets/images/ActiveJob00.png';
+import ClosedJobs from '../assets/images/ClosedJob00.png';
+import PostJobs from '../assets/images/PostAJob00.png';
 
-const SideBar = ({ isOpen, onClose }) => {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+const SideBar = ({ isOpen, onClose, isMobile }) => {
+  const sidebarRef = useRef(null);
 
+  // Detect clicks outside the sidebar (on mobile only)
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
+    const handleClickOutside = (event) => {
+      if (isMobile && isOpen && sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        onClose(); // Close sidebar
+      }
     };
-    
-    window.addEventListener('resize', handleResize);
-    
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const isMobile = windowWidth < 768;
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen, isMobile, onClose]);
 
   return (
-    <>
+    <motion.div
+      ref={sidebarRef}
+      initial={{ x: -100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: -100, opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className={`bg-[#5F9D08] text-white w-54 min-h-[calc(100vh-5rem)] fixed lg:static top-20 left-0 p-4 z-50 rounded-r-lg shadow-lg flex flex-col`}
+    >
+      {/* Close/Hamburger button only on mobile */}
       {isMobile && (
-        <div
-          className={`fixed inset-0 bg-white bg-opacity-50 z-40 ${isOpen ? 'block' : 'hidden'}`}
-          onClick={onClose}
-        >
-          <div
-            className={`fixed top-0 left-0 h-full mt-16 w-64 bg-[#5F9D08] text-white p-4 shadow-lg transform ${
-              isOpen ? 'translate-x-0' : '-translate-x-full'
-            } transition-transform duration-300 ease-in-out z-50`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <ul className="space-y-4">
-                          {/* for small devices */}
-
-              {/* <li className="flex items-center pt-16 p-1 hover:bg-gray-700 text-md"> */}
-              <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
-                <Link to="/users/saved-jobs" className="flex items-center">
-                  <FaBookmark className="mr-2" /> Saved Jobs
-                </Link>
-              </li>
-              <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
-                <Link to="/users/job-recommendations" className="flex items-center">
-                  <FaStar     className="mr-2" />Job Recommendations
-                </Link>
-              </li>
-             
-              <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
-              <Link to="/users/resume" className="flex items-center">
-                  <FaFileAlt     className="mr-2" />Resume
-                </Link>
-              </li>
-            </ul>
-          </div>
+        <div className="flex justify-end mb-4">
+          <button onClick={onClose} className="text-white text-2xl cursor-pointer">
+            <FiX />
+          </button>
         </div>
       )}
 
-      {!isMobile && (
-        <div
-          className={`fixed left-0 w-52 lg:w-72 h-[calc(100vh-64px)] bg-[#5F9D08] text-white mt-16 md:mt-20 p-4 rounded-tr-2xl shadow-lg transition-all duration-300 ease-in-out z-10`}
-        >
-          <ul className="space-y-4">
-                                    {/* for large devices */}
-
-            {/* <li className="flex items-center lg:p-2 hover:bg-gray-700 text-md lg:text-xl md:text-sm"> */}
-            <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
-              <Link to="/users/saved-jobs" className="flex items-center">
-                <FaBookmark className="mr-2" /> Saved Jobs
-              </Link>
-            </li>
-            <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
-                <Link to="/users/job-recommendations" className="flex items-center">
-                  <FaStar     className="mr-2" /> Job Recommendations
-                </Link>
-              </li>
-          
-            <li className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#092215]/80 hover:backdrop-blur-sm">
-              <Link to="/users/resume" className="flex items-center">
-                <FaFileAlt className="mr-2" />Resume
-              </Link>
-            </li>
-            
-          </ul>
-        </div>
-      )}
-    </>
+      <ul className="space-y-1">
+        <li>
+          <Link to="/users/dashboard" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
+            <img src={PostJobs} alt="Internship Icon" className="w-6 h-6" />
+            <span className="text-sm sm:text-base">DashBoard</span>
+          </Link>
+        </li>
+        <li>
+          <Link to="/users/saved-jobs" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
+            <img src={ActiveJobs} alt="Active Jobs Icon" className="w-6 h-6" />
+            <span className="text-sm sm:text-base">Saved Jobs</span>
+          </Link>
+        </li>
+        <li>
+          <Link to="/users/job-recommendations" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
+            <img src={ClosedJobs} alt="Closed Jobs Icon" className="w-6 h-6" />
+            <span className="text-sm sm:text-base">Job Recommendations</span>
+          </Link>
+        </li>
+        <li>
+          <Link to="/users/resume" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
+            <img src={PostJobs} alt="Post Job Icon" className="w-6 h-6" />
+            <span className="text-sm sm:text-base">Resume</span>
+          </Link>
+        </li>
+        
+      </ul>
+    </motion.div>
   );
 };
 

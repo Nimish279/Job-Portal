@@ -97,7 +97,7 @@ const UserNavbar = ({ pageName }) => {
       </div>
 
       {/* Profile icon */}
-      <div className="ml-auto mr-4 pt-5 -mt-4 flex items-center relative z-[300]">
+      <div className=" mr-4 p-2 rounded-b-lg flex items-center bg-[#5F9D08]">
         <Profile />
       </div>
     </nav>

@@ -242,6 +242,7 @@ const JobPage = () => {
     "HR Interview",
     "Offer"
   ];
+  //do we also need to take workflowsteps from database or it will be hardcoded and this steps colors will change according to tests status
 
   return (
     <div className="flex min-h-screen pt-10 bg-gray-50">
@@ -254,61 +255,86 @@ const JobPage = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="border-t border-gray-300 mb-4"></div>
-        <div className="flex flex-wrap md:flex-nowrap items-center mb-4 bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
-          <div className="bg-white p-2 rounded-lg shadow-sm mr-6 flex items-center justify-center">
-            <img src={amazonLogo} alt="Amazon Logo" className="w-16 h-16 object-contain" />
-          </div>
-          <div className="flex flex-col flex-grow">
-            <h2 className="text-2xl font-bold text-gray-800">{job.title}</h2>
-            <p className="text-[#5F9D08] font-medium text-lg">{job.company}</p>
-            <div className="flex flex-wrap items-center gap-4 mt-2">
-              <span className="inline-flex items-center text-sm text-gray-600">
-                <svg className="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                {job.location}
-              </span>
-              <span className="inline-flex items-center text-sm text-gray-600">
-                <svg className="w-4 h-4 mr-1 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M12 18h.01" />
-                </svg>
-                {job.type}
-              </span>
-              {job.salary && (
-                <span className="inline-flex items-center text-sm text-gray-600">
-                  <svg className="w-4 h-4 mr-1 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {job.salary}
-                </span>
-              )}
-              {job.deadline && (
-                <span className="inline-flex items-center text-sm text-gray-600">
-                  <svg className="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  Apply by {new Date(job.deadline).toLocaleDateString()}
-                </span>
-              )}
-            </div>
-          </div>
-          <motion.button 
-            onClick={handleApplyNow}
-            disabled={isApplied}
-            className={`mt-4 md:mt-0 ml-auto block text-sm text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-colors ${
-              isApplied 
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] hover:from-[#4A8B07] hover:to-[#3A7A00]'
-            }`}
-            whileHover={!isApplied ? { scale: 1.05 } : {}}
-            whileTap={!isApplied ? { scale: 0.95 } : {}}
-          >
-            {isApplied ? 'Applied ✓' : 'Apply Now'}
-          </motion.button>
-        </div>
+        <motion.div
+        initial={{ opacity:0 }}
+        animate={{ opacity:1}}
+        transition={{ duration: 0.4}}
 
-        <div className="flex justify-between mb-2 bg-white rounded-lg shadow-sm p-2">
+        className="flex flex-col md:flex-row items-start md:items-center gap-4 p-6 mb-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
+
+  {/* Company Logo */}
+  <div className="flex-shrink-0 w-20 h-20 flex items-center justify-center bg-white rounded-lg shadow-sm">
+    <img src={amazonLogo} alt={`${job.company} Logo`} className="w-16 h-16 object-contain" />
+  </div>
+
+  {/* Job Info */}
+  <div className="flex-grow flex flex-col gap-1">
+    <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{job.title}</h2>
+    <p className="text-[#5F9D08] font-medium text-base sm:text-lg">{job.company}</p>
+
+    {/* Job Meta */}
+    <div className="flex flex-wrap items-center gap-4 mt-2">
+      {/* Location */}
+      <span className="inline-flex items-center text-sm text-gray-600">
+        <svg className="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        {job.location}
+      </span>
+
+      {/* Type */}
+      <span className="inline-flex items-center text-sm text-gray-600">
+        <svg className="w-4 h-4 mr-1 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M12 18h.01" />
+        </svg>
+        {job.type}
+      </span>
+
+      {/* Salary */}
+      {job.salary && (
+        <span className="inline-flex items-center text-sm text-gray-600">
+          <svg className="w-4 h-4 mr-1 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {job.salary}
+        </span>
+      )}
+
+      {/* Deadline */}
+      {job.deadline && (
+        <span className="inline-flex items-center text-sm text-gray-600">
+          <svg className="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          Apply by {new Date(job.deadline).toLocaleDateString()}
+        </span>
+      )}
+    </div>
+  </div>
+
+  {/* Apply Button */}
+  <motion.button
+    onClick={handleApplyNow}
+    disabled={isApplied}
+    className={`w-full md:w-auto mt-4 md:mt-0 px-6 py-3 text-sm font-medium text-white rounded-lg transition-colors hover:shadow-lg ${
+      isApplied
+        ? 'bg-gray-400 cursor-not-allowed'
+        : 'bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] hover:from-[#4A8B07] hover:to-[#3A7A00]'
+    }`}
+    whileHover={!isApplied ? { scale: 1.05 } : {}}
+    whileTap={!isApplied ? { scale: 0.95 } : {}}
+  >
+    {isApplied ? 'Applied ✓' : 'Apply Now'}
+  </motion.button>
+</motion.div>
+
+
+        <motion.div 
+        initial={{y:20, opacity:0 }}
+        animate={{y:0, opacity:1}}
+        transition={{ duration: 0.5,ease:'easeInOut' }}
+        className="flex justify-between mb-2 bg-white rounded-lg shadow-sm p-2">
           <span 
             onClick={() => handleSectionChange('description')} 
             className={`cursor-pointer px-4 py-2 rounded-lg transition-all duration-300 ${activeSection === 'description' ? 'bg-[#5F9D08] text-white font-medium' : 'hover:bg-green-50 hover:text-[#5F9D08]'}`}
@@ -327,8 +353,7 @@ const JobPage = () => {
           >
             Eligibility Criteria
           </span>
-        </div>
-
+        </motion.div>
         <div className="mb-4"></div>
 
         {activeSection === 'description' && (
@@ -348,7 +373,7 @@ const JobPage = () => {
                 <div className="w-full md:w-1/3 font-medium text-gray-700 mb-1 md:mb-0">Skills Required:</div>
                 <div className="w-full md:w-2/3 text-gray-800">
                   {job.skillsRequired.split(',').map((skill, index) => (
-                    <span key={index} className="inline-block bg-green-100 text-[#5F9D08] px-2 py-1 rounded-full text-xs mr-2 mb-2">
+                    <span key={index} className="inline-block bg-green-100 text-[#589207] px-2 py-1 rounded-full text-xs mr-2 mb-2">
                       {skill.trim()}
                     </span>
                   ))}
