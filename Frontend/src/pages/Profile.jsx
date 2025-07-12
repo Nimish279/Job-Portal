@@ -28,6 +28,10 @@ const Profile = () => {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [isEditingSkills, setIsEditingSkills] = useState(false);
   const [editedSkills, setEditedSkills] = useState(profileData.skills);
+  const [isEditingAbout, setIsEditingAbout] = useState(false);
+  const [editedAbout, setEditedAbout] = useState(profileData.about);
+  const [isEditingExperience, setIsEditingExperience] = useState(false);
+  const [editedExperience, setEditedExperience] = useState(profileData.experience);
 
   useEffect(() => {
     const savedProfile = JSON.parse(localStorage.getItem('profileData')) || {};
@@ -36,8 +40,11 @@ const Profile = () => {
         ...prev,
         ...savedProfile,
         skills: savedProfile.skills || prev.skills,
-        experience: savedProfile.experience || prev.experience
+        experience: savedProfile.experience || prev.experience,
+        about: savedProfile.about || prev.about
       }));
+      setEditedAbout(savedProfile.about || profileData.about);
+      setEditedExperience(savedProfile.experience || profileData.experience);
     }
   }, []);
   
@@ -59,8 +66,19 @@ const Profile = () => {
     setIsEditingSkills(false);
   };
 
+  const handleAboutSave = () => {
+    setProfileData(prev => ({...prev, about: editedAbout}));
+    localStorage.setItem('profileData', JSON.stringify({ ...profileData, about: editedAbout}));
+    setIsEditingAbout(false);
+  };
+
+  const handleExperienceSave = () => {
+    setProfileData(prev => ({...prev, experience:editedExperience}));
+    localStorage.setItem('profileData', JSON.stringify({ ...profileData, experience:editedExperience}));
+    setIsEditingExperience(false);
+  }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-green-50 font-sans">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-gray-100 to-green-50 font-sans">
       <UserNavbar pageName="Profile" />
 
       <motion.div
@@ -168,10 +186,28 @@ const Profile = () => {
           >
 
             {/* About Section */}
-            <Section title="About Me" icon={FiEdit}>
+            <Section 
+            title="About Me" 
+            icon={FiEdit}
+            isEditing={isEditingAbout}
+            onEdit={() =>{
+              setIsEditingAbout(true);
+              setEditedAbout(profileData.about);
+            }}
+            onSave={handleAboutSave}
+            >
+            {isEditingAbout ? (
+              <textarea
+              className="w-full p-2 border rounded text-gray-700"
+              rows={4}
+              value={editedAbout}
+              onChange={(e) => setEditedAbout(e.target.value)}
+              />
+            ):(
               <p className="text-gray-700 leading-relaxed">
                 {profileData.about}
               </p>
+            )}
             </Section>
 
             {/* Skills Section with Edit on Card */}
@@ -231,13 +267,30 @@ const Profile = () => {
             </Section>
 
             {/* Experience Section */}
-            <Section title="Experience" icon={FiEdit}>
-              {profileData.experience ? (
+            <Section title="Experience" 
+            icon={FiEdit}
+            isEditing={isEditingExperience}
+            onEdit={() => {
+              setIsEditingExperience(true);
+              setEditedExperience(profileData.experience);
+            }}
+            onSave={handleExperienceSave}
+            >
+              {isEditingExperience ? (
+                <textarea
+                className="w-full p-2 border rounded text-gray-700"
+                rows={4}
+                value={editedExperience}
+                onChange={(e) => setEditedExperience(e.target.value)}
+                />
+              ) : (
+              profileData.experience ? (
                 <div className="bg-white border-l-4 border-[#5F9D08] p-4 rounded-lg shadow">
                   <p className="text-gray-700">{profileData.experience}</p>
                 </div>
               ) : (
                 <div className="text-gray-400">No experience added yet</div>
+              )
               )}
             </Section>
 

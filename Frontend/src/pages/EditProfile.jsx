@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUserEdit, FaSave } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { FiArrowLeft } from 'react-icons/fi';
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -45,13 +46,21 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#f0fdf4] to-[#d9f99d] py-20 px-4">
+    <div className="flex items-center justify-center min-h-screen overflow-x-hidden bg-gradient-to-br from-[#f0fdf4] to-[#d9f99d] py-20 px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="bg-white border border-gray-200 rounded-2xl shadow-2xl p-6 sm:p-10 w-full sm:w-3/4 lg:w-1/2 max-w-2xl"
       >
+        {/* Back Arrow */}
+        <button 
+        onClick={() => navigate(-1)}
+        className="flex items-center text-sm text-[#5F9D08] hover:text-[#4e7c07] mb-4 transition"
+        >
+          <FiArrowLeft className="mr-2"/>
+          Back
+        </button>
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-[#5F9D08] flex justify-center items-center gap-2">
