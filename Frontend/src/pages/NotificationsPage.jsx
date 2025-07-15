@@ -67,15 +67,20 @@ const NotificationsPage = () => {
 
       {/* Hamburger for mobile */}
       
-        <div className="p-4 mt-6 fixed top-5 left-4 z-50 lg:hidden">
+        {/* <div className="p-4 mt-6 fixed top-5 left-4 z-50 lg:hidden">
           <button
             onClick={() => setIsSidebarOpen(true)}
             className="text-3xl text-[#5F9D08] focus:outline-none cursor-pointer"
           >
             <FiMenu />
           </button>
-        </div>
-      
+        </div> */}
+
+      {/* Mobile Navigation */}
+      <NavSearchBar
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        showHamburger={true}
+      />  
 
       {/* Sidebar for large screens */}
       {!isMobile && (
