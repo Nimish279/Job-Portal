@@ -50,7 +50,8 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm">
+
       <motion.div 
         className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
         initial={{ opacity: 0, y: 20 }}

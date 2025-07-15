@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import UserNavbar from '../components/Header/UserNavbar';
 import Sidebar from '../components/SideBar';
 import { FiMenu } from 'react-icons/fi';
+import NavSearchBar from '../components/Header/NavSearchBar';
 const Resume = () => {
   const [pdfs, setPdfs] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -62,21 +63,17 @@ const Resume = () => {
   return (
     <div className="bg-gray-50 min-h-screen pt-16">
       {/* Navbar */}
-      <UserNavbar pageName="Resume" />
+      <NavSearchBar
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        showHamburger={true}
+      />
       <div className='flex flex-row min-h-screen'>
-      <div className="p-4 mt-6 fixed top-5 z-50 lg:hidden">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-3xl text-[#5F9D08] focus:outline-none cursor-pointer"
-          >
-            <FiMenu />
-          </button>
-        </div>
+      
     
 
       {/* Sidebar for large screens */}
       {!isMobile && (
-        <div className="hidden lg:block top-20 left-0 z-30">
+        <div className="hidden lg:block fixed top-20 left-0 z-30">
           <Sidebar isOpen={true} isMobile={false} />
         </div>
       )}
@@ -93,7 +90,7 @@ const Resume = () => {
       </AnimatePresence>
       
       <motion.div 
-        className="w-full mx-6 mt-6 p-4"
+        className="w-full mx-6 mt-6 p-4 lg:ml-64"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}

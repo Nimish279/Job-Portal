@@ -9,8 +9,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import JobApplicationForm from '../components/JobApplicationForm';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NavSearchBar from '../components/Header/NavSearchBar';
+import Sidebar from '../components/SideBar';
 
 const JobPage = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
   const { id } = useParams();
   const navigate = useNavigate();
   const [job, setJob] = useState(null);
@@ -246,10 +250,29 @@ const JobPage = () => {
 
   return (
     <div className="flex min-h-screen pt-10 bg-gray-50">
-      <UserNavbar pageName={"Job Page"}/>
+      <NavSearchBar
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        showHamburger={true}
+      />  
+
+        {/* Sidebar for large screens */}
+        <div className="hidden lg:block mt-20 fixed top-0 left-0 min-h-screen">
+          <Sidebar isOpen={true} isMobile={false} />
+        </div>
+
+        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <Sidebar
+              isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+              isMobile
+            />
+          )}
+        </AnimatePresence>
 
       <motion.div 
-        className="flex flex-col w-full p-6 bg-transparent"
+        className="flex flex-col w-full p-6 bg-transparent lg:ml-64"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
