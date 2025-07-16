@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const user = useUserStore(state => state.user);
-
+ 
   // Check if user is logged in
   useEffect(() => {
     // If no user is found after a short delay, redirect to login

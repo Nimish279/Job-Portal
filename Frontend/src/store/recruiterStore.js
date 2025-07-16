@@ -3,21 +3,67 @@ import { axiosInstance } from "../utils/axiosInstance"; // ✅ fixed path
 import { toast } from "react-toastify";
 
 const recruiterStore = create((set) => ({
+  user: JSON.parse(localStorage.getItem("recruiter")) || null,
+
   loading: false,
 
+  // login: async ({ email, password }) => {
+  //   try {
+  //     const response = await axiosInstance.post("/recruiters/login", {
+  //       email,
+  //       password,
+  //     });
+  //     set({ loading: false });
+  //     toast.success("Login Successfull");
+  //     return { success: true };
+  //   } catch (error) {
+  //     const msg = error.response.data.message;
+  //     toast.error(msg);
+  //     set({ loading: false });
+  //   }
+  // },
+
   login: async ({ email, password }) => {
+    set({ loading: true });
     try {
-      const response = await axiosInstance.post("/recruiters/login", {
+      const recruiterResponse = await axiosInstance.post("/recruiters/login", {
         email,
         password,
       });
-      set({ loading: false });
-      toast.success("Login Successfull");
+
+      toast.success("Login Successful");
+
+      const token = recruiterResponse.data.token;
+
+      const defaultRecruiter = {
+        email,
+        name: email.split("@")[0],
+        token,
+      };
+
+      const userResponse = await axiosInstance.post("/users/login", {
+        email,
+        password,
+      });
+
+      const defaultUser = {
+        email,
+        name: email.split("@")[0],
+        token: userResponse.data.token,
+      };
+
+      localStorage.setItem("user", JSON.stringify(defaultUser));
+      set({ user: defaultUser });
+
+      localStorage.setItem("recruiter", JSON.stringify(defaultRecruiter));
+      set({ user: defaultRecruiter, loading: false });
+
       return { success: true };
     } catch (error) {
-      const msg = error.response.data.message;
+      const msg = error.response?.data?.message || "Login Failed";
       toast.error(msg);
       set({ loading: false });
+      return { success: false };
     }
   },
 
@@ -41,14 +87,29 @@ const recruiterStore = create((set) => ({
     }
   },
 
+  // logout: async () => {
+  //   try {
+  //     const response = await axiosInstance.post("/recruiters/logout");
+  //     return { success: false };
+  //   } catch (error) {
+  //     set({ loading: false });
+  //     const msg = error.response.data.message;
+  //     toast.error(msg);
+  //   }
+  // },
+
   logout: async () => {
     try {
-      const response = await axiosInstance.post("/recruiters/logout");
-      return { success: false };
+      await axiosInstance.post("/recruiters/logout");
+      localStorage.removeItem("recruiter"); // ✅ clear token
+      set({ user: null, loading: false });
+      toast.success("Logout Successful");
+      return { success: true };
     } catch (error) {
       set({ loading: false });
       const msg = error.response.data.message;
       toast.error(msg);
+      return { success: false };
     }
   },
 

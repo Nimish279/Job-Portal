@@ -2,6 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+};
+
+
 const JobCard = ({ job }) => {
   return (
     <div className="rounded-xl p-5 shadow-md bg-white transition-all duration-300 hover:shadow-lg border border-gray-100">
