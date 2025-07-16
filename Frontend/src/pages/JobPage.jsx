@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate,useLocation } from 'react-router-dom';
 import jobData from '../components/jobData.json';
 import savedJobsData from '../data/saved.json';
 import UserNavbar from '../components/Header/UserNavbar';
@@ -11,9 +11,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavSearchBar from '../components/Header/NavSearchBar';
 import Sidebar from '../components/SideBar';
-
+import useUserStore from '../store/userStore';
 const JobPage = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const loc=useLocation();
   
   const { id } = useParams();
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const JobPage = () => {
   const [formErrors, setFormErrors] = useState({});
   const [applicationStatus, setApplicationStatus] = useState('');
   const [isSaved, setIsSaved] = useState(false);
-
+ const applyjob = useUserStore((state) => state.applyJob);
   const findJob = useCallback(() => {
     if (!id) {
       console.log('No ID provided');
@@ -162,8 +163,9 @@ const JobPage = () => {
     toast.success(isSaved ? 'Job removed from saved' : 'Job saved successfully!');
   }, [isSaved]);
 
-  const handleSubmitApplication = (formData) => {
+  const handleSubmitApplication = async(formData) => {
     // In a real app, you would send this data to your backend
+    await applyjob(loc.pathname.split('/').pop());
     console.log('Application submitted:', { jobId: job?.id, ...formData });
 
     toast.success('Application submitted successfully!', {

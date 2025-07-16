@@ -13,7 +13,8 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const user = useUserStore(state => state.user);
-
+const getAppliedJobs=useUserStore(state=>state.getAppliedJobs)
+const appliedJobs=useUserStore(state=>state.appliedJobs)
   // Check if user is logged in
   useEffect(() => {
     // If no user is found after a short delay, redirect to login
@@ -36,6 +37,7 @@ const Dashboard = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+  
 
   const isMobile = windowWidth < 768;
   
