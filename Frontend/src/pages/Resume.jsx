@@ -4,6 +4,8 @@ import UserNavbar from '../components/Header/UserNavbar';
 import Sidebar from '../components/SideBar';
 import { FiMenu } from 'react-icons/fi';
 import NavSearchBar from '../components/Header/NavSearchBar';
+import axios from 'axios'; // Make sure this is at the top if not already
+
 const Resume = () => {
   const [pdfs, setPdfs] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -25,20 +27,55 @@ const Resume = () => {
   };
 
   // Upload PDF
-  // Download and View PDF - By Wafiya Shaikh
-  const handleUpload = () => {
-    if (newPdf.file && newPdf.fileName) {
-      const url = URL.createObjectURL(newPdf.file);
-      const pdfData = {
+  // Download and View PDF - By Wafiya Shaikh this is old code store resume on local storage re-correct by mukund
+  // const handleUpload = () => {
+  //   if (newPdf.file && newPdf.fileName) {
+  //     const url = URL.createObjectURL(newPdf.file);
+  //     const pdfData = {
+  //       fileName: newPdf.fileName,
+  //       file: newPdf.file,
+  //       url,
+  //     }
+  //     setPdfs([...pdfs, pdfData]);
+  //     setNewPdf({ fileName: '', file: null });
+  //     toggleModal();
+  //   }
+  // };
+
+//new code to upload resume to MongoDB by Mukund
+const handleUpload = async () => {
+  if (newPdf.file && newPdf.fileName) {
+    try {
+      const formData = new FormData();
+      formData.append("resume", newPdf.file);
+
+      const yourJWTToken = localStorage.getItem("token"); // Or however you're storing the token
+
+      axios.post("http://localhost:8000/api/upload/resume", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${yourJWTToken}`
+        },
+        withCredentials: true // 👈 Agar cookie based auth hai
+      });
+
+      // Optional: Add response to local list (assuming server returns file info)
+      const uploadedPdf = {
         fileName: newPdf.fileName,
         file: newPdf.file,
-        url,
-      }
-      setPdfs([...pdfs, pdfData]);
+        url: URL.createObjectURL(newPdf.file)
+      };
+      setPdfs([...pdfs, uploadedPdf]);
+
       setNewPdf({ fileName: '', file: null });
       toggleModal();
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Failed to upload resume. Please try again.");
     }
-  };
+  }
+};
+
 
   // Delete PDF
   const handleDelete = (index) => {
@@ -47,7 +84,7 @@ const Resume = () => {
     setPdfs(updatedPdfs);
     setShowDropdownIndex(null); // Close dropdown after deletion
   };
-
+ 
   // Toggle Dropdown
   const toggleDropdown = (index) => {
     setShowDropdownIndex(showDropdownIndex === index ? null : index);
