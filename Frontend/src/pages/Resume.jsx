@@ -43,20 +43,39 @@ const Resume = () => {
   // };
 
 //new code to upload resume to MongoDB by Mukund
+useEffect(() => {
+  const fetchResumes = async () => {   //Fetching resume as soon as the page opens (By Tushar)
+    try {
+      const response = await axios.get("http://localhost:8000/api/upload/resume", {
+        withCredentials: true,
+      });
+
+      const fetchedResumes = response.data.resumes.map(r => ({
+        fileName: r.fileName,
+        url: r.fileUrl,
+      }));
+
+      setPdfs(fetchedResumes);
+    } catch (error) {
+      console.error("Failed to fetch resumes:", error);
+    }
+  };
+
+  fetchResumes();
+}, []);
+
+
 const handleUpload = async () => {
   if (newPdf.file && newPdf.fileName) {
     try {
       const formData = new FormData();
       formData.append("resume", newPdf.file);
 
-      const yourJWTToken = localStorage.getItem("token"); // Or however you're storing the token
-
-      axios.post("http://localhost:8000/api/upload/resume", formData, {
+      await axios.post("http://localhost:8000/api/upload/resume", formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${yourJWTToken}`
+          "Content-Type": "multipart/form-data"
         },
-        withCredentials: true // 👈 Agar cookie based auth hai
+        withCredentials: true // ✅ Required for cookie-based auth
       });
 
       // Optional: Add response to local list (assuming server returns file info)
@@ -75,6 +94,7 @@ const handleUpload = async () => {
     }
   }
 };
+
 
 
   // Delete PDF

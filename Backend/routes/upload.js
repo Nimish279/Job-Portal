@@ -151,7 +151,7 @@ const router = express.Router();
 
 router.post("/resume", upload.single("resume"), async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
+    const token = req.cookies.token
     if (!token) return res.status(401).json({ error: "Unauthorized" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -186,5 +186,22 @@ router.post("/resume", upload.single("resume"), async (req, res) => {
     res.status(500).json({ error: "Upload failed" });
   }
 });
+
+router.get("/resume", async (req, res) => {    //Fetching resume on resume page (By Tushar)
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id || decoded._id;
+
+    const user = await User.findById(userId);
+    res.status(200).json({ resumes: user.resume }); // assuming resume is an array
+  } catch (err) {
+    console.error("Fetch resume error:", err.message);
+    res.status(500).json({ error: "Failed to fetch resumes" });
+  }
+});
+
 
 export default router;
