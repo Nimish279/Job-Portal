@@ -107,8 +107,8 @@ export const applyToJobs=async (req,res) => {
           if (alreadyApplied) {
             return res.status(403).json({ message: "Already applied to this job" });
              }
-        job.candidates.push(user._id)
-        user.appliedJobs.push(job._id);
+        job.candidates.push(user._id) //ye job pe kitno ne apply kiya
+        user.appliedJobs.push(job._id); //ye bande ke kitne job pe apply kiya
         await job.save({
             validateBeforeSave:false
         })

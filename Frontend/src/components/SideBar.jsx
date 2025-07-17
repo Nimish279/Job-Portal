@@ -42,25 +42,29 @@ const SideBar = ({ isOpen, onClose, isMobile }) => {
       <ul className="space-y-1">
         <li>
           <Link to="/users/dashboard" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
-            <img src={PostJobs} alt="Internship Icon" className="w-6 h-6" />
+            {/* <img src={PostJobs} alt="Internship Icon" className="w-6 h-6" /> */}
+            <i className="fas fa-chart-line text-white text-base text-xl"></i>
             <span className="text-sm sm:text-base">DashBoard</span>
           </Link>
         </li>
         <li>
           <Link to="/users/saved-jobs" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
-            <img src={ActiveJobs} alt="Active Jobs Icon" className="w-6 h-6" />
+            {/* <img src={ActiveJobs} alt="Active Jobs Icon" className="w-6 h-6" /> */}
+            <i className="fa-regular fa-font-awesome text-white text-base text-xl"></i>
             <span className="text-sm sm:text-base">Saved Jobs</span>
           </Link>
         </li>
         <li>
           <Link to="/users/job-recommendations" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
-            <img src={ClosedJobs} alt="Closed Jobs Icon" className="w-6 h-6" />
+            {/* <img src={ClosedJobs} alt="Closed Jobs Icon" className="w-6 h-6" /> */}
+            <i className="fa-solid fa-briefcase text-white text-base text-xl"></i>
             <span className="text-sm sm:text-base">Job Recommendations</span>
           </Link>
         </li>
         <li>
           <Link to="/users/resume" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
-            <img src={PostJobs} alt="Post Job Icon" className="w-6 h-6" />
+            {/* <img src={PostJobs} alt="Post Job Icon" className="w-6 h-6" /> */}
+            <i className="fas fa-file-alt text-white text-base text-xl"></i>
             <span className="text-sm sm:text-base">Resume</span>
           </Link>
         </li>

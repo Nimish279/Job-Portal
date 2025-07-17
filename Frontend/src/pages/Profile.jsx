@@ -8,7 +8,7 @@ import {
 import { FaLinkedin, FaTwitter, FaGlobe } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 // import Navbar from '../components/Header/UserNavbar'; // ya jahan bhi User Navbar ka path ho
-
+import NavSearchBar from '../components/Header/NavSearchBar';
 
 
 const Profile = () => {
@@ -61,10 +61,13 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-green-50 font-sans">
-      <UserNavbar pageName="Profile" />
+      <NavSearchBar
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        showHamburger={true}
+      />
 
       <motion.div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}

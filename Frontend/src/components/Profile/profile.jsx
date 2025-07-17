@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaBell, FaUser, FaCaretDown } from 'react-icons/fa';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import useUserStore from '../../store/userStore.js';
-
+import { FaHome } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
 const Profile = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   // Get user data from the store
@@ -13,6 +14,8 @@ const Profile = () => {
   
   // Reference for the dropdown container
   const dropdownRef = useRef(null);
+  const locations=useLocation();
+  const loc=locations.pathname.split("/")[2];
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -46,8 +49,8 @@ const Profile = () => {
           </Link>
         </li>
         <li>
-          <Link to="/users/profile">
-                    <FaUser className="text-2xl cursor-pointer hover:text-gray-300" />
+          <Link to={`/users/${loc==="profile" ? "dashboard" : "profile"}`}>
+                    {loc==="profile" ? <FaHome className="text-2xl cursor-pointer hover:text-gray-300" /> : <FaUser className="text-2xl cursor-pointer hover:text-gray-300" />}
 </Link>
         </li>
         <li className="relative" ref={dropdownRef}>
@@ -59,13 +62,20 @@ const Profile = () => {
               <ul className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md z-[999] shadow-xl" style={{ pointerEvents: 'auto', position: 'fixed', top: '60px', right: '20px' }}>
                 {/* Use Link to navigate to the profile page */}
                 <li>
-                  <Link 
-                    to="/users/profile"  // Navigate to profile page
-                    className="block px-4 py-2 hover:bg-gray-200"
+                  
+                  {loc==="profile" ? <Link 
+                    to="/users/dashboard"  // Navigate to the profile page
+                    className="block px-4 py-2 hover:bg-gray-200" 
+                    style={{ color: '#5F9D08' }}
+                  >
+                    Dashboard
+                  </Link> : <Link 
+                    to="/users/profile"  // Navigate to the profile page
+                    className="block px-4 py-2 hover:bg-gray-200" 
                     style={{ color: '#5F9D08' }}
                   >
                     Profile
-                  </Link>
+                  </Link>}
                 </li>
                 <li>
                   <Link 

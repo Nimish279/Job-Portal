@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
-
+import NavSearchBar from '../components/Header/NavSearchBar';
 import UserNavbar from '../components/Header/UserNavbar';
 import Sidebar from '../components/SideBar';
 import jobsData from '../data/jobsData.json';
@@ -30,18 +30,21 @@ const JobRecommendations = () => {
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col md:flex-row">
       {/* Navbar */}
-      <UserNavbar pageName="Job Recs" />
+      <NavSearchBar
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        showHamburger={true}
+      />  
 
       {/* Hamburger menu (mobile) */}
       
-        <div className="p-4 mt-6 fixed top-5 z-50 lg:hidden">
+        {/* <div className="p-4 mt-6 fixed top-5 z-50 lg:hidden">
           <button
             onClick={() => setIsSidebarOpen(true)}
             className="text-3xl text-[#5F9D08] focus:outline-none cursor-pointer"
           >
             <FiMenu />
           </button>
-        </div>
+        </div> */}
     
 
       {/* Sidebar for large screens */}
@@ -64,6 +67,19 @@ const JobRecommendations = () => {
 
       {/* Main Content */}
       <div className="flex-1 pt-24 lg:pl-64 px-4 md:px-8">
+        <motion.div
+          className="mb-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-2xl font-bold text-gray-800 border-l-4 border-[#5F9D08] pl-3">
+            Job Recommendations
+          </h1>
+          <p className="text-gray-600 mt-2 pl-4">
+            Here are some job recommendations based on your skills and experience.
+          </p>
+        </motion.div>
         <motion.div
           className="lg:mt-6 md:mt-6 mt-4 relative z-0"
           variants={containerVariants}

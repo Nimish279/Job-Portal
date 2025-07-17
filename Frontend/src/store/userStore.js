@@ -99,7 +99,9 @@ const userStore = create((set) => ({
 
   getAppliedJobs: async () => {
     try {
+      console.log('ad')
       const response = await axiosInstance.get('/users/getAppliedJobs');
+      console.log(response.data.appliedJobs)
       set({ appliedJobs: response.data.appliedJobs, loading: false });
     } catch (error) {
       const msg = error?.response?.data?.message || 'Failed to fetch applied jobs';
