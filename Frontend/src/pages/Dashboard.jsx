@@ -13,7 +13,8 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const user = useUserStore(state => state.user);
-
+const getAppliedJobs=useUserStore(state=>state.getAppliedJobs)
+const appliedJobs=useUserStore(state=>state.appliedJobs)
   // Check if user is logged in
   useEffect(() => {
     // If no user is found after a short delay, redirect to login
@@ -36,6 +37,7 @@ const Dashboard = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+  
 
   const isMobile = windowWidth < 768;
   
@@ -53,18 +55,22 @@ const Dashboard = () => {
 
   return (
     <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex flex-col md:flex-row">
-      <NavSearchBar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
-      <div className="lg:hidden p-4 mt-10">
+      {/* <NavSearchBar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} /> */}
+      {/* <div className="lg:hidden p-4 mt-10">
           <button
             onClick={() => setIsSidebarOpen(true)}
             className="text-3xl text-[#5F9D08] cursor-pointer"
           >
             <FiMenu />
           </button>
-        </div>
+        </div> */}
+        <NavSearchBar
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        showHamburger={true}
+      />  
 
         {/* Sidebar for large screens */}
-        <div className="hidden lg:block mt-16">
+        <div className="hidden lg:block mt-20 fixed top-0 left-0 min-h-screen">
           <Sidebar isOpen={true} isMobile={false} />
         </div>
 
@@ -78,17 +84,17 @@ const Dashboard = () => {
             />
           )}
         </AnimatePresence>
-      <div className="flex flex-1 flex-col md:flex-row md:mt-20">
+      <div className="flex flex-1 flex-col md:flex-row md:mt-20 lg:ml-64">
       
         
-        <div className="flex-1 p-4 md:p-6">
-          <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
+        <div className="flex-1 pl-4 mt-20 md:mt-5 ">
+          <div className="bg-white rounded-xl shadow-sm p-5">
             <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''}!</h1>
             <p className="text-gray-600">Find your perfect job match from our listings.</p>
           </div>
           <JobCards />
         </div>
-        <div className="md:w-1/4 p-4 md:p-6 md:-mt-40">
+        <div className="md:w-1/4   md:-mt-40">
           <AppliedJobs />
         </div>
       </div>

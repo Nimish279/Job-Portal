@@ -35,6 +35,7 @@ function App() {
     <Router>
       <Routes>
         {/* Users */}
+        <Route path="*" element={<Navigate to="/" replace />} />
         <Route path='/' element={<LandingPage />} />
         <Route path='/users/register' element={<Register />} />
         <Route path='/users/login' element={<Login />} />
