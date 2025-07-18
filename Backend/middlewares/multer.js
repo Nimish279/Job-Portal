@@ -29,11 +29,16 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "resumes", // Cloudinary folder
     resource_type: "raw", // because .pdf and .docx are not images
+    access_mode: "public", // ✅ REQUIRED for open access via URL
     format: async (req, file) => {
       return file.originalname.split(".").pop(); // keep original file extension
     },
+    // public_id: (req, file) => {
+    //   return file.originalname.split(".")[0]; // filename without extension
+    // },
     public_id: (req, file) => {
-      return file.originalname.split(".")[0]; // filename without extension
+      const name = file.originalname.split(".")[0];
+      return `${name}_${Date.now()}`; // 👈 add timestamp
     },
   },
 });

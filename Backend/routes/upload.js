@@ -151,7 +151,7 @@ const router = express.Router();
 
 router.post("/resume", upload.single("resume"), async (req, res) => {
   try {
-    const token = req.cookies.token
+    const token = req.cookies.token;
     if (!token) return res.status(401).json({ error: "Unauthorized" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -170,6 +170,7 @@ router.post("/resume", upload.single("resume"), async (req, res) => {
           resume: {
             fileName: req.file.originalname,
             fileUrl: cloudinaryUrl,
+            publicId: req.file.filename,
           },
         },
       },
@@ -181,13 +182,20 @@ router.post("/resume", upload.single("resume"), async (req, res) => {
       fileUrl: cloudinaryUrl,
       user: updatedUser,
     });
+    console.log(
+      "Uploaded:",
+      req.file.path,
+      req.file.filename,
+      req.file.mimetype
+    );
   } catch (error) {
     console.error("Upload error:", error.message);
     res.status(500).json({ error: "Upload failed" });
   }
 });
 
-router.get("/resume", async (req, res) => {    //Fetching resume on resume page (By Tushar)
+router.get("/resume", async (req, res) => {
+  //Fetching resume on resume page (By Tushar)
   try {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ error: "Unauthorized" });
@@ -196,12 +204,53 @@ router.get("/resume", async (req, res) => {    //Fetching resume on resume page 
     const userId = decoded.id || decoded._id;
 
     const user = await User.findById(userId);
-    res.status(200).json({ resumes: user.resume }); // assuming resume is an array
+    // res.status(200).json({ resumes: user.resume }); // assuming resume is an array
+    res.status(200).json({
+      resumes: user.resume.map((r) => ({
+        fileName: r.fileName,
+        fileUrl: r.fileUrl,
+        publicId: r.publicId, // ✅ send explicitly
+      })),
+    });
   } catch (err) {
     console.error("Fetch resume error:", err.message);
     res.status(500).json({ error: "Failed to fetch resumes" });
   }
 });
+router.delete("/resume/:publicId", async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id || decoded._id;
+    const publicId = req.params.publicId;
+    // const publicId = resumeToDelete.publicId;
+
+    // 1. Delete from Cloudinary
+    await cloudinary.uploader.destroy(publicId, {
+      resource_type: "raw",
+    });
+
+    // 2. Delete from MongoDB
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: {
+          resume: { publicId: publicId },
+        },
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: "Resume deleted successfully",
+      user: updatedUser,
+    });
+  } catch (err) {
+    console.error("Delete resume error:", err.message);
+    res.status(500).json({ error: "Failed to delete resume" });
+  }
+});
 
 export default router;

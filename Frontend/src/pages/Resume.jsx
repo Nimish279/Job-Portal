@@ -53,6 +53,7 @@ useEffect(() => {
       const fetchedResumes = response.data.resumes.map(r => ({
         fileName: r.fileName,
         url: r.fileUrl,
+        publicId: r.publicId,
       }));
 
       setPdfs(fetchedResumes);
@@ -97,14 +98,38 @@ const handleUpload = async () => {
 
 
 
-  // Delete PDF
-  const handleDelete = (index) => {
-    const updatedPdfs = [...pdfs];
-    updatedPdfs.splice(index, 1);
-    setPdfs(updatedPdfs);
-    setShowDropdownIndex(null); // Close dropdown after deletion
-  };
- 
+  // // Delete PDF
+  // const handleDelete = (index) => {
+  //   const updatedPdfs = [...pdfs];
+  //   updatedPdfs.splice(index, 1);
+  //   setPdfs(updatedPdfs);
+  //   setShowDropdownIndex(null); // Close dropdown after deletion
+  // };
+
+
+const handleDelete = async (index) => {
+  const resumeToDelete = pdfs[index];
+  const publicId = resumeToDelete.publicId;
+
+  if (!publicId) {
+    console.warn("No publicId found.");
+    return;
+  }
+
+  try {
+    await axios.delete(`http://localhost:8000/api/upload/resume/${encodeURIComponent(publicId)}`, {
+      withCredentials: true,
+    });
+
+    setPdfs(prev => prev.filter((_, i) => i !== index));
+    setShowDropdownIndex(null);
+  } catch (err) {
+    console.error("Delete failed:", err);
+    alert("Failed to delete resume");
+  }
+};
+
+
   // Toggle Dropdown
   const toggleDropdown = (index) => {
     setShowDropdownIndex(showDropdownIndex === index ? null : index);
