@@ -118,7 +118,9 @@ const userStore = create((set) => ({
 
   getAppliedJobs: async () => {
     try {
-      const response = await axiosInstance.get("/users/getAppliedJobs");
+      console.log('ad')
+      const response = await axiosInstance.get('/users/getAppliedJobs');
+      console.log(response.data.appliedJobs)
       set({ appliedJobs: response.data.appliedJobs, loading: false });
       console.log("Saved Token =>", response.data.token);
     } catch (error) {

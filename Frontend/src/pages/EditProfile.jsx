@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUserEdit, FaSave } from 'react-icons/fa';
-import { motion } from 'framer-motion';
-
+import { motion,AnimatePresence } from 'framer-motion';
+import NavSearchBar from '../components/Header/NavSearchBar';
+import Sidebar from '../components/SideBar';
 const EditProfile = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -14,6 +15,9 @@ const EditProfile = () => {
     github: '',
     about: ''
   });
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  
 
   useEffect(() => {
     const savedProfile = JSON.parse(localStorage.getItem('profileData')) || {};
@@ -45,12 +49,32 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#f0fdf4] to-[#d9f99d] py-20 px-4">
+    <div className="flex min-h-screen">
+      <NavSearchBar
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        showHamburger={true}
+      />  
+
+        {/* Sidebar for large screens */}
+        <div className="hidden lg:block mt-20 fixed top-0 left-0 min-h-screen">
+          <Sidebar isOpen={true} isMobile={false} />
+        </div>
+
+        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <Sidebar
+              isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+              isMobile
+            />
+          )}
+        </AnimatePresence>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-white border border-gray-200 rounded-2xl shadow-2xl p-6 sm:p-10 w-full sm:w-3/4 lg:w-1/2 max-w-2xl"
+        className="bg-white border border-gray-200 rounded-2xl p-10 sm:p-10 w-full lg:ml-64"
       >
         {/* Header */}
         <div className="text-center mb-6">

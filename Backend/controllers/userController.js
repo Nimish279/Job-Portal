@@ -132,18 +132,18 @@ export const applyToJobs = async (req, res) => {
     const user = req.user;
     console.log("User object in applyToJobs route:", user);
 
-    const alreadyApplied = job.candidates.includes(user._id);
-    if (alreadyApplied) {
-      return res.status(403).json({ message: "Already applied to this job" });
-    }
-    job.candidates.push(user._id);
-    user.appliedJobs.push(job._id);
-    await job.save({
-      validateBeforeSave: false,
-    });
-    await user.save({
-      validateBeforeSave: false,
-    });
+          const alreadyApplied = job.candidates.includes(user._id);
+          if (alreadyApplied) {
+            return res.status(403).json({ message: "Already applied to this job" });
+             }
+        job.candidates.push(user._id) //ye job pe kitno ne apply kiya
+        user.appliedJobs.push(job._id); //ye bande ke kitne job pe apply kiya
+        await job.save({
+            validateBeforeSave:false
+        })
+        await user.save({
+            validateBeforeSave:false
+        });
 
     res.status(200).json({ message: "Applied To Job successfully", job });
   } catch (error) {

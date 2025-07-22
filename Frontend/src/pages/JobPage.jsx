@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate,useLocation } from 'react-router-dom';
 import jobData from '../components/jobData.json';
 import savedJobsData from '../data/saved.json';
 import UserNavbar from '../components/Header/UserNavbar';
@@ -9,8 +9,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import JobApplicationForm from '../components/JobApplicationForm';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import NavSearchBar from '../components/Header/NavSearchBar';
+import Sidebar from '../components/SideBar';
+import useUserStore from '../store/userStore';
 const JobPage = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const loc=useLocation();
+  
   const { id } = useParams();
   const navigate = useNavigate();
   const [job, setJob] = useState(null);
@@ -26,7 +31,7 @@ const JobPage = () => {
   const [formErrors, setFormErrors] = useState({});
   const [applicationStatus, setApplicationStatus] = useState('');
   const [isSaved, setIsSaved] = useState(false);
-
+ const applyjob = useUserStore((state) => state.applyJob);
   const findJob = useCallback(() => {
     if (!id) {
       console.log('No ID provided');
@@ -158,8 +163,9 @@ const JobPage = () => {
     toast.success(isSaved ? 'Job removed from saved' : 'Job saved successfully!');
   }, [isSaved]);
 
-  const handleSubmitApplication = (formData) => {
+  const handleSubmitApplication = async(formData) => {
     // In a real app, you would send this data to your backend
+    await applyjob(loc.pathname.split('/').pop());
     console.log('Application submitted:', { jobId: job?.id, ...formData });
 
     toast.success('Application submitted successfully!', {
@@ -246,10 +252,29 @@ const JobPage = () => {
 
   return (
     <div className="flex min-h-screen pt-10 bg-gray-50">
-      <UserNavbar pageName={"Job Page"}/>
+      <NavSearchBar
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        showHamburger={true}
+      />  
+
+        {/* Sidebar for large screens */}
+        <div className="hidden lg:block mt-20 fixed top-0 left-0 min-h-screen">
+          <Sidebar isOpen={true} isMobile={false} />
+        </div>
+
+        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <Sidebar
+              isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+              isMobile
+            />
+          )}
+        </AnimatePresence>
 
       <motion.div 
-        className="flex flex-col w-full p-6 bg-transparent"
+        className="flex flex-col w-full p-6 bg-transparent lg:ml-64"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}

@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import UserNavbar from '../components/Header/UserNavbar';
 import Sidebar from '../components/SideBar';
 import { FiMenu } from 'react-icons/fi';
+import NavSearchBar from '../components/Header/NavSearchBar';
+import axios from 'axios'; // Make sure this is at the top if not already
+
 const Resume = () => {
   const [pdfs, setPdfs] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -24,28 +27,108 @@ const Resume = () => {
   };
 
   // Upload PDF
-  // Download and View PDF - By Wafiya Shaikh
-  const handleUpload = () => {
-    if (newPdf.file && newPdf.fileName) {
-      const url = URL.createObjectURL(newPdf.file);
-      const pdfData = {
-        fileName: newPdf.fileName,
-        file: newPdf.file,
-        url,
-      }
-      setPdfs([...pdfs, pdfData]);
-      setNewPdf({ fileName: '', file: null });
-      toggleModal();
+  // Download and View PDF - By Wafiya Shaikh this is old code store resume on local storage re-correct by mukund
+  // const handleUpload = () => {
+  //   if (newPdf.file && newPdf.fileName) {
+  //     const url = URL.createObjectURL(newPdf.file);
+  //     const pdfData = {
+  //       fileName: newPdf.fileName,
+  //       file: newPdf.file,
+  //       url,
+  //     }
+  //     setPdfs([...pdfs, pdfData]);
+  //     setNewPdf({ fileName: '', file: null });
+  //     toggleModal();
+  //   }
+  // };
+
+//new code to upload resume to MongoDB by Mukund
+useEffect(() => {
+  const fetchResumes = async () => {   //Fetching resume as soon as the page opens (By Tushar)
+    try {
+      const response = await axios.get("http://localhost:8000/api/upload/resume", {
+        withCredentials: true,
+      });
+
+      const fetchedResumes = response.data.resumes.map(r => ({
+        fileName: r.fileName,
+        url: r.fileUrl,
+        publicId: r.publicId,
+      }));
+
+      setPdfs(fetchedResumes);
+    } catch (error) {
+      console.error("Failed to fetch resumes:", error);
     }
   };
 
-  // Delete PDF
-  const handleDelete = (index) => {
-    const updatedPdfs = [...pdfs];
-    updatedPdfs.splice(index, 1);
-    setPdfs(updatedPdfs);
-    setShowDropdownIndex(null); // Close dropdown after deletion
-  };
+  fetchResumes();
+}, []);
+
+
+const handleUpload = async () => {
+  if (newPdf.file && newPdf.fileName) {
+    try {
+      const formData = new FormData();
+      formData.append("resume", newPdf.file);
+
+      await axios.post("http://localhost:8000/api/upload/resume", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        withCredentials: true // ✅ Required for cookie-based auth
+      });
+
+      // Optional: Add response to local list (assuming server returns file info)
+      const uploadedPdf = {
+        fileName: newPdf.fileName,
+        file: newPdf.file,
+        url: URL.createObjectURL(newPdf.file)
+      };
+      setPdfs([...pdfs, uploadedPdf]);
+
+      setNewPdf({ fileName: '', file: null });
+      toggleModal();
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Failed to upload resume. Please try again.");
+    }
+  }
+};
+
+
+
+  // // Delete PDF
+  // const handleDelete = (index) => {
+  //   const updatedPdfs = [...pdfs];
+  //   updatedPdfs.splice(index, 1);
+  //   setPdfs(updatedPdfs);
+  //   setShowDropdownIndex(null); // Close dropdown after deletion
+  // };
+
+
+const handleDelete = async (index) => {
+  const resumeToDelete = pdfs[index];
+  const publicId = resumeToDelete.publicId;
+
+  if (!publicId) {
+    console.warn("No publicId found.");
+    return;
+  }
+
+  try {
+    await axios.delete(`http://localhost:8000/api/upload/resume/${encodeURIComponent(publicId)}`, {
+      withCredentials: true,
+    });
+
+    setPdfs(prev => prev.filter((_, i) => i !== index));
+    setShowDropdownIndex(null);
+  } catch (err) {
+    console.error("Delete failed:", err);
+    alert("Failed to delete resume");
+  }
+};
+
 
   // Toggle Dropdown
   const toggleDropdown = (index) => {
@@ -62,21 +145,17 @@ const Resume = () => {
   return (
     <div className="bg-gray-50 min-h-screen pt-16">
       {/* Navbar */}
-      <UserNavbar pageName="Resume" />
+      <NavSearchBar
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        showHamburger={true}
+      />
       <div className='flex flex-row min-h-screen'>
-      <div className="p-4 mt-6 fixed top-5 z-50 lg:hidden">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-3xl text-[#5F9D08] focus:outline-none cursor-pointer"
-          >
-            <FiMenu />
-          </button>
-        </div>
+      
     
 
       {/* Sidebar for large screens */}
       {!isMobile && (
-        <div className="hidden lg:block top-20 left-0 z-30">
+        <div className="hidden lg:block fixed top-20 left-0 z-30">
           <Sidebar isOpen={true} isMobile={false} />
         </div>
       )}
@@ -93,7 +172,7 @@ const Resume = () => {
       </AnimatePresence>
       
       <motion.div 
-        className="w-full mx-6 mt-6 p-4"
+        className="w-full mx-6 mt-6 p-4 lg:ml-64"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}

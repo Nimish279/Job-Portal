@@ -6,6 +6,7 @@ import Sidebar from '../components/SideBar';
 import UserNavbar from '../components/Header/UserNavbar';
 import JobCard from '../components/JobCard';
 import saved from '../data/saved.json';
+import NavSearchBar from '../components/Header/NavSearchBar';
 
 const SavedJobs = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -39,18 +40,21 @@ const SavedJobs = () => {
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col md:flex-row">
       {/* Navbar */}
-      <UserNavbar pageName="Saved Jobs" />
+      <NavSearchBar
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        showHamburger={true}
+      />  
 
       {/* Hamburger menu for mobile */}
       
-        <div className="p-4 mt-6 fixed top-5 z-50 lg:hidden">
+        {/* <div className="p-4 mt-6 fixed top-5 z-50 lg:hidden">
           <button
             onClick={() => setIsSidebarOpen(true)}
             className="text-3xl text-[#5F9D08] focus:outline-none cursor-pointer"
           >
             <FiMenu />
           </button>
-        </div>
+        </div> */}
       
 
       {/* Sidebar for desktop */}
