@@ -122,8 +122,9 @@ const handleSubmit = async (e) => {
             Submit Application
           </button>
         </div>
+        </form>
       </div>
-    </div>
+    
   );
 };
 
