@@ -15,6 +15,13 @@ function JobPage() {
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+   const isMobile = screenWidth < 768;
+   useEffect(() => {
+       const handleResize = () => setScreenWidth(window.innerWidth);
+       window.addEventListener('resize', handleResize);
+       return () => window.removeEventListener('resize', handleResize);
+     }, []);
 
    useEffect(() => {
     const fetchJobs = async () => {
@@ -108,27 +115,29 @@ function JobPage() {
         </div>
 
         {/* Sidebar for large screens */}
-        <div className="hidden lg:block mt-6 ml-4">
+         {!isMobile && (
+        <div className="hidden lg:block fixed top-20 left-0 z-30">
           <Sidebar isOpen={true} isMobile={false} />
         </div>
+      )}
 
-        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
-        <AnimatePresence>
-          {isSidebarOpen && (
-            <Sidebar
-              isOpen={isSidebarOpen}
-              onClose={() => setIsSidebarOpen(false)}
-              isMobile
-            />
-          )}
-        </AnimatePresence>
+      {/* Sidebar for mobile (animated) */}
+      <AnimatePresence>
+        { isSidebarOpen && (
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            isMobile={true}
+          />
+        )}
+      </AnimatePresence>
 
         {/* Main Content */}
         <motion.div 
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="flex-1 p-4 bg-gray-100">
+          className="flex-1 p-4 bg-gray-100 lg:ml-64 justify-center">
           <motion.h2 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
