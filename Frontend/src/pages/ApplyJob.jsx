@@ -1,47 +1,77 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 
 const ApplyJob = () => {
   const { id } = useParams();
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    experience: '',
-    currentCompany: '',
-    noticePeriod: 'Immediate',
-    coverLetter: '',
+    fullName: "",
+    email: "",
+    phone: "",
+    experience: "",
+    currentCompany: "",
+    noticePeriod: "Immediate",
+    coverLetter: "",
     resume: null, // <-- File input state
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e) => {
-    setFormData(prev => ({ ...prev, resume: e.target.files[0] }));
+    setFormData((prev) => ({ ...prev, resume: e.target.files[0] }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Submit logic here
     console.log("Form submitted:", formData);
-    alert('Application Submitted!');
+    alert("Application Submitted!");
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow mt-10">
+    // <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow mt-10">
+        <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:mt-15 md:mt-20 bg-white/20 backdrop-blur-lg rounded-2xl border border-black/30 shadow-xl">
+          
       <h2 className="text-2xl font-bold mb-6">Apply for Job #{id}</h2>
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input name="fullName" required placeholder="Full Name *" value={formData.fullName} onChange={handleChange} className="border p-2 rounded" />
-          <input name="email" required placeholder="Email *" type="email" value={formData.email} onChange={handleChange} className="border p-2 rounded" />
-          <input name="phone" required placeholder="Phone *" value={formData.phone} onChange={handleChange} className="border p-2 rounded" />
-          
-          <select name="experience" required value={formData.experience} onChange={handleChange} className="border p-2 rounded">
+          <input
+            name="fullName"
+            required
+            placeholder="Full Name *"
+            value={formData.fullName}
+            onChange={handleChange}
+            className="border p-2 rounded"
+          />
+          <input
+            name="email"
+            required
+            placeholder="Email *"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="border p-2 rounded"
+          />
+          <input
+            name="phone"
+            required
+            placeholder="Phone *"
+            value={formData.phone}
+            onChange={handleChange}
+            className="border p-2 rounded"
+          />
+
+          <select
+            name="experience"
+            required
+            value={formData.experience}
+            onChange={handleChange}
+            className="border p-2 rounded"
+          >
             <option value="">Select experience</option>
             <option value="0-1">0-1 years</option>
             <option value="1-3">1-3 years</option>
@@ -49,9 +79,20 @@ const ApplyJob = () => {
             <option value="5+">5+ years</option>
           </select>
 
-          <input name="currentCompany" placeholder="Current Company" value={formData.currentCompany} onChange={handleChange} className="border p-2 rounded" />
+          <input
+            name="currentCompany"
+            placeholder="Current Company"
+            value={formData.currentCompany}
+            onChange={handleChange}
+            className="border p-2 rounded"
+          />
 
-          <select name="noticePeriod" value={formData.noticePeriod} onChange={handleChange} className="border p-2 rounded">
+          <select
+            name="noticePeriod"
+            value={formData.noticePeriod}
+            onChange={handleChange}
+            className="border p-2 rounded"
+          >
             <option value="Immediate">Immediate</option>
             <option value="15 Days">15 Days</option>
             <option value="1 Month">1 Month</option>
@@ -83,8 +124,18 @@ const ApplyJob = () => {
         </div>
 
         <div className="mt-6 flex justify-end space-x-4">
-          <button type="button" className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancel</button>
-          <button type="submit" className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700">Submit Application</button>
+          <button
+            type="button"
+            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700"
+          >
+            Submit Application
+          </button>
         </div>
       </form>
     </div>
