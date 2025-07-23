@@ -29,10 +29,26 @@ import ChangePassword from './RecruiterPages/RecruiterData/ChangePassword.jsx';
 
 // ✅ NEW IMPORT for Apply Now Page
 import ApplyJob from './pages/ApplyJob.jsx';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   return (
     <Router>
+      <>
+        {/* 🔔 Toast Container */}
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       <Routes>
         {/* Users */}
         <Route path="*" element={<Navigate to="/" replace />} />
@@ -68,6 +84,7 @@ function App() {
         <Route path='/recruiters/post-job/internship' element={<PostJob_Internship />} />
         <Route path='/recruiters/change-password' element={<ChangePassword />} />
       </Routes>
+      </>
     </Router>
   );
 }
