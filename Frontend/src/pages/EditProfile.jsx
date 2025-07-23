@@ -76,6 +76,14 @@ const EditProfile = () => {
         transition={{ duration: 0.6 }}
         className="bg-white border border-gray-200 rounded-2xl p-10 sm:p-10 w-full lg:ml-64"
       >
+        {/* Back Arrow */}
+        <button 
+        onClick={() => navigate(-1)}
+        className="flex items-center text-sm text-[#5F9D08] hover:text-[#4e7c07] mb-4 transition"
+        >
+          <FiArrowLeft className="mr-2"/>
+          Back
+        </button>
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-[#5F9D08] flex justify-center items-center gap-2">
