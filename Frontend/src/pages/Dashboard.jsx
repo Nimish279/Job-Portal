@@ -94,7 +94,7 @@ const Dashboard = () => {
           </div>
           <JobCards />
         </div>
-        <div className="md:w-1/4   md:-mt-40">
+        <div className="md:w-1/4 ">
           <AppliedJobs />
         </div>
       </div>
