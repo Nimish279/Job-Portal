@@ -44,6 +44,8 @@ const Profile = () => {
         skills: savedProfile.skills || prev.skills,
         experience: savedProfile.experience || prev.experience
       }));
+      setEditedExperience(savedProfile.experience || prev.experience);
+      setEditedAbout(savedProfile.about || prev.about);
     }
   }, []);
   
