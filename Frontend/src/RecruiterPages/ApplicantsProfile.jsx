@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import Navbar from './Notifications/Navbar';
 
 // Static image imports
 import photo1 from '../assets/images/Profile_pics/1.jpg';
@@ -95,12 +96,15 @@ const ApplicantsProfile = () => {
   };
 
   return (
+    <div>
+      <Navbar pageName="Appicants-Profile" />
     <motion.div 
       className="flex flex-col md:flex-row w-full min-h-screen p-8 bg-gray-100"
       initial="hidden"
       animate="visible"
       variants={fadeIn}
     >
+      
       {/* Left Section */}
       <motion.div 
         className="md:w-2/3 p-6 bg-white rounded-md shadow-lg mb-8 md:mb-0 md:mr-6"
@@ -329,6 +333,7 @@ const ApplicantsProfile = () => {
         </motion.button>
       </motion.div>
     </motion.div>
+    </div>
   );
 };
 

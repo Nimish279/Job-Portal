@@ -4,6 +4,7 @@ import { FaUserEdit, FaSave } from 'react-icons/fa';
 import { motion,AnimatePresence } from 'framer-motion';
 import NavSearchBar from '../components/Header/NavSearchBar';
 import Sidebar from '../components/SideBar';
+import { FiArrowLeft } from 'react-icons/fi';
 const EditProfile = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

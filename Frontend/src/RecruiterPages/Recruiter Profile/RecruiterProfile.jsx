@@ -22,6 +22,13 @@ const RecruiterProfile = () => {
   const [industryType, setIndustryType] = useState('');
   const [company_name, setcompany_name] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+       const isMobile = screenWidth < 768;
+       useEffect(() => {
+           const handleResize = () => setScreenWidth(window.innerWidth);
+           window.addEventListener('resize', handleResize);
+           return () => window.removeEventListener('resize', handleResize);
+         }, []);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -53,33 +60,35 @@ const RecruiterProfile = () => {
 
       <div className="flex">
         {/* Mobile Hamburger */}
-        <div className="lg:hidden absolute top-16 left-4 z-50">
+        <div className="lg:hidden p-4">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="text-3xl text-[#5F9D08]"
+            className="text-3xl text-[#5F9D08] cursor-pointer"
           >
             <FiMenu />
           </button>
         </div>
 
-        {/* Desktop Sidebar */}
-        <div className="hidden lg:block mt-6 ml-4">
+        {/* Sidebar for large screens */}
+         {!isMobile && (
+        <div className="hidden lg:block fixed top-20 left-0 z-30">
           <Sidebar isOpen={true} isMobile={false} />
         </div>
+      )}
 
-        {/* Animated Sidebar for Mobile */}
-        <AnimatePresence>
-          {isSidebarOpen && (
-            <Sidebar
-              isOpen={isSidebarOpen}
-              onClose={() => setIsSidebarOpen(false)}
-              isMobile
-            />
-          )}
-        </AnimatePresence>
+      {/* Sidebar for mobile (animated) */}
+      <AnimatePresence>
+        { isSidebarOpen && (
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            isMobile={true}
+          />
+        )}
+      </AnimatePresence>
 
         {/* Page Content */}
-        <div className="flex-1 p-4 lg:pl-8 mt-20 lg:mt-6">
+        <div className="flex-1 p-4 mt-10 lg:ml-64">
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Left Section - Company Info */}
             <motion.div
@@ -109,7 +118,7 @@ const RecruiterProfile = () => {
               initial={{ x: 50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="w-full lg:w-1/3 bg-white rounded-md shadow-md p-6 h-fit sticky top-24"
+              className="w-full lg:w-1/3 bg-white rounded-md shadow-md p-6 h-fit top-24"
             >
               <h3 className="text-xl font-bold mb-6 text-center">Recruiter Profile</h3>
 

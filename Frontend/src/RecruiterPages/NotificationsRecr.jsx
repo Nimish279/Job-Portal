@@ -11,6 +11,13 @@ export default function NotificationsRecr() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+       const isMobile = screenWidth < 768;
+       useEffect(() => {
+           const handleResize = () => setScreenWidth(window.innerWidth);
+           window.addEventListener('resize', handleResize);
+           return () => window.removeEventListener('resize', handleResize);
+         }, []);
 
 
   useEffect(() => {
@@ -67,7 +74,7 @@ export default function NotificationsRecr() {
       {/* Main Content Area Below Navbar */}
       <div className="flex flex-col lg:flex-row relative">
         {/* Mobile Hamburger (inside content, below navbar) */}
-        <div className="lg:hidden p-4">
+       <div className="lg:hidden p-4">
           <button
             onClick={() => setIsSidebarOpen(true)}
             className="text-3xl text-[#5F9D08] cursor-pointer"
@@ -77,20 +84,22 @@ export default function NotificationsRecr() {
         </div>
 
         {/* Sidebar for large screens */}
-        <div className="hidden lg:block mt-6 ml-4">
+         {!isMobile && (
+        <div className="hidden lg:block fixed top-20 left-0 z-30">
           <Sidebar isOpen={true} isMobile={false} />
         </div>
+      )}
 
-        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
-        <AnimatePresence>
-          {isSidebarOpen && (
-            <Sidebar
-              isOpen={isSidebarOpen}
-              onClose={() => setIsSidebarOpen(false)}
-              isMobile
-            />
-          )}
-        </AnimatePresence>
+      {/* Sidebar for mobile (animated) */}
+      <AnimatePresence>
+        { isSidebarOpen && (
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            isMobile={true}
+          />
+        )}
+      </AnimatePresence>
 
         {/* Main Notification Content */}
         <main className="flex-1 px-4 md:px-6 mt-4 lg:mt-6">
