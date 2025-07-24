@@ -1,43 +1,68 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { useParams } from "react-router-dom";
+import useUserStore from '../store/userStore.js';
 
-const ApplyJob = ({ onClose }) => {
-  const { id } = useParams();
-  const { applyJob } = useUserStore(); // 👈 Store action to apply job
-
+const ApplyJob = ({ id, onClose }) => {
+  const user = useUserStore((state) => state.user);
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    experience: "",
-    currentCompany: "",
-    noticePeriod: "Immediate",
-    coverLetter: "",
-    resume: null, // <-- File input state
+    name: user?.name || '',
+    email: user?.email || '',
+    coverLetter: '',
+    resume: null,
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, files } = e.target;
+    if (name === 'resume') {
+      setFormData({ ...formData, resume: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
-  const handleFileChange = (e) => {
-    setFormData((prev) => ({ ...prev, resume: e.target.files[0] }));
-  };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Submit logic here
-  //   console.log("Form submitted:", formData);
-  //   alert("Application Submitted!");
-  //   onClose(); // optional: close after submission
-  // };
-
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit logic here
-    console.log("Form submitted:", formData);
-    alert("Application Submitted!");
+
+    if (!formData.resume) {
+      alert("Please attach your resume.");
+      return;
+    }
+
+    try {
+      // Upload the resume to Cloudinary
+      const cloudData = new FormData();
+      cloudData.append("file", formData.resume);
+      cloudData.append("upload_preset", "resume"); // your Cloudinary unsigned upload preset
+      cloudData.append("folder", "resumes");
+      cloudData.append("resource_type", "raw"); // for PDF or DOCX files
+
+      const res = await fetch("https://api.cloudinary.com/v1_1/dq2zghl4o/raw/upload", {
+        method: "POST",
+        body: cloudData,
+      });
+
+      const data = await res.json();
+
+      if (!data.secure_url) {
+        throw new Error("Resume upload failed.");
+      }
+
+      const resumeUrl = data.secure_url;
+
+      const applicationData = {
+        ...formData,
+        resume: resumeUrl,
+        jobId: id,
+      };
+
+      await applyJob(applicationData);
+
+      alert("Application Submitted!");
+      if (onClose) onClose();
+    } catch (err) {
+      console.error("Error submitting application:", err);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   return (
