@@ -6,7 +6,7 @@ const userStore = create((set) => ({
   loading: false,
   jobs: [],
   appliedJobs: [],
-  user: JSON.parse(localStorage.getItem('user')) || null, // 🔥 load from localStorage
+  // user: JSON.parse(localStorage.getItem('user')) || null, // 🔥 load from localStorage
   login: async ({ email, password }) => {
     set({ loading: true });
     try {
@@ -21,7 +21,7 @@ const userStore = create((set) => ({
 
       // localStorage.setItem('user', JSON.stringify(defaultUser)); // ✅ Save to localStorage
 
-      // set({ user: defaultUser, loading: false });
+      set({ loading: false });
       return { success: true };
     } catch (error) {
       const message = error?.response?.data?.message || 'Login failed';
