@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
-import Profile from '../profile_temp/profile';
+import Profile from '../profile/profile';
 
 const UserNavbar = ({ pageName }) => {
   const [searchQuery, setSearchQuery] = useState('');
