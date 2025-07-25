@@ -2,41 +2,49 @@ import React, { useState } from 'react'
 import {useNavigate, Link} from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useRecruiterStore from '../../store/recruiterStore';
 
 const RecruiterLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const { login, loading } = useRecruiterStore();
   
     const handleSubmit = async (e) => {
       e.preventDefault();
   
-      try {
-        const response = await fetch("http://localhost:8000/api/recruiters/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ email, password }),
-        });
+      const result = await login({ email, password });
   
-        const data = await response.json();
-  
-        if (response.ok) {
-          toast.success("Login Successful!");
-  
-          // Store JWT Token in localStorage
-          // localStorage.setItem("token", data.token);
-  
-          // Redirect to dashboard
-          navigate("/recruiters/jobs/active");
-        } else {
-          toast.error(data.message || "Invalid email or password");
-        }
-      } catch (error) {
-        toast.error("Login failed. Please try again.");
+      if (result?.success) {
+        navigate('/recruiter/dashboard');
+        
       }
+      // try {
+      //   const response = await fetch("http://localhost:8000/api/recruiters/login", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     credentials: "include",
+      //     body: JSON.stringify({ email, password }),
+      //   });
+  
+      //   const data = await response.json();
+  
+      //   if (response.ok) {
+      //     toast.success("Login Successful!");
+  
+      //     // Store JWT Token in localStorage
+      //     // localStorage.setItem("token", data.token);
+  
+      //     // Redirect to dashboard
+      //     navigate("/recruiters/jobs/active");
+      //   } else {
+      //     toast.error(data.message || "Invalid email or password");
+      //   }
+      // } catch (error) {
+      //   toast.error("Login failed. Please try again.");
+      // }
     };
   
     return (

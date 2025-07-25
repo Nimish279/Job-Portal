@@ -7,7 +7,6 @@ const userStore = create((set) => ({
   jobs: [],
   appliedJobs: [],
   user: JSON.parse(localStorage.getItem('user')) || null, // 🔥 load from localStorage
-
   login: async ({ email, password }) => {
     set({ loading: true });
     try {
@@ -15,14 +14,14 @@ const userStore = create((set) => ({
 
       toast.success('Login Successful');
 
-      const defaultUser = {
-        email,
-        name: email.split('@')[0],
-      };
+      // const defaultUser = {
+      //   email,
+      //   name: email.split('@')[0],
+      // };
 
-      localStorage.setItem('user', JSON.stringify(defaultUser)); // ✅ Save to localStorage
+      // localStorage.setItem('user', JSON.stringify(defaultUser)); // ✅ Save to localStorage
 
-      set({ user: defaultUser, loading: false });
+      // set({ user: defaultUser, loading: false });
       return { success: true };
     } catch (error) {
       const message = error?.response?.data?.message || 'Login failed';
@@ -56,7 +55,6 @@ const userStore = create((set) => ({
     set({ loading: true });
     try {
       await axiosInstance.post('/users/logout');
-      localStorage.removeItem('user'); // ✅ Clear localStorage
       set({ user: null, loading: false });
       toast.success('Logged out successfully');
       return { success: true };

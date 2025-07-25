@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import  userecruiterStore  from '../../store/recruiterStore';
 const Logout = () => {
   const navigate = useNavigate();
-
+  const {logout}=userecruiterStore()
   useEffect(() => {
     const logoutUser = async () => {
       try {
