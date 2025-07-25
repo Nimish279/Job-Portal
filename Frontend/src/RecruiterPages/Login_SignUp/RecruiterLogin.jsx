@@ -16,7 +16,7 @@ const RecruiterLogin = () => {
       const result = await login({ email, password });
   
       if (result?.success) {
-        navigate('/recruiter/dashboard');
+        navigate('/recruiters/jobs/active');
         
       }
       // try {
