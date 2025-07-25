@@ -36,7 +36,7 @@
 
 import React from 'react';
 import { FaSearch, FaBars } from 'react-icons/fa';
-import ProfileDropdown from '../profile/profile';
+import ProfileDropdown from '../Profile/profile';
 
 
 const NavSearchBar = ({ toggleSidebar, showHamburger = false }) => {
