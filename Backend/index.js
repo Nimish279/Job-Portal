@@ -13,9 +13,10 @@ const app = express();
 // ✅ Allow multiple Vite dev ports to avoid CORS issues
 app.use(cors({
     origin: [
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:5175"
+        // "http://localhost:5173",
+        // "http://localhost:5174",
+        // "http://localhost:5175",
+        "https://job-portal-532g.onrender.com"  //ye frontend ka url hai deployed wala
     ],
     credentials: true
 }));
