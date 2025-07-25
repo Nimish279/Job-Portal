@@ -17,7 +17,7 @@ export const loginUser = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "Strict",
+            sameSite: 'None',
             maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
           });
         res.status(200).json({success:true,message:"User login successful"});
