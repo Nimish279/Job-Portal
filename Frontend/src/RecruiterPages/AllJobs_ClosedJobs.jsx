@@ -125,9 +125,21 @@ function AllJobs_ClosedJobs() {
       </AnimatePresence>
 
         {/* Main Content */}
-        <div className="flex-1 p-4 bg-gray-100 lg:ml-64 ">
-          <h2 className="text-lg sm:text-2xl font-semibold mb-2">All Jobs</h2>
-          <h3 className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Closed Jobs</h3>
+        <motion.div 
+                  initial={{ x: 50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex-1 p-4 bg-gray-100 lg:ml-64 justify-center">
+                  <motion.h2 
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.5, }}
+                    className="text-lg sm:text-2xl font-semibold mb-2">All Jobs</motion.h2>
+                  <motion.h3 
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Closed Jobs</motion.h3>
 
           {loading ? (
             <div className="text-center">
@@ -160,7 +172,7 @@ function AllJobs_ClosedJobs() {
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

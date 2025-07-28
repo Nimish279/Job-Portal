@@ -23,19 +23,19 @@ const containerVariants = {
     transition: {
       staggerChildren: 0.2,
       ease: "easeOut",
-      duration: 0.5,
+      duration: 0.3,
     }
   }
 };
 
-const itemVariants = {
-  hidden: { y: 30, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { type: 'spring', stiffness: 120 }
-  }
-};
+// const itemVariants = {
+//   hidden: { y: 30, opacity: 0 },
+//   visible: {
+//     y: 0,
+//     opacity: 1,
+//     transition: { type: 'spring', stiffness: 120 }
+//   }
+// };
 
 function Applicants() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -103,7 +103,10 @@ function Applicants() {
               {applicantsData.map((applicant, index) => (
                 <motion.div
                   key={index}
-                  variants={itemVariants}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  // variants={itemVariants}
                   whileHover={{ scale: 1.015 }}
                   className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-gray-100 rounded-lg bg-gray-50 hover:shadow transition-all duration-300"
                 >
