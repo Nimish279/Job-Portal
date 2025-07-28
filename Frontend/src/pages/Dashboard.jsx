@@ -26,8 +26,8 @@ const Dashboard = () => {
       
     },); // Small delay to allow store to initialize
 
-    return () => clearTimeout(timer);
-  }, [user, navigate]);
+  //   return () => clearTimeout(timer);
+  // },);
 
   useEffect(() => {
     const handleResize = () => {

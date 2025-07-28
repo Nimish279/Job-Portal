@@ -348,9 +348,10 @@ const handleDelete = async (index) => {
       <AnimatePresence>
         {showModal && (
           <motion.div 
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm bg-opacity-50 flex justify-center items-center z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
             exit={{ opacity: 0 }}
             onClick={toggleModal}
           >
