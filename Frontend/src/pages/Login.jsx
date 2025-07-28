@@ -1,14 +1,16 @@
-import React, { useRef } from "react";
+import React, { useRef,useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useUserStore from "../store/userStore.js";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const navigate = useNavigate();
   const { login, loading } = useUserStore();
+  const[showPassword, setShowPassword] = useState(false);
  
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
@@ -87,12 +89,20 @@ const handleSubmit = async (e) => {
                 <label className="block text-gray-700 mb-2 text-left">
                   Password
                 </label>
+                <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   ref={passwordRef}
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#5F9D08]"
                   required
                 />
+                <span
+                                    onClick={() => setShowPassword((prev) => !prev)}
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+                                  >
+                                    {showPassword ?  <FaEye />:<FaEyeSlash /> }
+                                  </span>
+                                  </div>
               </div>
               <button
                 type="submit"

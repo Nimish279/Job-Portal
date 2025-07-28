@@ -10,7 +10,6 @@ const Profile = () => {
   const user = useUserStore(state => state.user);
   
   // Default name if user data is not available
-  const userName = user?.name || 'User';
   
   // Reference for the dropdown container
   const dropdownRef = useRef(null);
@@ -55,7 +54,7 @@ const Profile = () => {
         </li>
         <li className="relative" ref={dropdownRef}>
           <button onClick={toggleDropdown} className="flex text-xl items-center font-bold text-white hover:text-gray-300 transition-colors duration-200">
-            {userName} <FaCaretDown className="ml-1" />
+            {user.name} <FaCaretDown className="ml-1" />
           </button>
           {dropdownOpen && (
             <div className="fixed top-0 left-0 w-full h-full z-[400]" style={{ pointerEvents: 'none' }}>

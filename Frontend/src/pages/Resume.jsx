@@ -17,9 +17,32 @@ const Resume = () => {
   const toggleModal = () => setShowModal(!showModal);
 
   // Handle file input changes
-  const handleFileChange = (e) => {
-    setNewPdf({ ...newPdf, file: e.target.files[0] });
-  };
+  const handleFileChange = (e) => {  //file size restriciton and docs pdf only allowed (tushar-feature)
+  const file = e.target.files[0];
+
+  if (!file) return;
+
+  const allowedTypes = [
+    "application/pdf",
+    "application/msword",               // .doc
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document" // .docx
+  ];
+
+  const maxSize = 2 * 1024 * 1024; // 2MB
+
+  if (!allowedTypes.includes(file.type)) {
+    alert("Invalid file type. Only PDF, DOC, or DOCX files are allowed.");
+    return;
+  }
+
+  if (file.size > maxSize) {
+    alert("File size exceeds 2MB. Please upload a smaller file.");
+    return;
+  }
+
+  setNewPdf({ ...newPdf, file });
+};
+
 
   // Handle file name change
   const handleNameChange = (e) => {
@@ -42,32 +65,9 @@ const Resume = () => {
   //   }
   // };
 
-//new code to upload resume to MongoDB by Mukund
-useEffect(() => {
-  const fetchResumes = async () => {   //Fetching resume as soon as the page opens (By Tushar)
-    try {
-      const response = await axios.get("http://localhost:8000/api/upload/resume", {
-        withCredentials: true,
-      });
-
-      const fetchedResumes = response.data.resumes.map(r => ({
-        fileName: r.fileName,
-        url: r.fileUrl,
-        publicId: r.publicId,
-      }));
-
-      setPdfs(fetchedResumes);
-    } catch (error) {
-      console.error("Failed to fetch resumes:", error);
-    }
-  };
-
-  fetchResumes();
-}, []);
-
 
 const handleUpload = async () => {
-  if (newPdf.file && newPdf.fileName) {
+  if (newPdf.file) {
     try {
       const formData = new FormData();
       formData.append("resume", newPdf.file);
@@ -95,6 +95,30 @@ const handleUpload = async () => {
     }
   }
 };
+useEffect(() => {
+  const fetchResumes = async () => {   //Fetching resume as soon as the page opens (By Tushar)
+    try {
+      const response = await axios.get("http://localhost:8000/api/upload/resume", {
+        withCredentials: true,
+      });
+
+      const fetchedResumes = response.data.resumes.map(r => ({
+        fileName: r.fileName,
+        url: r.fileUrl,
+        publicId: r.publicId,
+      }));
+
+      setPdfs(fetchedResumes);
+    } catch (error) {
+      console.error("Failed to fetch resumes:", error);
+    }
+  };
+
+  fetchResumes();
+},[pdfs]);
+
+
+
 
 
 
@@ -351,7 +375,7 @@ const handleDelete = async (index) => {
               </div>
               
               <div className="space-y-4">
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Document Name</label>
                   <input
                     type="text"
@@ -360,14 +384,14 @@ const handleDelete = async (index) => {
                     onChange={handleNameChange}
                     className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5F9D08] focus:border-transparent transition-all duration-200"
                   />
-                </div>
+                </div> */}
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Select PDF File</label>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#5F9D08] transition-colors duration-200">
                     <input
                       type="file"
-                      accept="application/pdf"
+                      accept=".pdf,.doc,.docx"
                       onChange={handleFileChange}
                       className="hidden"
                       id="file-upload"
@@ -400,7 +424,7 @@ const handleDelete = async (index) => {
                   className="bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] text-white px-5 py-2 rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  disabled={!newPdf.file || !newPdf.fileName}
+                  disabled={!newPdf.file}
                 >
                   Upload Resume
                 </motion.button>
