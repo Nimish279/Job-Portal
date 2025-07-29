@@ -28,55 +28,46 @@ export const loginRecruiter = async (req, res) => {
 };
 
 export const registerRecruiter = async (req, res) => {
-    try {
-        const {recruiterName, jobTitle, email, phone, alternateContact, linkedIn, password, companyName, website, street, city, state, postalCode, industryType, registrationNumber, companyPanCardNumber} = req.body;
-    
-        const existingRecruiter = await Recruiter.findOne({email});
-        if(existingRecruiter){
-            return res.status(400).json({message: 'Recruiter already exists'});
-        }
-    
-        const hashedPassword = await bcrypt.hash(password, 10);
-    
-        const newRecruiter = new Recruiter({
-            recruiterName,
-            jobTitle,
-            email,
-            phone,
-            alternateContact,
-            linkedIn,
-            password: hashedPassword,
-            companyName,
-            website,
-            companyAddress:{
-                street,
-                city,
-                state,
-                postalCode,
-            },
-            industryType,
-            registrationNumber,
-            companyPanCardNumber,
-        });
-    
-        await newRecruiter.save();
-    
-        res.status(201).json({
-            message: "Recruiter registered Successfully",
-            recruiter: {
-                id: newRecruiter._id,
-                recruiterName: newRecruiter.recruiterName,
-                email: newRecruiter.email,
-                companyName: newRecruiter.companyName,
-                status: newRecruiter.status,
-            },
-        });
-    } catch (error) {
-        console.error("Register Error:", error);
-        res.status(500).json({message: "Server error during registration", error});
+  try {
+    const { email, phone, password, companyName } = req.body;
+    const existingRecruiter = await Recruiter.findOne({ email });
+    if (existingRecruiter) {
+      return res.status(400).json({ message: 'Recruiter already exists' });
     }
 
-}
+    if (!req.file || !req.file.path) {
+      return res.status(400).json({ message: 'PAN or GST document is required' });
+    }
+
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    
+    const newRecruiter = new Recruiter({
+      email,
+      phone,
+      password: hashedPassword,
+      companyName,
+      companyPanCardOrGstFile: req.file.path, 
+    });
+
+    await newRecruiter.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Recruiter registered successfully',
+      recruiter: {
+        id: newRecruiter._id,
+        email: newRecruiter.email,
+        companyName: newRecruiter.companyName,
+        status: newRecruiter.status,
+      },
+    });
+  } catch (error) {
+    console.error('Register Error:', error);
+    res.status(500).json({ message: 'Server error during registration', error });
+  }
+};
 
 export const getProfile = async (req, res) => {
     try{

@@ -6,7 +6,7 @@ import upload from '../middlewares/multer.js';
 
 const router = express.Router();
 
-router.post('/register', upload.none(), registerRecruiter); // WOrking
+router.post('/register',upload.single("panCardOrGstFile"), registerRecruiter); // WOrking //GST or PAN added (by-tushar)
 router.post('/login', loginRecruiter); // WOrking
 router.post('/postJob',protect,
     isRecruiter,

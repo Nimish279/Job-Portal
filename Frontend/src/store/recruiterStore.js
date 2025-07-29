@@ -21,25 +21,28 @@ const recruiterStore = create((set) => ({
     }
   },
 
-  register: async (formData) => {
-    set({ loading: true });
-    try {
-      const form = new FormData();
-      for (const key in formData) {
-        if (formData[key]) {
-          form.append(key, formData[key]);
-        }
-      }
-      const response = await axiosInstance.post("/recruiters/register", form);
+ register: async (formData) => {
+  set({ loading: true });
+  try {
+    console.log(formData);
+    const response = await axiosInstance.post("/recruiters/register", formData);
+    
+    if (response.status === 201) {
       toast.success("Recruiter registered successfully");
       set({ loading: false });
       return { success: true };
-    } catch (error) {
+    } else {
       set({ loading: false });
-      const msg = error.response.data.message;
-      toast.error(msg);
+      return { success: false, message: "Unexpected response" };
     }
-  },
+  } catch (error) {
+    set({ loading: false });
+    const msg = error?.response?.data?.message || "Server Error";
+    toast.error(msg);
+    return { success: false, message: msg };
+  }
+},
+
 
   logout: async () => {
     try {

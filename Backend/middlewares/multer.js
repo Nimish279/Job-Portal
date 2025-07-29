@@ -28,7 +28,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "resumes", // Cloudinary folder
-    resource_type: "raw", // because .pdf and .docx are not images
+    resource_type: "auto", // because .pdf and .docx are not images
     access_mode: "public", // ✅ REQUIRED for open access via URL
     format: async (req, file) => {
       return file.originalname.split(".").pop(); // keep original file extension
@@ -48,9 +48,12 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB Limit
   fileFilter: (req, file, cb) => {
     const allowedTypes = [
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
+  "application/pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "image/jpeg",
+  "image/png"
+];
+
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
