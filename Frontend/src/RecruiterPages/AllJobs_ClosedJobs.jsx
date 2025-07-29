@@ -16,6 +16,13 @@ function AllJobs_ClosedJobs() {
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+     const isMobile = screenWidth < 768;
+     useEffect(() => {
+         const handleResize = () => setScreenWidth(window.innerWidth);
+         window.addEventListener('resize', handleResize);
+         return () => window.removeEventListener('resize', handleResize);
+       }, []);
 
    useEffect(() => {
     const fetchJobs = async () => {
@@ -100,25 +107,39 @@ function AllJobs_ClosedJobs() {
         </div>
 
         {/* Sidebar for large screens */}
-        <div className="hidden lg:block mt-6 ml-4">
+         {!isMobile && (
+        <div className="hidden lg:block fixed top-20 left-0 z-30">
           <Sidebar isOpen={true} isMobile={false} />
         </div>
+      )}
 
-        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
-        <AnimatePresence>
-          {isSidebarOpen && (
-            <Sidebar
-              isOpen={isSidebarOpen}
-              onClose={() => setIsSidebarOpen(false)}
-              isMobile
-            />
-          )}
-        </AnimatePresence>
+      {/* Sidebar for mobile (animated) */}
+      <AnimatePresence>
+        { isSidebarOpen && (
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            isMobile={true}
+          />
+        )}
+      </AnimatePresence>
 
         {/* Main Content */}
-        <div className="flex-1 p-4 bg-gray-100">
-          <h2 className="text-lg sm:text-2xl font-semibold mb-2">All Jobs</h2>
-          <h3 className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Closed Jobs</h3>
+        <motion.div 
+                  initial={{ x: 50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex-1 p-4 bg-gray-100 lg:ml-64 justify-center">
+                  <motion.h2 
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.5, }}
+                    className="text-lg sm:text-2xl font-semibold mb-2">All Jobs</motion.h2>
+                  <motion.h3 
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Closed Jobs</motion.h3>
 
           {loading ? (
             <div className="text-center">
@@ -151,7 +172,7 @@ function AllJobs_ClosedJobs() {
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

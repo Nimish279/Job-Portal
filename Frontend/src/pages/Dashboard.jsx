@@ -18,16 +18,16 @@ const Dashboard = () => {
   // Check if user is logged in
   useEffect(() => {
     // If no user is found after a short delay, redirect to login
-    const timer = setTimeout(() => {
-      if (!user) {
-        navigate('/users/login');
-      } else {
+    // const timer = setTimeout(() => {
+    //   if (!user) {
+    //     navigate('/users/login');
+    //   } else {
         setIsLoading(false);
-      }
-    }, 500); // Small delay to allow store to initialize
+      
+    },); // Small delay to allow store to initialize
 
-    return () => clearTimeout(timer);
-  }, [user, navigate]);
+  //   return () => clearTimeout(timer);
+  // },);
 
   useEffect(() => {
     const handleResize = () => {
@@ -94,7 +94,7 @@ const Dashboard = () => {
           </div>
           <JobCards />
         </div>
-        <div className="md:w-1/4   md:-mt-40">
+        <div className="md:w-1/4 ">
           <AppliedJobs />
         </div>
       </div>

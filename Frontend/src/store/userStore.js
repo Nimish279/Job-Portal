@@ -6,8 +6,17 @@ const userStore = create((set) => ({
   loading: false,
   jobs: [],
   appliedJobs: [],
-  user: JSON.parse(localStorage.getItem('user')) || null, // 🔥 load from localStorage
-
+  user: null,
+  fetchedUser:false,
+  fetchUser: async () => {
+    try {
+      const response = await axiosInstance.get('/users/me');
+      set({ user: response.data.user,fetchedUser:true });
+    } catch (error) {
+      set({ user: null,fetchedUser:true });
+      console.error('Not logged in or error fetching user:', error?.response?.data?.message);
+    }
+  },
   login: async ({ email, password }) => {
     set({ loading: true });
     try {
@@ -20,9 +29,9 @@ const userStore = create((set) => ({
         name: email.split('@')[0],
       };
 
-      localStorage.setItem('user', JSON.stringify(defaultUser)); // ✅ Save to localStorage
-
-      set({ user: defaultUser, loading: false });
+      // localStorage.setItem('user', JSON.stringify(defaultUser)); // ✅ Save to localStorage
+      console.log(response.data.user);
+      set({user: response.data.user, loading: false });
       return { success: true };
     } catch (error) {
       const message = error?.response?.data?.message || 'Login failed';
@@ -110,5 +119,6 @@ const userStore = create((set) => ({
     }
   },
 }));
+
 
 export default userStore;

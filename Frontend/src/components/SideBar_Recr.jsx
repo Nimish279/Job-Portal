@@ -1,4 +1,4 @@
-// src/components/SideBar_Recr.jsx
+
 import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -38,7 +38,6 @@ const SideBar_Recr = ({ isOpen, onClose, isMobile }) => {
           </button>
         </div>
       )}
-
       <ul className="space-y-1">
         <li>
           <Link to="/recruiters/jobs/active" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
@@ -65,6 +64,7 @@ const SideBar_Recr = ({ isOpen, onClose, isMobile }) => {
           </Link>
         </li>
       </ul>
+      
     </motion.div>
   );
 };
