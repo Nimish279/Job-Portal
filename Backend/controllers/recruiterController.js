@@ -99,7 +99,7 @@ export const registerRecruiter = async (req, res) => {
       .status(500)
       .json({ message: "Server error during registration", error });
   }
-};
+
   try {
     const { email, phone, password, companyName } = req.body;
 
@@ -110,7 +110,9 @@ export const registerRecruiter = async (req, res) => {
 
     // Check if file is uploaded
     if (!req.file) {
-      return res.status(400).json({ success: false, message: "No file uploaded" });
+      return res
+        .status(400)
+        .json({ success: false, message: "No file uploaded" });
     }
 
     // 🟢 Get file URL from Cloudinary (multer-cloudinary saves `req.file.path`)
@@ -143,11 +145,11 @@ export const registerRecruiter = async (req, res) => {
     });
   } catch (error) {
     console.error("Register Error:", error);
-    return res.status(500).json({ message: "Server error during registration", error });
+    return res
+      .status(500)
+      .json({ message: "Server error during registration", error });
   }
 };
-
-
 
 export const getProfile = async (req, res) => {
   try {
@@ -313,7 +315,12 @@ export const postInternship = async (req, res) => {
       eligibilityCriteria,
     });
 
-    res.status(201).json({ message: "Internship created successfully", internship: newInternship });
+    res
+      .status(201)
+      .json({
+        message: "Internship created successfully",
+        internship: newInternship,
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
@@ -325,15 +332,18 @@ export const deleteJob = async (req, res) => {
     const jobId = req.params.id;
     const job = await Job.findByIdAndDelete(jobId);
 
-        res.status(200).json({message:"Job Posting Deleted Successfully",
-            job,
-            success:true})
-
-    } catch (error) {
-          res.status(500).json({error:error.message})
-        console.log(error)
-    }
-}
+    res
+      .status(200)
+      .json({
+        message: "Job Posting Deleted Successfully",
+        job,
+        success: true,
+      });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+};
 
 export const updateJobDocs = async (req, res) => {
   try {
