@@ -20,7 +20,7 @@ export const loginUser = async (req, res) => {
             sameSite: "Strict",
             maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
           });
-        res.status(200).json({success:true,message:"User login successful"});
+        res.status(200).json({success:true,message:"User login successful",user:{name:existingUser.name,email:existingUser.email,id:existingUser._id}});
     } catch(err){
         res.status(500).json({error: err.message});
     }
@@ -145,3 +145,19 @@ export const getAppliedJobs=async (req,res) => {
     
     }
 }
+
+export const getCurrentUser = async (req, res) => {
+  try {
+    const user = req.user;
+    res.status(200).json({
+      success: true,
+      user: {
+        name: user.name,
+        email: user.email,
+        id: user._id,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

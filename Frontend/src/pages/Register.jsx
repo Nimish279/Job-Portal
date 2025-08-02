@@ -132,10 +132,12 @@ import useUserStore from '../store/userStore.js';
 
 const Register = () => {
   const navigate = useNavigate();
-  const nameRef = useRef();
+  const firstNameRef = useRef();
+  const lastNameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
+
   const { register } = useUserStore();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -144,17 +146,18 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const name = nameRef.current.value.trim();
+    const firstName = firstNameRef.current.value.trim();
+    const lastName = lastNameRef.current.value.trim();
     const email = emailRef.current.value.trim();
     const password = passwordRef.current.value;
     const confirmPassword = confirmPasswordRef.current.value;
 
-    if (!name || !email || !password || !confirmPassword) {
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
       toast.error("Please fill in all fields");
       return;
     }
 
-    if (name.length < 3) {
+    if (firstName.length < 3 || lastName.length < 3) {
       toast.error("Full name must be at least 3 characters long");
       return;
     }
@@ -174,10 +177,11 @@ const Register = () => {
       toast.error("Passwords don't match!");
       return;
     }
-
+    const name=`${firstName} ${lastName}`
+    console.log(name);
     const result = await register({ name, email, password });
     if (result?.success) {
-      navigate('/users/dashboard');
+      navigate('/users/login');
     } else {
       toast.error(result.message || "Registration failed");
     }
@@ -204,10 +208,19 @@ const Register = () => {
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="mb-4 w-full">
-                <label className="block text-gray-700 mb-2 text-left">Full Name</label>
+                <label className="block text-gray-700 mb-2 text-left">First Name</label>
                 <input
                   type="text"
-                  ref={nameRef}
+                  ref={firstNameRef}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#5F9D08]"
+                  required
+                />
+              </div>
+              <div className="mb-4 w-full">
+                <label className="block text-gray-700 mb-2 text-left">Last Name</label>
+                <input
+                  type="text"
+                  ref={lastNameRef}
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#5F9D08]"
                   required
                 />
@@ -237,7 +250,7 @@ const Register = () => {
                     onClick={() => setShowPassword((prev) => !prev)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ?  <FaEye />:<FaEyeSlash /> }
                   </span>
                 </div>
               </div>
@@ -256,7 +269,7 @@ const Register = () => {
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
                   >
-                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showConfirmPassword ? <FaEye />:<FaEyeSlash />}
                   </span>
                 </div>
               </div>

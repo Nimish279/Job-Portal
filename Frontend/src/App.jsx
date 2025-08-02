@@ -26,19 +26,34 @@ import ApplicantsProfile from './RecruiterPages/ApplicantsProfile.jsx';
 import JobPage from './pages/JobPage.jsx';
 import NotificationsPage from './pages/NotificationsPage.jsx';
 import ChangePassword from './RecruiterPages/RecruiterData/ChangePassword.jsx';
-
+import { useEffect } from 'react';
+import  userStore  from './store/userStore';
 // ✅ NEW IMPORT for Apply Now Page
 import ApplyJob from './pages/ApplyJob.jsx';
 
 function App() {
+  const fetchUser = userStore((state) => state.fetchUser);
+  const user = userStore((state) => state.user);
+  const fetchedUser = userStore((state) => state.fetchedUser);
+  useEffect(() => {
+    fetchUser();
+  }, []);
+  if (!fetchedUser) {
+    // Show loading screen or nothing until we know if the user is logged in
+    return <div>Loading...</div>; // optional: splash screen / spinner
+  }
   return (
     <Router>
       <Routes>
-        {/* Users */}
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path='/' element={<LandingPage />} />
         <Route path='/users/register' element={<Register />} />
         <Route path='/users/login' element={<Login />} />
+        <Route path='/recruiters/register' element={<RecruiterRegister />} />
+        <Route path='/recruiters/login' element={<RecruiterLogin />} />
+        {user && (
+          <>
+          
         <Route path='/users/logout' element={<Logout />} />
         <Route path='/users/dashboard' element={<Dashboard />} />
         <Route path='/users/saved-jobs' element={<SavedJobs />} />
@@ -47,12 +62,16 @@ function App() {
         <Route path='/users/profile' element={<Profile />} />
         <Route path='/users/edit-profile' element={<EditProfile />} />
         <Route path='/users/job/:id' element={<JobPage />} />
-        <Route path='/users/apply/:id' element={<ApplyJob />} /> {/* ✅ NEW APPLY NOW PAGE */}
+        <Route path='/users/apply/:id' element={<ApplyJob />} /> 
         <Route path='/users/notifications' element={<NotificationsPage />} />
-
+          </>
+        )}
+      
+        
+        
+        
         {/* Recruiters */}
-        <Route path='/recruiters/register' element={<RecruiterRegister />} />
-        <Route path='/recruiters/login' element={<RecruiterLogin />} />
+        
         <Route path='/recruiters/logout' element={<RecruiterLogout />} />
         <Route path='/recruiters/jobs/active' element={<AllJobs_ActiveJobs />} />
         <Route path='/recruiters/jobs/closed' element={<AllJobs_ClosedJobs />} />

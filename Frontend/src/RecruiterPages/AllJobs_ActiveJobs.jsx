@@ -15,6 +15,13 @@ function JobPage() {
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+   const isMobile = screenWidth < 768;
+   useEffect(() => {
+       const handleResize = () => setScreenWidth(window.innerWidth);
+       window.addEventListener('resize', handleResize);
+       return () => window.removeEventListener('resize', handleResize);
+     }, []);
 
    useEffect(() => {
     const fetchJobs = async () => {
@@ -62,13 +69,13 @@ function JobPage() {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.2 }}
       className="h-screen flex bg-gray-100 flex-col">
       {/* Top Navigation Bar */}
       <motion.div 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
         className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full">
         <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto">
           <img src={Search} alt="Search Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
@@ -108,36 +115,38 @@ function JobPage() {
         </div>
 
         {/* Sidebar for large screens */}
-        <div className="hidden lg:block mt-6 ml-4">
+         {!isMobile && (
+        <div className="hidden lg:block fixed top-20 left-0 z-30">
           <Sidebar isOpen={true} isMobile={false} />
         </div>
+      )}
 
-        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
-        <AnimatePresence>
-          {isSidebarOpen && (
-            <Sidebar
-              isOpen={isSidebarOpen}
-              onClose={() => setIsSidebarOpen(false)}
-              isMobile
-            />
-          )}
-        </AnimatePresence>
+      {/* Sidebar for mobile (animated) */}
+      <AnimatePresence>
+        { isSidebarOpen && (
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            isMobile={true}
+          />
+        )}
+      </AnimatePresence>
 
         {/* Main Content */}
         <motion.div 
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="flex-1 p-4 bg-gray-100">
+          transition={{ duration: 0.3 }}
+          className="flex-1 p-4 bg-gray-100 lg:ml-64 justify-center">
           <motion.h2 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
+            transition={{ duration: 0.5, }}
             className="text-lg sm:text-2xl font-semibold mb-2">All Jobs</motion.h2>
           <motion.h3 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.7 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Active Jobs</motion.h3>
 
           {loading ? (
@@ -153,7 +162,7 @@ function JobPage() {
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
               className="space-y-4">
               {jobs.map((job, index) => (
                 <motion.div
