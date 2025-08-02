@@ -28,55 +28,54 @@ export const loginRecruiter = async (req, res) => {
 };
 
 export const registerRecruiter = async (req, res) => {
-    try {
-        const {recruiterName, jobTitle, email, phone, alternateContact, linkedIn, password, companyName, website, street, city, state, postalCode, industryType, registrationNumber, companyPanCardNumber} = req.body;
-    
-        const existingRecruiter = await Recruiter.findOne({email});
-        if(existingRecruiter){
-            return res.status(400).json({message: 'Recruiter already exists'});
-        }
-    
-        const hashedPassword = await bcrypt.hash(password, 10);
-    
-        const newRecruiter = new Recruiter({
-            recruiterName,
-            jobTitle,
-            email,
-            phone,
-            alternateContact,
-            linkedIn,
-            password: hashedPassword,
-            companyName,
-            website,
-            companyAddress:{
-                street,
-                city,
-                state,
-                postalCode,
-            },
-            industryType,
-            registrationNumber,
-            companyPanCardNumber,
-        });
-    
-        await newRecruiter.save();
-    
-        res.status(201).json({
-            message: "Recruiter registered Successfully",
-            recruiter: {
-                id: newRecruiter._id,
-                recruiterName: newRecruiter.recruiterName,
-                email: newRecruiter.email,
-                companyName: newRecruiter.companyName,
-                status: newRecruiter.status,
-            },
-        });
-    } catch (error) {
-        console.error("Register Error:", error);
-        res.status(500).json({message: "Server error during registration", error});
+  try {
+    const { email, phone, password, companyName } = req.body;
+
+    const existingRecruiter = await Recruiter.findOne({ email });
+    if (existingRecruiter) {
+      return res.status(400).json({ message: "Recruiter already exists" });
     }
 
-}
+    // Check if file is uploaded
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "No file uploaded" });
+    }
+
+    // 🟢 Get file URL from Cloudinary (multer-cloudinary saves `req.file.path`)
+    const panCardOrGstDocumentUrl = req.file.path;
+
+    // 🟢 Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 🟢 Save recruiter to DB
+    const newRecruiter = new Recruiter({
+      email,
+      phone,
+      password: hashedPassword,
+      companyName,
+      companyPanCardOrGstFile: panCardOrGstDocumentUrl,
+    });
+
+    await newRecruiter.save();
+
+    // 🟢 Respond only once
+    return res.status(201).json({
+      success: true,
+      message: "Recruiter registered successfully",
+      recruiter: {
+        id: newRecruiter._id,
+        email: newRecruiter.email,
+        companyName: newRecruiter.companyName,
+        status: newRecruiter.status,
+      },
+    });
+  } catch (error) {
+    console.error("Register Error:", error);
+    return res.status(500).json({ message: "Server error during registration", error });
+  }
+};
+
+
 
 export const getProfile = async (req, res) => {
     try{
