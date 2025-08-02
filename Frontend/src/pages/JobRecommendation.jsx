@@ -6,14 +6,10 @@ import NavSearchBar from '../components/Header/NavSearchBar';
 import UserNavbar from '../components/Header/UserNavbar';
 import Sidebar from '../components/SideBar';
 import jobsData from '../data/jobsData.json';
-import { toast } from 'react-toastify';
 
 const JobRecommendations = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const [savedJobs, setSavedJobs] = useState(() => {
-    return JSON.parse(localStorage.getItem('savedJobs')) || [];
-  });
   const navigate = useNavigate();
 
   const isMobile = screenWidth < 768;
@@ -24,39 +20,6 @@ const JobRecommendations = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const handleSaveToggle = (jobId, checked) => {
-
-  let updatedJobs;
-  //   if (checked) {
-  //     updatedJobs = [...savedJobs, jobId];
-  //     alert('This job is saved!');  
-  //     navigate('/users/saved'); // Go to saved page
-  //   } else {
-  //     updatedJobs = savedJobs.filter(id => id !== jobId);
-  //     alert('This job is removed from saved!');
-  //   }
-  //   setSavedJobs(updatedJobs);
-  //   localStorage.setItem('savedJobs', JSON.stringify(updatedJobs));
-  // };
-
-  if (checked) {
-    if (!savedJobs.includes(jobId)) {
-      updatedJobs = [...savedJobs, jobId];
-      // alert('This job is saved!');
-      toast.success('Job saved!');
-      localStorage.setItem('savedJobs', JSON.stringify(updatedJobs));
-      setSavedJobs(updatedJobs);
-      navigate('/users/saved-jobs');
-    }
-  } else {
-    updatedJobs = savedJobs.filter(id => id !== jobId);
-    // alert('This job is removed from saved!');
-    toast.error('Job removed from saved!');
-    localStorage.setItem('savedJobs', JSON.stringify(updatedJobs));
-    setSavedJobs(updatedJobs);
-  }
-};
 
   // Animation variants
   const containerVariants = {
@@ -200,8 +163,6 @@ const JobRecommendations = () => {
                   <input
                     type="checkbox"
                     className="form-checkbox h-4 w-4 text-[#5F9D08] rounded border-gray-300 focus:ring-[#5F9D08] mr-1"
-                    checked={savedJobs.includes(job.id)}
-                    onChange={(e) => handleSaveToggle(job.id, e.target.checked)}
                   />
                   <span>Save Job</span>
                 </label>
@@ -210,13 +171,13 @@ const JobRecommendations = () => {
               {/* Action Buttons */}
               <div className="absolute bottom-2 lg:bottom-4 right-2 lg:right-4 flex items-center">
                 <button
-                  onClick={() => navigate(`/users/apply/${job.id}`)}
+                  onClick={() => navigate(/users/apply/${job.id})}
                   className="bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] text-xs lg:text-md md:text-sm text-white px-4 py-1.5 rounded-lg hover:shadow-lg transition-all duration-300 mr-3 font-medium"
                 >
                   Apply Now
                 </button>
                 <button
-                  onClick={() => navigate(`/users/job/${job.id}`)}
+                  onClick={() => navigate(/users/job/${job.id})}
                   className="bg-white text-[#5F9D08] border-2 text-xs lg:text-md md:text-sm border-[#5F9D08] px-4 py-1.5 rounded-lg hover:bg-green-50 transition-all duration-300 font-medium"
                 >
                   Know More

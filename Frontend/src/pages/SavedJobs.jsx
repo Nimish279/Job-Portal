@@ -1,24 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { FiMenu } from "react-icons/fi";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import { FiMenu } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 
-import Sidebar from "../components/SideBar";
-import UserNavbar from "../components/Header/UserNavbar";
-import JobCard from "../components/JobCard";
-// import saved from '../data/saved.json';
-import NavSearchBar from "../components/Header/NavSearchBar";
-import jobsData from "../data/jobsData.json";
+import Sidebar from '../components/SideBar';
+import UserNavbar from '../components/Header/UserNavbar';
+import JobCard from '../components/JobCard';
+import saved from '../data/saved.json';
+import NavSearchBar from '../components/Header/NavSearchBar';
 
 const SavedJobs = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  const [savedJobIds, setSavedJobIds] = useState(() => {
-    return JSON.parse(localStorage.getItem("savedJobs")) || [];
-  });
-  const savedJobs = savedJobIds
-    .map((id) => jobsData.find((job) => job.id === id))
-    .filter(Boolean); // Remove nulls (i.e., non-existing jobs)
 
   // useEffect(() => {
   //   const handleResize = () => setWindowWidth(window.innerWidth);
@@ -26,32 +18,23 @@ const SavedJobs = () => {
   //   return () => window.removeEventListener('resize', handleResize);
   // }, []);
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const updated = JSON.parse(localStorage.getItem("savedJobs")) || [];
-      setSavedJobIds(updated);
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+      
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
   const isMobile = windowWidth < 768;
 
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
+    visible: { 
       opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
+      transition: { staggerChildren: 0.1 }
+    }
   };
 
   return (
@@ -60,11 +43,11 @@ const SavedJobs = () => {
       <NavSearchBar
         toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         showHamburger={true}
-      />
+      />  
 
       {/* Hamburger menu for mobile */}
-
-      {/* <div className="p-4 mt-6 fixed top-5 z-50 lg:hidden">
+      
+        {/* <div className="p-4 mt-6 fixed top-5 z-50 lg:hidden">
           <button
             onClick={() => setIsSidebarOpen(true)}
             className="text-3xl text-[#5F9D08] focus:outline-none cursor-pointer"
@@ -72,6 +55,7 @@ const SavedJobs = () => {
             <FiMenu />
           </button>
         </div> */}
+      
 
       {/* Sidebar for desktop */}
       {!isMobile && (
@@ -82,7 +66,7 @@ const SavedJobs = () => {
 
       {/* Sidebar for mobile (animated) */}
       <AnimatePresence>
-        {isSidebarOpen && (
+        { isSidebarOpen && (
           <Sidebar
             isOpen={isSidebarOpen}
             onClose={() => setIsSidebarOpen(false)}
@@ -116,10 +100,8 @@ const SavedJobs = () => {
           animate="visible"
         >
           <div className="flex flex-col space-y-4 sm:pt-6">
-            {/* {saved.length > 0 ? (
-              saved.map((job, index) => ( */}
-            {savedJobs.length > 0 ? (
-              savedJobs.map((job, index) => (
+            {saved.length > 0 ? (
+              saved.map((job, index) => (
                 <motion.div
                   key={job.id}
                   initial={{ opacity: 0, y: 20 }}
