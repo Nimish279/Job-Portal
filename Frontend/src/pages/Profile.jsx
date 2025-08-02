@@ -95,14 +95,39 @@ useEffect(() => {
     setEditedSkills(profileData.skills);
   };
 
-  const handleSkillsSave = () => {
-    setProfileData(prev => ({
-      ...prev,
-      skills: editedSkills
-    }));
-    localStorage.setItem('profileData', JSON.stringify({ ...profileData, skills: editedSkills }));
-    setIsEditingSkills(false);
-  };
+  // const handleSkillsSave = () => {
+  //   setProfileData(prev => ({
+  //     ...prev,
+  //     skills: editedSkills
+  //   }));
+  //   localStorage.setItem('profileData', JSON.stringify({ ...profileData, skills: editedSkills }));
+  //   setIsEditingSkills(false);
+  // };
+
+const handleSkillsSave = async () => {
+  try {
+    const res = await fetch("/api/user/edit-profile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // JWT cookie bhejne ke liye
+      body: JSON.stringify({ skills: editedSkills }),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      setProfileData(prev => ({ ...prev, skills: editedSkills }));
+      setIsEditingSkills(false);
+    } else {
+      alert("Failed to save skills");
+    }
+  } catch (err) {
+    console.error("handleSkillsSave Error:", err);
+  }
+};
+
+
 
   const handleAboutSave = () => {
     setProfileData(prev => ({...prev, about: editedAbout}));
@@ -110,11 +135,35 @@ useEffect(() => {
     setIsEditingAbout(false);
   };
 
-  const handleExperienceSave = () => {
-    setProfileData(prev => ({...prev, experience:editedExperience}));
-    localStorage.setItem('profileData', JSON.stringify({ ...profileData, experience:editedExperience}));
-    setIsEditingExperience(false);
+  // const handleExperienceSave = () => {
+  //   setProfileData(prev => ({...prev, experience:editedExperience}));
+  //   localStorage.setItem('profileData', JSON.stringify({ ...profileData, experience:editedExperience}));
+  //   setIsEditingExperience(false);
+  // }
+
+  const handleExperienceSave = async () => {
+  try {
+    const updated = { ...profileData, experience: editedExperience };
+
+    const res = await fetch("/api/user/edit-profile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(updated),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      setProfileData(updated);
+      setIsEditingExperience(false);
+    }
+  } catch (err) {
+    console.error("Failed to save experience:", err);
   }
+};
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-green-50 font-sans">
       <NavSearchBar

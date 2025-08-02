@@ -87,22 +87,61 @@ export const registerUser = async (req, res) => {
 //   }
 // };
 
+// export const editProfile = async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user.id);
+//     if (!user) return res.status(404).json({ message: "User not found" });
+
+//     const updatedFields = [
+//       "name",
+//       "github",
+//       "degree",
+//       "university",
+//       "email",
+//       "city",
+//       "about",
+//       "skills",
+//       "experience", // Added experience field
+//     ];
+
+//     updatedFields.forEach((field) => {
+//       if (req.body[field] !== undefined) {
+//         user[field] = req.body[field];
+//       }
+//     });
+
+//     await user.save();
+
+//     res.status(200).json({
+//       success: true,
+//       message: "User profile edited successfully",
+//     });
+//   } catch (error) {
+//     console.log("Edit profile error:", error);
+//     res
+//       .status(500)
+//       .json({ success: false, message: "Server error", error: error.message });
+//   }
+// };
+
 export const editProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    const updatedFields = [
+    const fieldsToUpdate = [
       "name",
       "github",
       "degree",
+      "city",
       "university",
       "email",
-      "city",
       "about",
+      "skills",
+      "experience",
     ];
 
-    updatedFields.forEach((field) => {
+    fieldsToUpdate.forEach((field) => {
       if (req.body[field] !== undefined) {
         user[field] = req.body[field];
       }
@@ -110,15 +149,10 @@ export const editProfile = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({
-      success: true,
-      message: "User profile edited successfully",
-    });
+    res.status(200).json({ success: true, message: "Profile updated" });
   } catch (error) {
-    console.log("Edit profile error:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Server error", error: error.message });
+    console.error("Edit Profile Error:", error);
+    res.status(500).json({ message: "Server error", error });
   }
 };
 

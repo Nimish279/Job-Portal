@@ -12,6 +12,8 @@ const EditProfile = () => {
     degree: '',
     university: '',
     email: '',
+    skills: '',
+    experience: '',
     city: '',
     github: '',
     about: ''
@@ -29,6 +31,8 @@ const EditProfile = () => {
       email: savedProfile.email || '',
       city: savedProfile.city || '',
       github: savedProfile.github || '',
+      skills: savedProfile.skills || '',
+      experience: savedProfile.experience || '',
       about: savedProfile.about || ''
     });
   }, []);
@@ -133,6 +137,8 @@ const EditProfile = () => {
             { id: 'university', label: 'University' },
             { id: 'email', label: 'Email' },
             { id: 'city', label: 'City' },
+            { id: 'skills', label: 'Skills' },
+            { id: 'experience', label: 'Experience' },
             { id: 'github', label: 'GitHub' }
           ].map(field => (
             <div key={field.id}>
