@@ -4,7 +4,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import useRecruiterStore from '../../store/recruiterStore';
-import Logo from '../../assets/images/logo.jpg';
 
 const RecruiterRegister = () => {
   const navigate = useNavigate();
@@ -13,65 +12,67 @@ const RecruiterRegister = () => {
   const formRef = useRef();
   const [showPassword, setShowPassword] = useState(false);
 
+  const fields = [
+    { label: "Recruiter Name", name: "recruiterName" },
+    { label: "Job Title", name: "jobTitle" },
+    { label: "Phone", name: "phone", type: "tel" },
+    { label: "Alternate Contact", name: "alternateContact", type: "tel" },
+    { label: "LinkedIn", name: "linkedIn" },
+    { label: "Company Name", name: "companyName" },
+    { label: "Website", name: "website" },
+    { label: "Street", name: "street" },
+    { label: "City", name: "city" },
+    { label: "State", name: "state" },
+    { label: "Postal Code", name: "postalCode" },
+    { label: "Industry Type", name: "industryType" },
+    { label: "Registration Number", name: "registrationNumber" },
+    { label: "Company PAN Card Number", name: "companyPanCardNumber" },
+    { label: "Upload PAN/GST File", name: "panCardOrGstFile", type: "file" },
+  ];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = formRef.current;
 
-    const formData = {
-      recruiterName: form.recruiterName.value,
-      jobTitle: form.jobTitle.value,
-      email: form.email.value,
-      password: form.password.value,
-      phone: form.phone.value,
-      alternateContact: form.alternateContact.value,
-      linkedIn: form.linkedIn.value,
-      companyName: form.companyName.value,
-      website: form.website.value,
-      street: form.street.value,
-      city: form.city.value,
-      state: form.state.value,
-      postalCode: form.postalCode.value,
-      industryType: form.industryType.value,
-      registrationNumber: form.registrationNumber.value,
-      companyPanCardNumber: form.companyPanCardNumber.value,
-    };
+    const formData = new FormData();
 
-    if (!formData.recruiterName || !formData.email || !formData.password) {
+    fields.forEach(({ name, type }) => {
+      const value = type === 'file'
+        ? form[name]?.files[0]
+        : form[name]?.value;
+
+      if (type === 'file' && !value) {
+        toast.error("Please upload the required file.");
+        return;
+      }
+
+      formData.append(name, value);
+    });
+
+    formData.append('email', form.email.value);
+    formData.append('password', form.password.value);
+
+    if (!form.email.value || !form.password.value || !form.recruiterName.value) {
       toast.error("Please fill all required fields.");
       return;
     }
+
+    console.log("📁 File selected:", form.panCardOrGstFile.files[0]);
+    console.log("📎 Is File?", form.panCardOrGstFile.files[0] instanceof File);
 
     const result = await register(formData);
     if (result?.success) {
       navigate('/recruiters/jobs/active');
     } else {
-      toast.error(result.message || "Registration failed");
+      toast.error(result?.message || "Registration failed");
     }
   };
 
-  const fields = [
-    { label: 'Recruiter Name', name: 'recruiterName' },
-    { label: 'Job Title', name: 'jobTitle' },
-    { label: 'Phone', name: 'phone' },
-    { label: 'Alternate Contact', name: 'alternateContact' },
-    { label: 'LinkedIn', name: 'linkedIn' },
-    { label: 'Company Name', name: 'companyName' },
-    { label: 'Website', name: 'website' },
-    { label: 'Street', name: 'street' },
-    { label: 'City', name: 'city' },
-    { label: 'State', name: 'state' },
-    { label: 'Postal Code', name: 'postalCode' },
-    { label: 'Industry Type', name: 'industryType' },
-    { label: 'Registration Number', name: 'registrationNumber' },
-    { label: 'Company PAN Number', name: 'companyPanCardNumber' },
-  ];
-
   return (
-    <div className="flex min-h-screen bg-gradient-to-r from-gray-200 to-gray-50 justify-center items-center px-4 py-16 ">
+    <div className="flex min-h-screen bg-gradient-to-r from-gray-200 to-gray-50 justify-center items-center px-4 py-16">
       <div className="flex flex-col lg:flex-row w-full max-w-7xl bg-white shadow-xl rounded-lg overflow-hidden">
         {/* Left Sidebar */}
         <div className="lg:w-1/4 bg-[#5F9D08] text-white flex flex-col justify-center items-center py-8">
-          
           <h3 className="text-xl font-semibold">Company Panel</h3>
           <p className="text-sm text-gray-200 text-center mt-2 px-4">Start hiring the right candidates now.</p>
         </div>
@@ -111,14 +112,14 @@ const RecruiterRegister = () => {
               </div>
             </div>
 
-            {/* Other fields */}
+            {/* Other dynamic fields */}
             {fields.map(({ label, name, type = 'text' }, i) => (
               <div key={i} className="flex flex-col">
                 <label className="text-gray-700 mb-1">{label}</label>
                 <input
                   type={type}
                   name={name}
-                  required
+                  required={type !== 'file' ? true : false}
                   className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#5F9D08]"
                 />
               </div>
