@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import NavSearchBar from '../components/Header/NavSearchBar';
 import Sidebar from '../components/SideBar';
 import jobsData from '../data/jobsData.json';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const JobRecommendations = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -25,16 +27,23 @@ const JobRecommendations = () => {
 
   const handleSaveJob = (job) => {
     const normalizedJob = {
-    ...job,
-    title: job.jobTitle, // <-- normalize the title key
-  };
+      ...job,
+      title: job.jobTitle,
+    };
     const isSaved = savedJobs.some((saved) => saved.id === job.id);
     const updatedJobs = isSaved
       ? savedJobs.filter((saved) => saved.id !== job.id)
-      : [...savedJobs, job];
+      : [...savedJobs, normalizedJob];
 
     setSavedJobs(updatedJobs);
     localStorage.setItem('savedJobs', JSON.stringify(updatedJobs));
+
+    // ✅ Show toast notification
+    if (isSaved) {
+      toast.info('Removed from saved jobs');
+    } else {
+      toast.success('Job saved successfully!');
+    }
   };
 
   const containerVariants = {
@@ -104,8 +113,12 @@ const JobRecommendations = () => {
                     </div>
                   </div>
                   <div>
-                    <h3 className="m-0 text-sm lg:text-lg font-semibold text-gray-800">{job.jobTitle}</h3>
-                    <p className="text-xs lg:text-md font-medium text-[#5F9D08]">{job.company}</p>
+                    <h3 className="m-0 text-sm lg:text-lg font-semibold text-gray-800">
+                      {job.jobTitle}
+                    </h3>
+                    <p className="text-xs lg:text-md font-medium text-[#5F9D08]">
+                      {job.company}
+                    </p>
                     <p className="text-gray-600 text-xs lg:text-sm mt-1">
                       <span className="inline-flex items-center">
                         <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
@@ -134,7 +147,12 @@ const JobRecommendations = () => {
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     Posted {job.timeAgo}
                   </span>
@@ -152,25 +170,28 @@ const JobRecommendations = () => {
                   </label>
                 </div>
 
-              {/* Action Buttons */}
-              <div className="absolute bottom-2 lg:bottom-4 right-2 lg:right-4 flex items-center">
-                <button
-                  onClick={() => navigate(`/users/apply/${job.id}`)}
-                  className="bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] text-xs lg:text-md md:text-sm text-white px-4 py-1.5 rounded-lg hover:shadow-lg transition-all duration-300 mr-3 font-medium"
-                >
-                  Apply Now
-                </button>
-                <button
-                  onClick={() => navigate(`/users/job/${job.id}`)}
-                  className="bg-white text-[#5F9D08] border-2 text-xs lg:text-md md:text-sm border-[#5F9D08] px-4 py-1.5 rounded-lg hover:bg-green-50 transition-all duration-300 font-medium"
-                >
-                  Know More
-                </button>
-              </div>
-            </motion.div>
-          ))}
+                <div className="absolute bottom-2 lg:bottom-4 right-2 lg:right-4 flex items-center">
+                  <button
+                    onClick={() => navigate(`/users/apply/${job.id}`)}
+                    className="bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] text-xs lg:text-md md:text-sm text-white px-4 py-1.5 rounded-lg hover:shadow-lg transition-all duration-300 mr-3 font-medium"
+                  >
+                    Apply Now
+                  </button>
+                  <button
+                    onClick={() => navigate(`/users/job/${job.id}`)}
+                    className="bg-white text-[#5F9D08] border-2 text-xs lg:text-md md:text-sm border-[#5F9D08] px-4 py-1.5 rounded-lg hover:bg-green-50 transition-all duration-300 font-medium"
+                  >
+                    Know More
+                  </button>
+                </div>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </div>
+
+      {/* ✅ Toast Container for Notifications */}
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
     </div>
   );
 };
