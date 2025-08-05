@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import dayjs from 'dayjs';
+
+const formatDate = (date) => dayjs(date).format('DD MMM YYYY');
 
 const JobCard = ({ job }) => {
   return (

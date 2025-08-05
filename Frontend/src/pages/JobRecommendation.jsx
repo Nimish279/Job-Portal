@@ -152,23 +152,23 @@ const JobRecommendations = () => {
                   </label>
                 </div>
 
-                <div className="absolute bottom-2 lg:bottom-4 right-2 lg:right-4 flex items-center">
-                  <button
-                    onClick={() => navigate(`/users/apply/${job.id}`)}
-                    className="bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] text-xs lg:text-md md:text-sm text-white px-4 py-1.5 rounded-lg hover:shadow-lg transition-all duration-300 mr-3 font-medium"
-                  >
-                    Apply Now
-                  </button>
-                  <button
-                    onClick={() => navigate(`/users/job/${job.id}`)}
-                    className="bg-white text-[#5F9D08] border-2 text-xs lg:text-md md:text-sm border-[#5F9D08] px-4 py-1.5 rounded-lg hover:bg-green-50 transition-all duration-300 font-medium"
-                  >
-                    Know More
-                  </button>
-                </div>
-              </motion.div>
-            );
-          })}
+              {/* Action Buttons */}
+              <div className="absolute bottom-2 lg:bottom-4 right-2 lg:right-4 flex items-center">
+                <button
+                  onClick={() => navigate(`/users/apply/${job.id}`)}
+                  className="bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] text-xs lg:text-md md:text-sm text-white px-4 py-1.5 rounded-lg hover:shadow-lg transition-all duration-300 mr-3 font-medium"
+                >
+                  Apply Now
+                </button>
+                <button
+                  onClick={() => navigate(`/users/job/${job.id}`)}
+                  className="bg-white text-[#5F9D08] border-2 text-xs lg:text-md md:text-sm border-[#5F9D08] px-4 py-1.5 rounded-lg hover:bg-green-50 transition-all duration-300 font-medium"
+                >
+                  Know More
+                </button>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </div>
