@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function LandingPage() {
   return (
@@ -9,8 +10,8 @@ function LandingPage() {
           <div className="text-2xl font-bold text-[#4CAF50]">JobPortal</div>
           <ul className="flex gap-8 list-none m-0 p-0 md:flex-row md:mt-0 mt-4">
             <li><a href="#home" className="text-gray-700 text-base font-medium hover:text-[#4CAF50] transition-colors">Home</a></li>
-            <li><a href="#login" className="text-gray-700 text-base font-medium hover:text-[#4CAF50] transition-colors">Login</a></li>
-            <li><a href="#register" className="text-gray-700 text-base font-medium hover:text-[#4CAF50] transition-colors">Register</a></li>
+            <li><a href="/users/login" className="text-gray-700 text-base font-medium hover:text-[#4CAF50] transition-colors">Login</a></li>
+            <li><a href="/users/register" className="text-gray-700 text-base font-medium hover:text-[#4CAF50] transition-colors">Register</a></li>
           </ul>
         </nav>
       </header>
@@ -25,7 +26,7 @@ function LandingPage() {
             Connecting Talent with Opportunity – Your Gateway to Career Success.
           </p>
           <div className="flex gap-5">
-          <button className="py-4 px-8 rounded-md text-xl cursor-pointer transition-all duration-300 bg-[#4CAF50] text-white hover:bg-[#45a049] hover:-translate-y-0.5">
+          <button className="py-4 px-8 rounded-md text-xl cursor-pointer transition-all duration-300 bg-[#4CAF50] text-white hover:bg-[#45a049] hover:-translate-y-0.5" >
             Search Jobs
           </button>
           <button className="py-4 px-8 rounded-md text-xl cursor-pointer transition-all duration-300 bg-transparent border-2 border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white hover:-translate-y-0.5">
@@ -42,7 +43,9 @@ function LandingPage() {
           <p className="text-xl text-gray-600 mb-10 max-w-2xl leading-relaxed lg:text-lg md:text-base sm:text-sm">
             Elevate your career with companies that value talent, growth, and innovation. Discover opportunities that align with your goals and unlock your full potential.
           </p>
+          <Link to="/recruiters/register">
           <button className="py-4 px-8 rounded-md text-xl cursor-pointer transition-all duration-300 bg-[#4CAF50] text-white hover:bg-[#45a049] hover:-translate-y-0.5">Join Now</button>
+          </Link>
         </section>
       </main>
 
@@ -86,16 +89,16 @@ function LandingPage() {
       <p className="text-gray-300 text-base mb-4">
         Subscribe to get the latest job alerts, career tips, and updates.
       </p>
-      <form class="space-y-3">
+      <form className="space-y-3">
         <input
           type="email"
           placeholder="Email Address"
-          class="w-full px-4 py-2 rounded-md bg-gray-900 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+          className="w-full px-4 py-2 rounded-md bg-gray-900 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
           required
         />
         <button
           type="submit"
-          class="w-full bg-[#41B84D] hover:bg-[#369D40] text-white font-semibold py-2 rounded-md transition-colors"
+          className="w-full bg-[#41B84D] hover:bg-[#369D40] text-white font-semibold py-2 rounded-md transition-colors"
         >
           Subscribe now
         </button>

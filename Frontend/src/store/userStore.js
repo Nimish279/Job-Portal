@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { axiosInstance } from '../utils/axiosInstance.js';
 import { toast } from 'react-toastify';
-
+import { getCookie } from '../utils/getCookie';
 const userStore = create((set) => ({
   loading: false,
   jobs: [],
@@ -9,12 +9,22 @@ const userStore = create((set) => ({
   user: null,
   fetchedUser:false,
   fetchUser: async () => {
+    const token = getCookie('token'); // ✅ Adjust name to match your cookie
+    if (!token) {
+      // No token in cookies, skip API call
+      set({ user: null, fetchedUser: true });
+      return;
+    }
+
     try {
       const response = await axiosInstance.get('/users/me');
-      set({ user: response.data.user,fetchedUser:true });
+      set({ user: response.data.user, fetchedUser: true });
     } catch (error) {
-      set({ user: null,fetchedUser:true });
-      console.error('Not logged in or error fetching user:', error?.response?.data?.message);
+      set({ user: null, fetchedUser: true });
+
+      if (import.meta.env.DEV) {
+        console.error('Not logged in or error fetching user:', error?.response?.data?.message);
+      }
     }
   },
   login: async ({ email, password }) => {
