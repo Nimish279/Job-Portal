@@ -52,18 +52,18 @@ const recruiterSchema = new mongoose.Schema({
     industryType: {
         type: String,
     },
-    registrationNumber: {
-        type: String,
-    },
-    companyPanCardNumber: {
-        type: String,
-    },
+    // registrationNumber: {  //removed due to new register page (By-tushar)
+    //     type: String,
+    // },
+    // companyPanCardNumber: {
+    //     type: String,
+    // },
     // companyLogo: {
     //     type: String,
     // },
-    // companyPanCardFile: {
-    //     type: String,
-    // },
+    companyPanCardOrGstFile: {  //GST or PAN added
+        type: String, 
+    },
     role: {
         type: String,
         enum: ["Seeker", "Recruiter"],

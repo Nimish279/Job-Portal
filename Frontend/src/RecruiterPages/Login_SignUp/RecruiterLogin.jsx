@@ -43,13 +43,13 @@ const RecruiterLogin = () => {
       <div className="flex min-h-screen bg-gradient-to-r from-gray-100 to-gray-50 justify-center items-center">
         <div className="relative flex w-full max-w-7xl">
           <div className="w-full bg-white rounded-2xl shadow-xl min-h-[600px] flex items-center justify-center">
-            <div className="hidden lg:flex w-1/6 bg-[#5F9D08] text-white items-center justify-center h-full">
+            <div className="hidden lg:flex w-1/4 bg-[#5F9D08] text-white items-center justify-center h-full">
               <div className="text-center">
                 <h3 className="text-xl font-semibold mb-4">Welcome Back</h3>
                 <p className="text-sm text-gray-300">Manage your job postings</p>
               </div>
             </div>
-            <div className="w-full lg:w-5/6 p-10 max-w-md mx-auto space-y-6">
+            <div className="w-full lg:w-3/4 p-10 max-w-md mx-auto space-y-6">
               <h2 className="text-3xl font-bold text-[#5F9D08] mb-8 text-center">Recruiter Login</h2>
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="mb-4 w-full">

@@ -22,30 +22,27 @@ const recruiterStore = create((set) => ({
   },
 
  register: async (formData) => {
-    set({ loading: true });
-    try {
-      console.log("🔍 Checking contents of FormData:");
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
-      }
-
-      const response = await axiosInstance.post("/recruiters/register", formData);
-
-      if (response.status === 201) {
-        toast.success("Recruiter registered successfully");
-        return { success: true };
-      } else {
-        toast.error("Unexpected response from server");
-        return { success: false };
-      }
-    } catch (error) {
-      const msg = error.response?.data?.message || "Registration failed";
-      toast.error(msg);
-      return { success: false };
-    } finally {
+  set({ loading: true });
+  try {
+    console.log(formData);
+    const response = await axiosInstance.post("/recruiters/register", formData);
+    
+    if (response.status === 201) {
+      toast.success("Recruiter registered successfully");
       set({ loading: false });
+      return { success: true };
+    } else {
+      set({ loading: false });
+      return { success: false, message: "Unexpected response" };
     }
-  },
+  } catch (error) {
+    set({ loading: false });
+    const msg = error?.response?.data?.message || "Server Error";
+    toast.error(msg);
+    return { success: false, message: msg };
+  }
+},
+
 
   logout: async () => {
     try {
