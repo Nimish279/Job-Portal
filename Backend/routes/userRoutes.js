@@ -22,5 +22,5 @@ router.put("/applyJob", protect, isSeeker, applyToJobs);
 router.get("/getAppliedJobs", protect, isSeeker, getAppliedJobs);
 router.get("/profile", protect, isSeeker, getCurrentUser);
 router.put("/edit-profile", protect, isSeeker, editProfile);
-
+router.get('/me', protect,isSeeker, getCurrentUser);
 export default router;

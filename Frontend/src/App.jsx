@@ -26,33 +26,53 @@ import ApplicantsProfile from './RecruiterPages/ApplicantsProfile.jsx';
 import JobPage from './pages/JobPage.jsx';
 import NotificationsPage from './pages/NotificationsPage.jsx';
 import ChangePassword from './RecruiterPages/RecruiterData/ChangePassword.jsx';
-
+import { useEffect } from 'react';
+import  userStore  from './store/userStore';
 // ✅ NEW IMPORT for Apply Now Page
 import ApplyJob from './pages/ApplyJob.jsx';
+import ProtectedRoute from './ProtectedRoute.jsx';
 
 function App() {
+  const fetchUser = userStore((state) => state.fetchUser);
+  const user = userStore((state) => state.user);
+  const fetchedUser = userStore((state) => state.fetchedUser);
+
+  // useEffect(() => {
+  //   fetchUser();
+  // }, []);
+  useEffect(() => {
+    console.log('🧠 Zustand user:', user);
+    console.log('✅ Zustand fetchedUser:', fetchedUser);
+  }, [user, fetchedUser]);
+
+  if (!fetchedUser) {
+    return <div>Loading...</div>;
+  }
+
   return (
+    
     <Router>
       <Routes>
-        {/* Users */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Public Routes */}
         <Route path='/' element={<LandingPage />} />
         <Route path='/users/register' element={<Register />} />
         <Route path='/users/login' element={<Login />} />
-        <Route path='/users/logout' element={<Logout />} />
-        <Route path='/users/dashboard' element={<Dashboard />} />
-        <Route path='/users/saved-jobs' element={<SavedJobs />} />
-        <Route path='/users/job-recommendations' element={<JobRecommendations />} />
-        <Route path='/users/resume' element={<Resume />} />
-        <Route path='/users/profile' element={<Profile />} />
-        <Route path='/users/edit-profile' element={<EditProfile />} />
-        <Route path='/users/job/:id' element={<JobPage />} />
-        <Route path='/users/apply/:id' element={<ApplyJob />} /> {/* ✅ NEW APPLY NOW PAGE */}
-        <Route path='/users/notifications' element={<NotificationsPage />} />
-
-        {/* Recruiters */}
         <Route path='/recruiters/register' element={<RecruiterRegister />} />
         <Route path='/recruiters/login' element={<RecruiterLogin />} />
+
+        {/* User Routes */}
+          <Route path='/users/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+  <Route path='/users/logout' element={<ProtectedRoute><Logout /></ProtectedRoute>} />
+  <Route path='/users/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+  <Route path='/users/resume' element={<ProtectedRoute><Resume /></ProtectedRoute>} />
+  <Route path='/users/saved-jobs' element={<ProtectedRoute><SavedJobs /></ProtectedRoute>} />
+  <Route path='/users/edit-profile' element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+  <Route path='/users/job/:id' element={<ProtectedRoute><JobPage /></ProtectedRoute>} />
+  <Route path='/users/apply/:id' element={<ProtectedRoute><ApplyJob /></ProtectedRoute>} />
+  <Route path='/users/notifications' element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+  <Route path='/users/job-recommendations' element={<ProtectedRoute><JobRecommendations /></ProtectedRoute>} />
+
+        {/* Recruiter Routes */}
         <Route path='/recruiters/logout' element={<RecruiterLogout />} />
         <Route path='/recruiters/jobs/active' element={<AllJobs_ActiveJobs />} />
         <Route path='/recruiters/jobs/closed' element={<AllJobs_ClosedJobs />} />
@@ -67,9 +87,13 @@ function App() {
         <Route path='/recruiters/post-job/job' element={<PostJob_Job />} />
         <Route path='/recruiters/post-job/internship' element={<PostJob_Internship />} />
         <Route path='/recruiters/change-password' element={<ChangePassword />} />
+
+        
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
 }
+
 
 export default App;

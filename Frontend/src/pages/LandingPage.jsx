@@ -89,16 +89,16 @@ function LandingPage() {
       <p className="text-gray-300 text-base mb-4">
         Subscribe to get the latest job alerts, career tips, and updates.
       </p>
-      <form class="space-y-3">
+      <form className="space-y-3">
         <input
           type="email"
           placeholder="Email Address"
-          class="w-full px-4 py-2 rounded-md bg-gray-900 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+          className="w-full px-4 py-2 rounded-md bg-gray-900 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
           required
         />
         <button
           type="submit"
-          class="w-full bg-[#41B84D] hover:bg-[#369D40] text-white font-semibold py-2 rounded-md transition-colors"
+          className="w-full bg-[#41B84D] hover:bg-[#369D40] text-white font-semibold py-2 rounded-md transition-colors"
         >
           Subscribe now
         </button>
