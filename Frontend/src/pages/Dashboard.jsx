@@ -87,9 +87,9 @@ const Dashboard = () => {
       <div className="flex flex-1 flex-col md:flex-row md:mt-20 lg:ml-64">
       
         
-        <div className="flex-1 pl-4 mt-20 md:mt-5 ">
-          <div className="bg-white rounded-xl shadow-sm p-5">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''}!</h1>
+        <div className="flex-1 pl-4 mt-20 md:mt-5 md:w-3/4 ">
+          <div className="bg-white rounded-xl shadow-sm p-5 mr-4">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2 ">Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''}!</h1>
             <p className="text-gray-600">Find your perfect job match from our listings.</p>
           </div>
           <JobCards />
