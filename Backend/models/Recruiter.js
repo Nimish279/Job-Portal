@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 
 const recruiterSchema = new mongoose.Schema({
-    recruiterName: {
-        type: String,
-        required: true,
-    },
-    jobTitle: {
-        type: String,
-        required: true,
-    },
+    // recruiterName: {
+    //     type: String,
+    //     required: false,
+    // },
+    // jobTitle: {
+    //     type: String,
+    //     required: false,
+    // }, // removed by wafiya
     email: {
         type: String,
         required: true,
@@ -18,12 +18,12 @@ const recruiterSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    alternateContact: {
-        type: String,
-    },
-    linkedIn: {
-        type: String,
-    },
+    // alternateContact: { // removed by wafiya
+    //     type: String,
+    // },
+    // linkedIn: {
+    //     type: String,
+    // },
     password: {
         type: String,
         required: true,
@@ -32,26 +32,26 @@ const recruiterSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    website: {
-        type: String,
-    },
-    companyAddress: {
-        street: {
-            type: String,
-        },
-        city: {
-            type: String,
-        },
-        state: {
-            type: String,
-        },
-        postalCode: {
-            type: String,
-        }
-    },
-    industryType: {
-        type: String,
-    },
+    // website: {
+    //     type: String,
+    // },
+    // companyAddress: {
+    //     street: {
+    //         type: String,
+    //     },
+    //     city: {
+    //         type: String,
+    //     },
+    //     state: {
+    //         type: String,
+    //     },
+    //     postalCode: {
+    //         type: String,
+    //     }
+    // },
+    // industryType: {
+    //     type: String,
+    // }, // removed by wafiya
     // registrationNumber: {  //removed due to new register page (By-tushar)
     //     type: String,
     // },

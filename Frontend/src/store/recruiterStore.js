@@ -24,9 +24,12 @@ const recruiterStore = create((set) => ({
  register: async (formData) => {
   set({ loading: true });
   try {
-    console.log(formData);
-    const response = await axiosInstance.post("/recruiters/register", formData);
-    
+    const response = await axiosInstance.post("/recruiters/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // ✅ Explicitly needed here if axiosInstance has a default
+      },
+    });
+
     if (response.status === 201) {
       toast.success("Recruiter registered successfully");
       set({ loading: false });

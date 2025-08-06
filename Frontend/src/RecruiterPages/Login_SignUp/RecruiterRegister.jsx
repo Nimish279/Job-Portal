@@ -32,22 +32,23 @@ const RecruiterRegister = () => {
   };
 
   const handleNext = () => {
-    const { companyName, phone, password, confirmPassword } = formData;
-    if (!companyName || !phone || !password || !confirmPassword) {
-      toast.error("Please fill all required fields in Step 1.");
-      return;
-    }
+  const { companyName, phone, password, confirmPassword } = formData;
+  if (!companyName || !phone || !password || !confirmPassword) {
+    toast.error("Please fill all required fields in Step 1.");
+    return;
+  }
 
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match.");
-      return;
-    }
+  if (password !== confirmPassword) {
+    toast.error("Passwords do not match.");
+    return;
+  }
 
-    console.log("📁 File selected:", form.panCardOrGstFile.files[0]);
-    console.log("📎 Is File?", form.panCardOrGstFile.files[0] instanceof File);
+  console.log("📁 File selected:", formData.panCardOrGstFile);
+  console.log("📎 Is File?", formData.panCardOrGstFile instanceof File);
 
-    setStep(2);
-  };
+  setStep(2);
+};
+
 
 const handleSubmit = async (e) => {
   e.preventDefault();
