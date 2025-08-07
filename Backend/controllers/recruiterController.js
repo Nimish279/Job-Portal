@@ -296,12 +296,12 @@ export const myJobs = async (req, res) => {
     const recruiter = req.recruiter;
     const jobs = await Job.find({ recruiter: recruiter._id });
     if (jobs.length === 0) {
-      res.status(203).json({ message: "No Jobs Posted by you", jobs: [] });
+      return res.status(203).json({ message: "No Jobs Posted by you", jobs: [] });
     }
-    res.status(200).json({ success: true, jobs });
+    return res.status(200).json({ success: true, jobs });
   } catch (error) {
-    res.status(500).json({ error: error.message });
     console.log(error);
+    return res.status(500).json({ error: error.message });
   }
 };
 export const getCurrentRecruiter = async (req, res) => {
