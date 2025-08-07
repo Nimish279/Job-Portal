@@ -40,14 +40,14 @@ function App() {
   // useEffect(() => {
   //   fetchUser();
   // }, []);
-  useEffect(() => {
-    console.log('🧠 Zustand user:', user);
-    console.log('✅ Zustand fetchedUser:', fetchedUser);
-  }, [user, fetchedUser]);
+  // useEffect(() => {
+  //   console.log('🧠 Zustand user:', user);
+  //   console.log('✅ Zustand fetchedUser:', fetchedUser);
+  // }, [user, fetchedUser]);
 
-  if (!fetchedUser) {
-    return <div>Loading...</div>;
-  }
+  // if (!fetchedUser) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     
@@ -61,7 +61,9 @@ function App() {
         <Route path='/recruiters/login' element={<RecruiterLogin />} />
 
         {/* User Routes */}
-          <Route path='/users/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          {/* <Route path='/users/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> */}
+          <Route path="/users/dashboard" element={<ProtectedRoute allowedRole="user"><Dashboard /></ProtectedRoute>
+} />
   <Route path='/users/logout' element={<ProtectedRoute><Logout /></ProtectedRoute>} />
   <Route path='/users/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
   <Route path='/users/resume' element={<ProtectedRoute><Resume /></ProtectedRoute>} />
@@ -74,7 +76,7 @@ function App() {
 
         {/* Recruiter Routes */}
         <Route path='/recruiters/logout' element={<RecruiterLogout />} />
-        <Route path='/recruiters/jobs/active' element={<AllJobs_ActiveJobs />} />
+        <Route path='/recruiters/jobs/active' element={<ProtectedRoute allowedRole="recruiter"><AllJobs_ActiveJobs /></ProtectedRoute>} />
         <Route path='/recruiters/jobs/closed' element={<AllJobs_ClosedJobs />} />
         <Route path='/recruiters/notifications' element={<NotificationsRecr />} />
         <Route path='/recruiters/getProfile' element={<RecruiterProfile />} />

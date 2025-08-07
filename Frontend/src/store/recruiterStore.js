@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 const recruiterStore = create((set) => ({
   loading: false,
+  recruiter: null,
 
   login: async ({ email, password }) => {
     try {
@@ -11,7 +12,7 @@ const recruiterStore = create((set) => ({
         email,
         password,
       });
-      set({ loading: false });
+      set({recruiter: response.data.recruiter, loading: false });
       toast.success("Login Successfull");
       return { success: true };
     } catch (error) {
@@ -20,6 +21,16 @@ const recruiterStore = create((set) => ({
       set({ loading: false });
     }
   },
+  fetchRecruiter: async () => {
+  set({ loading: true });   //added fetch for recruiter along with page restrictions
+  try {
+    const res = await axiosInstance.get("/recruiters/me");
+    set({ recruiter: res.data.recruiter, loading: false });
+  } catch (err) {
+    console.error("Failed to fetch recruiter:", err);
+    set({ recruiter: null, loading: false });
+  }
+},
 
  register: async (formData) => {
   set({ loading: true });
@@ -32,7 +43,7 @@ const recruiterStore = create((set) => ({
 
     if (response.status === 201) {
       toast.success("Recruiter registered successfully");
-      set({ loading: false });
+      set({recruiter: response.data.recruiter, loading: false });
       return { success: true };
     } else {
       set({ loading: false });

@@ -6,6 +6,9 @@ import recruiterRoutes from "./routes/recruiterRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import upload from "./routes/upload.js";
 import cookieParser from "cookie-parser";
+import authRoutes from "./routes/authRoutes.js";
+
+
 
 dotenv.config();
 const app = express();
@@ -30,7 +33,10 @@ app.use("/api/recruiters", recruiterRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/upload", upload);
 app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
 const PORT = process.env.PORT || 8000;
+
+
 
 connectDB()
   .then(() => {

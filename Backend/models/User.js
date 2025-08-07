@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["Seeker", "Recruiter"],
+      // enum: ["Seeker", "Recruiter"],
       default: "Seeker",
     },
     status: {

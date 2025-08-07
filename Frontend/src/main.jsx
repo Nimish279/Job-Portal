@@ -7,8 +7,8 @@ import ProtectedRoute from './ProtectedRoute.jsx';
 import AuthProvider from './AuthProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  
     <AuthProvider><App /></AuthProvider>
     
-  </StrictMode>,
+  
 )

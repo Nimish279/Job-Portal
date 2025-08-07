@@ -52,7 +52,7 @@ function JobPage() {
         })
         const recruiter=res.data.recruiter
         
-        setUserName(recruiter.recruiterName)
+        setUserName(recruiter.companyName) //Company Nmae aayega modals me changes hai(By-tushar)
         setLoading(false);
         // console.log(res.data.recruiter)
       } catch (error) {

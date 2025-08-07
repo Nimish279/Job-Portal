@@ -1,24 +1,39 @@
-// AuthProvider.jsx
-import { useEffect, useState } from 'react';
-import userStore from './store/userStore';
+// Extra changes for role based authorization
+
+import { useEffect, useState } from "react";
+import userStore from "./store/userStore";
+import recruiterStore from "./store/recruiterStore";
+import { axiosInstance } from "./utils/axiosInstance";
 
 const AuthProvider = ({ children }) => {
   const fetchUser = userStore((state) => state.fetchUser);
-  const fetchedUser = userStore((state) => state.fetchedUser);
+  const fetchRecruiter = recruiterStore((state) => state.fetchRecruiter);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const init = async () => {
-      await fetchUser(); // Wait for the user to be fetched
-      setLoading(false);
+    const checkAuth = async () => {
+      try {
+        const res = await axiosInstance.get("/auth/check");
+        const role = res.data.role;
+
+        if (role === "user") {
+          await fetchUser();
+          setLoading(false);
+        } else if (role === "recruiter") {
+          await fetchRecruiter();
+          setLoading(false);
+        }
+      } catch (err) {
+        console.log(" Not authenticated.");
+        setLoading(false);
+      } 
     };
 
-    init();
+    checkAuth();
   }, []);
 
-  if (loading || !fetchedUser) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <div>Loading...</div>;
 
   return children;
 };

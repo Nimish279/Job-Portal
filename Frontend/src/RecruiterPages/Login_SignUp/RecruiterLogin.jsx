@@ -2,41 +2,28 @@ import React, { useState } from 'react'
 import {useNavigate, Link} from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import useRecruiterStore from '../../store/recruiterStore.js'
 const RecruiterLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const { login } = useRecruiterStore();
   
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {  // jisne bhi phele likha tha bhai recruiterStore bhi dekh liya kr
       e.preventDefault();
-  
-      try {
-        const response = await fetch("http://localhost:8000/api/recruiters/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ email, password }),
-        });
-  
-        const data = await response.json();
-  
-        if (response.ok) {
-          toast.success("Login Successful!");
-  
-          // Store JWT Token in localStorage
-          // localStorage.setItem("token", data.token);
-  
-          // Redirect to dashboard
+      if (password.length < 6) {
+          toast.error("Password must be at least 6 characters.");
+          return;
+        }
+
+      const result = await login({ email, password });
+      
+        if (result.success) {
           navigate("/recruiters/jobs/active");
         } else {
-          toast.error(data.message || "Invalid email or password");
-        }
-      } catch (error) {
-        toast.error("Login failed. Please try again.");
-      }
+          toast.error(result.message || "Login failed");
+        }  
+      
     };
   
     return (

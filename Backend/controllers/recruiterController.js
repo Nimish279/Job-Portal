@@ -26,7 +26,14 @@ export const loginRecruiter = async (req, res) => {
       sameSite: "Strict",
       maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
     });
-    res.status(200).json({ success: true, message: "Login successfully" });
+    res.status(200).json({
+      recruiter:{
+        id: recruiter._id,
+        email: recruiter.email,
+        companyName: recruiter.companyName,
+ 
+      },
+      success: true, message: "Login successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -289,11 +296,26 @@ export const myJobs = async (req, res) => {
     const recruiter = req.recruiter;
     const jobs = await Job.find({ recruiter: recruiter._id });
     if (jobs.length === 0) {
-      res.status(203).json({ message: "No Jobs Posted by you" });
+      res.status(203).json({ message: "No Jobs Posted by you", jobs: [] });
     }
     res.status(200).json({ success: true, jobs });
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.log(error);
+  }
+};
+export const getCurrentRecruiter = async (req, res) => {
+  try {
+    const recruiter = req.recruiter;
+    res.status(200).json({
+      success: true,
+      recruiter: {
+        name: recruiter.companyName,
+        email: recruiter.email,
+        id: recruiter._id,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ message: unauthenticated });
   }
 };
