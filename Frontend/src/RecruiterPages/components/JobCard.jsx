@@ -82,15 +82,15 @@ const JobCard = ({
         </p>
         <div className="flex flex-wrap gap-2">
           {actionButtonLink && (
-            <Link to={actionButtonLink}>
-              <button className="bg-[#5F9D08] hover:bg-[#4b7b06] text-white px-4 py-2 rounded-md transition-colors text-xs sm:text-sm">
+            // <Link to={actionButtonLink}>
+              <button onClick={actionButtonLink} className="bg-[#5F9D08] hover:bg-[#4b7b06] text-white px-4 py-2 rounded-md transition-colors text-xs sm:text-sm cursor-pointer">
                 {actionButtonText}
               </button>
-            </Link>
+            // </Link>
           )}
           {secondaryButtonText && (
             <button
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-xs sm:text-sm transition"
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-xs sm:text-sm transition cursor-pointer"
               onClick={onSecondaryButtonClick}
             >
               {secondaryButtonText}

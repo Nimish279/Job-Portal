@@ -319,3 +319,28 @@ export const getCurrentRecruiter = async (req, res) => {
     res.status(500).json({ message: unauthenticated });
   }
 };
+
+export const closeJob=async(req,res)=>{
+  try {
+    const jobId = req.params.id;
+    const job = await Job.findById(jobId);
+    job.status="closed";
+    await job.save();
+    res.status(200).json({ success: true, job });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+}
+export const openJob=async(req,res)=>{
+  try {
+    const jobId = req.params.id;
+    const job = await Job.findById(jobId);
+    job.status="open";
+    await job.save();
+    res.status(200).json({ success: true, job });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+}

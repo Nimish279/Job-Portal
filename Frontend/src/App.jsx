@@ -86,8 +86,8 @@ function App() {
         <Route path='/recruiters/applicants' element={<Applicants />} />
         <Route path='/recruiters/updateRecruiter' element={<UpdateRecruiter />} />
         <Route path='/recruiters/applicantsProfile/:id' element={<ApplicantsProfile />} />
-        <Route path='/recruiters/post-job/job' element={<PostJob_Job />} />
-        <Route path='/recruiters/post-job/internship' element={<PostJob_Internship />} />
+        {/* <Route path='/recruiters/post-job/job' element={<PostJob_Job />} />
+        <Route path='/recruiters/post-job/internship' element={<PostJob_Internship />} /> */} // These routes are repeated.
         <Route path='/recruiters/change-password' element={<ChangePassword />} />
 
         

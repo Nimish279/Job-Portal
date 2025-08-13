@@ -23,15 +23,14 @@ function AllJobs_ClosedJobs() {
          window.addEventListener('resize', handleResize);
          return () => window.removeEventListener('resize', handleResize);
        }, []);
-
-   useEffect(() => {
-    const fetchJobs = async () => {
+       const fetchJobs = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/recruiters/myJobs', {
           withCredentials: true, // <-- THIS is required to send cookies
         });
-
-        setJobs(response.data.jobs); // Adjust according to your API shape
+        const recruiterAllJobs=response.data.jobs.filter((job) => job.status === 'closed'); //added a filter (by-tushar)
+        setJobs(recruiterAllJobs);
+         
         setLoading(false);
         // console.log(response.data.jobs)
       } catch (error) {
@@ -40,6 +39,9 @@ function AllJobs_ClosedJobs() {
         setLoading(false);
       }
     };
+
+   useEffect(() => {
+    
 
     fetchJobs();
   }, []);
@@ -64,6 +66,40 @@ function AllJobs_ClosedJobs() {
     }
     fetchProfile()
   }, []);
+
+  const handleOpenJob=async(jobId)=>{
+    
+  try {
+      await axios.post(
+        `http://localhost:8000/api/recruiters/openJob/${jobId}`,
+        {},
+        { withCredentials: true }
+      );
+      fetchJobs();
+      toast.success("Job Opened successfully");
+    } catch (error) {
+      toast.error("Failed to open job");
+      console.error("Error opening job:", error);
+    }
+  };
+
+  const handleDeleteJob=async(jobId)=>{
+    
+  try {
+      await axios.delete(
+        `http://localhost:8000/api/recruiters/deleteJob/${jobId}`,
+        
+        { withCredentials: true }
+      );
+      fetchJobs();
+      toast.success("Job Deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete job");
+      console.error("Error deleting job:", error);
+    }
+  };
+
+
   
 
   return (
@@ -72,24 +108,32 @@ function AllJobs_ClosedJobs() {
       <motion.div 
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
               className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full">
               <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto">
-                <img src={Search} alt="Search Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
+                {/* <img src={Search} alt="Search Icon" className="w-8 h-8 sm:w-10 sm:h-10" /> //logo */}
+                {/* <input
+                  type="text"
+                  placeholder="Search"
+                  className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
+                /> */}
+              </div>
+              <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
+                
                 <input
                   type="text"
                   placeholder="Search"
                   className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
                 />
-              </div>
-              <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
+                <img src={Search} alt="Search Icon" className="w-8 h-8" /> 
                 <Link to="/recruiters/notifications">
                   <img src={Notifications} alt="Notifications Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
                 </Link>
+                <Link to="/recruiters/getProfile" className='flex flex-row items-center gap-2'>
                 <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8">
                   <img src={ProfileImage} alt="" className="w-full h-full rounded-full" />
                 </div>
-                <Link to="/recruiters/getProfile">
+                
                 <span className="text-sm sm:text-base">{userName || 'Loading...'}</span> 
                 </Link>
               </div>
@@ -163,10 +207,10 @@ function AllJobs_ClosedJobs() {
                   eligibilityCriteria={job.eligibilityCriteria}
                   status={job.status}
                   opened={job.created_at}
-                  actionButtonText="View Applicants"
-                  secondaryButtonText="Close Job"
-                  actionButtonLink={`/recruiters/applicants`}
-                  onSecondaryButtonClick={() => console.log(`Closing job ${job._id}`)}
+                  actionButtonText="Open Job"
+                  secondaryButtonText="Delete Job"
+                  actionButtonLink={()=>{handleOpenJob(job._id)}}
+                  onSecondaryButtonClick={() => {handleDeleteJob(job._id)}}
                   statusText={job.status === 1 ? 'Active' : 'Inactive'}
                 />
               ))}
