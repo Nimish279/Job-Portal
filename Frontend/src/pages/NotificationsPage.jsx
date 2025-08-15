@@ -1,3 +1,4 @@
+// C:\Users\Lenovo\Downloads\feature\Job-Portal\Frontend\src\pages\NotificationsPage.jsx
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FiMenu } from "react-icons/fi";
