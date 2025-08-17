@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Job } from "../models/Job.js";
 import { Internship } from "../models/Internship.js";
+// import Job from "../models/Job.js";
 
 export const loginRecruiter = async (req, res) => {
   const { email, password } = req.body;
@@ -27,13 +28,14 @@ export const loginRecruiter = async (req, res) => {
       maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
     });
     res.status(200).json({
-      recruiter:{
+      recruiter: {
         id: recruiter._id,
         email: recruiter.email,
         companyName: recruiter.companyName,
- 
       },
-      success: true, message: "Login successfully" });
+      success: true,
+      message: "Login successfully",
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -44,30 +46,30 @@ export const registerRecruiter = async (req, res) => {
     const { email, phone, password, companyName } = req.body;
     const existingRecruiter = await Recruiter.findOne({ email });
     if (existingRecruiter) {
-      return res.status(400).json({ message: 'Recruiter already exists' });
+      return res.status(400).json({ message: "Recruiter already exists" });
     }
 
     if (!req.file || !req.file.path) {
-      return res.status(400).json({ message: 'PAN or GST document is required' });
+      return res
+        .status(400)
+        .json({ message: "PAN or GST document is required" });
     }
 
-    
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    
     const newRecruiter = new Recruiter({
       email,
       phone,
       password: hashedPassword,
       companyName,
-      companyPanCardOrGstFile: req.file.path, 
+      companyPanCardOrGstFile: req.file.path,
     });
 
     await newRecruiter.save();
 
     res.status(201).json({
       success: true,
-      message: 'Recruiter registered successfully',
+      message: "Recruiter registered successfully",
       recruiter: {
         id: newRecruiter._id,
         email: newRecruiter.email,
@@ -76,8 +78,10 @@ export const registerRecruiter = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Register Error:', error);
-    res.status(500).json({ message: 'Server error during registration', error });
+    console.error("Register Error:", error);
+    res
+      .status(500)
+      .json({ message: "Server error during registration", error });
   }
 };
 
@@ -245,12 +249,10 @@ export const postInternship = async (req, res) => {
       eligibilityCriteria,
     });
 
-    res
-      .status(201)
-      .json({
-        message: "Internship created successfully",
-        internship: newInternship,
-      });
+    res.status(201).json({
+      message: "Internship created successfully",
+      internship: newInternship,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
@@ -262,13 +264,11 @@ export const deleteJob = async (req, res) => {
     const jobId = req.params.id;
     const job = await Job.findByIdAndDelete(jobId);
 
-    res
-      .status(200)
-      .json({
-        message: "Job Posting Deleted Successfully",
-        job,
-        success: true,
-      });
+    res.status(200).json({
+      message: "Job Posting Deleted Successfully",
+      job,
+      success: true,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.log(error);
@@ -320,27 +320,126 @@ export const getCurrentRecruiter = async (req, res) => {
   }
 };
 
-export const closeJob=async(req,res)=>{
+// export const closeJob=async(req,res)=>{
+//   try {
+//     const jobId = req.params.id;
+//     const job = await Job.findById(jobId);
+//     job.status="closed";
+//     await job.save();
+//     res.status(200).json({ success: true, job });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//     console.log(error);
+//   }
+// }
+
+//by mukund
+// controllers/recruiterController.js
+
+// export const closeJob = async (req, res) => {
+//   try {
+//     const job = await Job.findOneAndUpdate(
+//       { _id: req.params.id, recruiter: req.recruiter._id },
+//       { status: "closed" },
+//       { new: true, runValidators: false } // 👈 validation skip
+//     );
+
+//     if (!job) {
+//       return res.status(404).json({ message: "Job not found" });
+//     }
+
+//     // Recruiter owner check
+//     if (
+//       !req.recruiter ||
+//       job.recruiter.toString() !== req.recruiter._id.toString()
+//     ) {
+//       return res
+//         .status(403)
+//         .json({ message: "Not authorized to close this job" });
+//     }
+
+//     job.status = "closed";
+//     await job.save({ validateModifiedOnly: true });
+
+//     res
+//       .status(200)
+//       .json({ success: true, message: "Job closed successfully", job });
+
+//     fetchJobs();
+//     toast.success("Job closed successfully");
+//   } catch (error) {
+//     console.error("❌ Error in closeJob:", error);
+//     res.status(500).json({ message: "Server error", error: error.message });
+//     toast.error("Failed to close job");
+//     console.error("Error closing job:", error);
+//   }
+// };
+
+// controllers/recruiterController.js
+
+export const closeJob = async (req, res) => {
   try {
-    const jobId = req.params.id;
-    const job = await Job.findById(jobId);
-    job.status="closed";
-    await job.save();
-    res.status(200).json({ success: true, job });
+    // Find job by ID & recruiter (ownership check)
+    const job = await Job.findOneAndUpdate(
+      { _id: req.params.id, recruiter: req.recruiter._id },
+      { status: "closed" },
+      { new: true, runValidators: false } // validation skip
+    );
+
+    if (!job) {
+      return res
+        .status(404)
+        .json({ message: "Job not found or not authorized" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Job closed successfully",
+      job,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-    console.log(error);
+    console.error("❌ Error in closeJob:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-}
-export const openJob=async(req,res)=>{
+};
+
+export const openJob = async (req, res) => {
+  //   try {
+  //     const jobId = req.params.id;
+  //     const job = await Job.findById(jobId);
+  //     job.status = "open";
+  //     await job.save();
+  //     res.status(200).json({ success: true, job });
+  //   } catch (error) {
+  //     res.status(500).json({ error: error.message });
+  //     console.log(error);
+  //   }
+  // };
   try {
-    const jobId = req.params.id;
-    const job = await Job.findById(jobId);
-    job.status="open";
-    await job.save();
-    res.status(200).json({ success: true, job });
+    const job = await Job.findById(req.params.id);
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    // Recruiter owner check
+    if (
+      !req.recruiter ||
+      job.recruiter.toString() !== req.recruiter._id.toString()
+    ) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to open this job" });
+    }
+
+    job.status = "open";
+    await job.save({ validateModifiedOnly: true });
+
+    res
+      .status(200)
+      .json({ success: true, message: "Job opened successfully", job });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-    console.log(error);
+    console.error("❌ Error in openJob:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};

@@ -12,3 +12,5 @@ const NotificationCard = ({ title, message, timeAgo }) => {
 };
 
 export default NotificationCard;
+
+

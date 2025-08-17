@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const recruiterSchema = new mongoose.Schema({
+const recruiterSchema = new mongoose.Schema(
+  {
     // recruiterName: {
     //     type: String,
     //     required: false,
@@ -10,13 +11,13 @@ const recruiterSchema = new mongoose.Schema({
     //     required: false,
     // }, // removed by wafiya
     email: {
-        type: String,
-        required: true,
-        unique: true,
+      type: String,
+      required: true,
+      unique: true,
     },
     phone: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     // alternateContact: { // removed by wafiya
     //     type: String,
@@ -25,12 +26,12 @@ const recruiterSchema = new mongoose.Schema({
     //     type: String,
     // },
     password: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     companyName: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     // website: {
     //     type: String,
@@ -61,21 +62,29 @@ const recruiterSchema = new mongoose.Schema({
     // companyLogo: {
     //     type: String,
     // },
-    companyPanCardOrGstFile: {  //GST or PAN added
-        type: String, 
+    companyPanCardOrGstFile: {
+      //GST or PAN added
+      type: String,
     },
     role: {
-        type: String,
-        // enum: ["Seeker", "Recruiter"],
-        default: "Recruiter",
+      type: String,
+      // enum: ["Seeker", "Recruiter"],
+      default: "Recruiter",
     },
+    // status: {
+    //     type: String,
+    //     enum: ["Active", "Inactive"],
+    //     default: "Active",
+    // }
     status: {
-        type: String,
-        enum: ["Active", "Inactive"],
-        default: "Active",
-    }
-}, {
+      type: String,
+      enum: ["open", "closed"],
+      default: "open",
+    },
+  },
+  {
     timestamps: true,
-})
+  }
+);
 
 export const Recruiter = mongoose.model("Recruiter", recruiterSchema);

@@ -9,6 +9,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu } from 'react-icons/fi';
 import ProfileImage from '../assets/images/Profile_pics/1.jpg';
+import { Job } from '../../../Backend/models/Job';
 
 function AllJobs_ClosedJobs() {
    const [jobs, setJobs] = useState([]);
@@ -67,21 +68,43 @@ function AllJobs_ClosedJobs() {
     fetchProfile()
   }, []);
 
-  const handleOpenJob=async(jobId)=>{
+  // const handleOpenJob=async(jobId)=>{
     
+  // try {
+  //     await axios.post(
+  //       `http://localhost:8000/api/recruiters/openJob/${jobId}`,
+  //       {},
+  //       { withCredentials: true }
+  //     );
+  //     fetchJobs();
+  //     toast.success("Job Opened successfully");
+  //   } catch (error) {
+  //     toast.error("Failed to open job");
+  //     console.error("Error opening job:", error);
+  //   }
+  // };
+
+
+  //by mukund
+
+const handleOpenJob = async (jobId) => {
   try {
-      await axios.post(
-        `http://localhost:8000/api/recruiters/openJob/${jobId}`,
-        {},
-        { withCredentials: true }
-      );
-      fetchJobs();
-      toast.success("Job Opened successfully");
-    } catch (error) {
-      toast.error("Failed to open job");
-      console.error("Error opening job:", error);
-    }
-  };
+    await axios.post(
+      `http://localhost:8000/api/recruiters/openJob/${jobId}`,
+      {}, // body empty
+      { withCredentials: true }
+    );
+    fetchJobs(); // refresh list
+    toast.success("Job opened successfully");
+  } catch (error) {
+    toast.error("Failed to open job");
+    console.error("Error opening job:", error);
+  }
+};
+
+
+
+
 
   const handleDeleteJob=async(jobId)=>{
     

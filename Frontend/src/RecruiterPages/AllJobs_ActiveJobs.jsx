@@ -67,14 +67,34 @@ function JobPage() {
     fetchProfile()
   }, []);
 
-  const handleCloseJob = async (jobId) => {
+//   const handleCloseJob = async (jobId) => {
+//   try {
+//     await axios.post(
+//       `http://localhost:8000/api/recruiters/closeJob/${jobId}`,
+//       {},
+//       { withCredentials: true }
+//     );
+//     fetchJobs();
+//     toast.success("Job closed successfully");
+//   } catch (error) {
+//     toast.error("Failed to close job");
+//     console.error("Error closing job:", error);
+//   }
+// };
+
+
+// by mukund
+const handleCloseJob = async (jobId) => {
   try {
     await axios.post(
       `http://localhost:8000/api/recruiters/closeJob/${jobId}`,
       {},
       { withCredentials: true }
     );
-    fetchJobs();
+
+    // Active jobs me se hatado
+    setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
+
     toast.success("Job closed successfully");
   } catch (error) {
     toast.error("Failed to close job");
