@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 const recruiterStore = create((set) => ({
   loading: false,
+  recruiter: null,
 
   login: async ({ email, password }) => {
     try {
@@ -11,7 +12,7 @@ const recruiterStore = create((set) => ({
         email,
         password,
       });
-      set({ loading: false });
+      set({recruiter: response.data.recruiter, loading: false });
       toast.success("Login Successfull");
       return { success: true };
     } catch (error) {
@@ -20,32 +21,42 @@ const recruiterStore = create((set) => ({
       set({ loading: false });
     }
   },
+  fetchRecruiter: async () => {
+  set({ loading: true });   //added fetch for recruiter along with page restrictions
+  try {
+    const res = await axiosInstance.get("/recruiters/me");
+    set({ recruiter: res.data.recruiter, loading: false });
+  } catch (err) {
+    console.error("Failed to fetch recruiter:", err);
+    set({ recruiter: null, loading: false });
+  }
+},
 
  register: async (formData) => {
-    set({ loading: true });
-    try {
-      console.log("🔍 Checking contents of FormData:");
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
-      }
+  set({ loading: true });
+  try {
+    const response = await axiosInstance.post("/recruiters/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // ✅ Explicitly needed here if axiosInstance has a default
+      },
+    });
 
-      const response = await axiosInstance.post("/recruiters/register", formData);
-
-      if (response.status === 201) {
-        toast.success("Recruiter registered successfully");
-        return { success: true };
-      } else {
-        toast.error("Unexpected response from server");
-        return { success: false };
-      }
-    } catch (error) {
-      const msg = error.response?.data?.message || "Registration failed";
-      toast.error(msg);
-      return { success: false };
-    } finally {
+    if (response.status === 201) {
+      toast.success("Recruiter registered successfully");
+      set({recruiter: response.data.recruiter, loading: false });
+      return { success: true };
+    } else {
       set({ loading: false });
+      return { success: false, message: "Unexpected response" };
     }
-  },
+  } catch (error) {
+    set({ loading: false });
+    const msg = error?.response?.data?.message || "Server Error";
+    toast.error(msg);
+    return { success: false, message: msg };
+  }
+},
+
 
   logout: async () => {
     try {

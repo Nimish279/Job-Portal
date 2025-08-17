@@ -254,14 +254,16 @@ export const getAppliedJobs = async (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
-
+    const user = req.user;
     res.status(200).json({
       success: true,
-      user,
+      user: {
+        name: user.name,
+        email: user.email,
+        id: user._id,
+      },
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: unauthenticated });
   }
 };

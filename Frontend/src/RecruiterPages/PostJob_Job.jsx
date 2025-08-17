@@ -5,7 +5,10 @@ import { FiMenu } from "react-icons/fi";
 import Sidebar from "../components/SideBar_Recr";
 import { motion, AnimatePresence } from "framer-motion";
 import useRecruiterStore from "../store/recruiterStore";
-
+import { FaHome } from "react-icons/fa";
+import AmazonLogo from '../assets/images/AmazonLogo.png';
+import ProfileImage from '../assets/images/Profile_pics/1.jpg';
+import axios from "axios";
 function PostJob_Job() {
   // Animation variants
   const fadeIn = {
@@ -47,7 +50,7 @@ function PostJob_Job() {
   const [requiredDocuments, setRequiredDocuments] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  
+   const [userName, setUserName] = useState('');
 
   const { postJob } = useRecruiterStore();
 const isMobile = screenWidth < 768;
@@ -56,6 +59,23 @@ useEffect(() => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+useEffect(()=>{
+  const fetchProfile = async () => {
+      try {
+        const res = await axios.get('http://localhost:8000/api/recruiters/getProfile', {
+          withCredentials: true
+        });
+        setUserName(res.data.recruiter.companyName);
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+
+    
+    fetchProfile();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const jobData = {
@@ -94,7 +114,41 @@ useEffect(() => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Navbar */}
-      <Navbar pageName="Post Job" />
+      <motion.div
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full shadow-md"
+            >
+              {/* Left: Home button */}
+              <div className="flex items-center space-x-4 w-full sm:w-auto">
+                <Link to="/recruiters/jobs/active">
+                            <img src={AmazonLogo} alt="Amazon Logo" className="w-8 h-8" />
+                          </Link>
+              </div>
+      
+              {/* Right: Search + Notifications + Profile */}
+              <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
+                {/* <input
+                  type="text"
+                  placeholder="Search"
+                  className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
+                />
+                <img src={Search} alt="Search Icon" className="w-8 h-8" /> */}
+                {/* <Link to="/recruiters/notifications">
+                  <img src={NotificationsIcon} alt="Notifications" className="w-8 h-8" />
+                </Link> */}
+                <Link to="/recruiters/jobs/active">
+                                      <FaHome className="text-2xl w-8 h-8  cursor-pointer hover:text-gray-300" />
+                                    </Link>
+                <Link to="/recruiters/getProfile" className="flex items-center gap-2">
+                  <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8">
+                    <img src={ProfileImage} alt="" className="w-full h-full rounded-full" />
+                  </div>
+                  <span className="text-sm sm:text-base">{userName || 'Loading...'}</span>
+                </Link>
+              </div>
+            </motion.div>
 
       {/* Layout */}
       <div className="flex flex-col lg:flex-row w-full">

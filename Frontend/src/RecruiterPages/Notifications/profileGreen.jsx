@@ -40,7 +40,7 @@ const ProfileGreen = () => {
           withCredentials: true,
         });
         const recruiter = response.data.recruiter;
-        setUserName(recruiter.recruiterName);
+        setUserName(recruiter.companyName);
       } catch (error) {
         toast.error("Failed to fetch recruiter details");
         console.error("Error fetching recruiter:", error);

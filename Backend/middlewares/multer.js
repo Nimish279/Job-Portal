@@ -28,7 +28,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "resumes", // Cloudinary folder
-    resource_type: "raw", // because .pdf and .docx are not images
+    resource_type: "auto", // because .pdf and .docx are not images
     access_mode: "public", // ✅ REQUIRED for open access via URL
     format: async (req, file) => {
       return file.originalname.split(".").pop(); // keep original file extension
@@ -47,20 +47,19 @@ const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB Limit
   fileFilter: (req, file, cb) => {
-  const allowedTypes = [
-    "application/pdf",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "image/jpeg",
-    "image/png"
-  ];
-  console.log("File MIME:", file.mimetype);
-  if (allowedTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    console.error("Rejected file type:", file.mimetype);
-    cb(new Error("Only PDF, DOCX, JPEG, and PNG files are allowed"), false);
-  }
-},
+    const allowedTypes = [
+  "application/pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "image/jpeg",
+  "image/png"
+];
+
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only .pdf and .docx files are allowed"), false);
+    }
+  },
 });
 
 export default upload;

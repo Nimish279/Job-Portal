@@ -16,7 +16,7 @@ const JobCard = ({ job }) => {
         </div>
         
         <div className="flex-1">
-          <h2 className="text-lg md:text-xl font-bold text-gray-800">{job.title || 'Untitled Position'}</h2>
+          <h2 className="text-lg md:text-xl font-bold text-gray-800">{job.title || job.jobTitle || 'Untitled Position'}</h2>
           <p className="text-[#5F9D08] font-medium">{job.company || 'Unknown Company'}</p>
           
           <div className="flex flex-wrap items-center mt-2 text-sm text-gray-600">

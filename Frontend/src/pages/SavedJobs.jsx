@@ -3,32 +3,29 @@ import { FiMenu } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import Sidebar from '../components/SideBar';
-import UserNavbar from '../components/Header/UserNavbar';
-import JobCard from '../components/JobCard';
-import saved from '../data/saved.json';
 import NavSearchBar from '../components/Header/NavSearchBar';
+import JobCard from '../components/JobCard';
 
 const SavedJobs = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [savedJobs, setSavedJobs] = useState([]);
 
-  // useEffect(() => {
-  //   const handleResize = () => setWindowWidth(window.innerWidth);
-  //   window.addEventListener('resize', handleResize);
-  //   return () => window.removeEventListener('resize', handleResize);
-  // }, []);
   useEffect(() => {
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      };
-      
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const storedJobs = localStorage.getItem('savedJobs');
+    if (storedJobs) {
+      setSavedJobs(JSON.parse(storedJobs));
+    }
+  }, []);
 
   const isMobile = windowWidth < 768;
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
@@ -39,32 +36,17 @@ const SavedJobs = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col md:flex-row">
-      {/* Navbar */}
       <NavSearchBar
         toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         showHamburger={true}
-      />  
+      />
 
-      {/* Hamburger menu for mobile */}
-      
-        {/* <div className="p-4 mt-6 fixed top-5 z-50 lg:hidden">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-3xl text-[#5F9D08] focus:outline-none cursor-pointer"
-          >
-            <FiMenu />
-          </button>
-        </div> */}
-      
-
-      {/* Sidebar for desktop */}
       {!isMobile && (
         <div className="hidden lg:block fixed top-20 left-0 z-30">
           <Sidebar isOpen={true} isMobile={false} />
         </div>
       )}
 
-      {/* Sidebar for mobile (animated) */}
       <AnimatePresence>
         { isSidebarOpen && (
           <Sidebar
@@ -75,9 +57,7 @@ const SavedJobs = () => {
         )}
       </AnimatePresence>
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col pt-24 lg:pl-64 px-4 md:px-8">
-        {/* Page Heading */}
         <motion.div
           className="mb-4"
           initial={{ opacity: 0, y: -20 }}
@@ -92,7 +72,6 @@ const SavedJobs = () => {
           </p>
         </motion.div>
 
-        {/* Job List */}
         <motion.div
           className="w-full max-w-5xl mx-auto"
           variants={containerVariants}
@@ -100,8 +79,8 @@ const SavedJobs = () => {
           animate="visible"
         >
           <div className="flex flex-col space-y-4 sm:pt-6">
-            {saved.length > 0 ? (
-              saved.map((job, index) => (
+            {savedJobs.length > 0 ? (
+              savedJobs.map((job, index) => (
                 <motion.div
                   key={job.id}
                   initial={{ opacity: 0, y: 20 }}

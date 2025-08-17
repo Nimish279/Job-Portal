@@ -26,7 +26,14 @@ export const loginRecruiter = async (req, res) => {
       sameSite: "Strict",
       maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
     });
-    res.status(200).json({ success: true, message: "Login successfully" });
+    res.status(200).json({
+      recruiter:{
+        id: recruiter._id,
+        email: recruiter.email,
+        companyName: recruiter.companyName,
+ 
+      },
+      success: true, message: "Login successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -34,108 +41,33 @@ export const loginRecruiter = async (req, res) => {
 
 export const registerRecruiter = async (req, res) => {
   try {
-    const {
-      recruiterName,
-      jobTitle,
-      email,
-      phone,
-      alternateContact,
-      linkedIn,
-      password,
-      companyName,
-      website,
-      street,
-      city,
-      state,
-      postalCode,
-      industryType,
-      registrationNumber,
-      companyPanCardNumber,
-    } = req.body;
-
+    const { email, phone, password, companyName } = req.body;
     const existingRecruiter = await Recruiter.findOne({ email });
     if (existingRecruiter) {
-      return res.status(400).json({ message: "Recruiter already exists" });
+      return res.status(400).json({ message: 'Recruiter already exists' });
     }
 
+    if (!req.file || !req.file.path) {
+      return res.status(400).json({ message: 'PAN or GST document is required' });
+    }
+
+    
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    
     const newRecruiter = new Recruiter({
-      recruiterName,
-      jobTitle,
       email,
       phone,
-      alternateContact,
-      linkedIn,
       password: hashedPassword,
       companyName,
-      website,
-      companyAddress: {
-        street,
-        city,
-        state,
-        postalCode,
-      },
-      industryType,
-      registrationNumber,
-      companyPanCardNumber,
+      companyPanCardOrGstFile: req.file.path, 
     });
 
     await newRecruiter.save();
 
     res.status(201).json({
-      message: "Recruiter registered Successfully",
-      recruiter: {
-        id: newRecruiter._id,
-        recruiterName: newRecruiter.recruiterName,
-        email: newRecruiter.email,
-        companyName: newRecruiter.companyName,
-        status: newRecruiter.status,
-      },
-    });
-  } catch (error) {
-    console.error("Register Error:", error);
-    res
-      .status(500)
-      .json({ message: "Server error during registration", error });
-  }
-
-  try {
-    const { email, phone, password, companyName } = req.body;
-
-    const existingRecruiter = await Recruiter.findOne({ email });
-    if (existingRecruiter) {
-      return res.status(400).json({ message: "Recruiter already exists" });
-    }
-
-    // Check if file is uploaded
-    if (!req.file) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No file uploaded" });
-    }
-
-    // 🟢 Get file URL from Cloudinary (multer-cloudinary saves `req.file.path`)
-    const panCardOrGstDocumentUrl = req.file.path;
-
-    // 🟢 Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // 🟢 Save recruiter to DB
-    const newRecruiter = new Recruiter({
-      email,
-      phone,
-      password: hashedPassword,
-      companyName,
-      companyPanCardOrGstFile: panCardOrGstDocumentUrl,
-    });
-
-    await newRecruiter.save();
-
-    // 🟢 Respond only once
-    return res.status(201).json({
       success: true,
-      message: "Recruiter registered successfully",
+      message: 'Recruiter registered successfully',
       recruiter: {
         id: newRecruiter._id,
         email: newRecruiter.email,
@@ -144,10 +76,8 @@ export const registerRecruiter = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Register Error:", error);
-    return res
-      .status(500)
-      .json({ message: "Server error during registration", error });
+    console.error('Register Error:', error);
+    res.status(500).json({ message: 'Server error during registration', error });
   }
 };
 
@@ -366,7 +296,7 @@ export const myJobs = async (req, res) => {
     const recruiter = req.recruiter;
     const jobs = await Job.find({ recruiter: recruiter._id });
     if (jobs.length === 0) {
-      res.status(203).json({ message: "No Jobs Posted by you" });
+      res.status(203).json({ message: "No Jobs Posted by you", jobs: [] });
     }
     res.status(200).json({ success: true, jobs });
   } catch (error) {
@@ -374,3 +304,43 @@ export const myJobs = async (req, res) => {
     console.log(error);
   }
 };
+export const getCurrentRecruiter = async (req, res) => {
+  try {
+    const recruiter = req.recruiter;
+    res.status(200).json({
+      success: true,
+      recruiter: {
+        name: recruiter.companyName,
+        email: recruiter.email,
+        id: recruiter._id,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ message: unauthenticated });
+  }
+};
+
+export const closeJob=async(req,res)=>{
+  try {
+    const jobId = req.params.id;
+    const job = await Job.findById(jobId);
+    job.status="closed";
+    await job.save();
+    res.status(200).json({ success: true, job });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+}
+export const openJob=async(req,res)=>{
+  try {
+    const jobId = req.params.id;
+    const job = await Job.findById(jobId);
+    job.status="open";
+    await job.save();
+    res.status(200).json({ success: true, job });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+}
