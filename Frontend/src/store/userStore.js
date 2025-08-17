@@ -6,8 +6,22 @@ const userStore = create((set) => ({
   loading: false,
   jobs: [],
   appliedJobs: [],
+<<<<<<< HEAD
   user: JSON.parse(localStorage.getItem("user")) || null, // 🔥 load from localStorage
 
+=======
+  user: null,
+  fetchedUser:false,
+  fetchUser: async () => {
+    try {
+      const response = await axiosInstance.get('/users/me');
+      set({ user: response.data.user,fetchedUser:true });
+    } catch (error) {
+      set({ user: null,fetchedUser:true });
+      console.error('Not logged in or error fetching user:', error?.response?.data?.message);
+    }
+  },
+>>>>>>> d8a7f4b6c610f19ed7b4fef6d6cf38d1cfa668f9
   login: async ({ email, password }) => {
     set({ loading: true });
     try {
@@ -32,11 +46,17 @@ const userStore = create((set) => ({
         token: response.data.token, // 👈 Token bhi store karo
       };
 
+<<<<<<< HEAD
       localStorage.setItem("user", JSON.stringify(defaultUser));
 
       set({ user: defaultUser, loading: false });
       console.log("Saved Token =>", response.data.token);
 
+=======
+      // localStorage.setItem('user', JSON.stringify(defaultUser)); // ✅ Save to localStorage
+      console.log(response.data.user);
+      set({user: response.data.user, loading: false });
+>>>>>>> d8a7f4b6c610f19ed7b4fef6d6cf38d1cfa668f9
       return { success: true };
     } catch (error) {
       const message = error?.response?.data?.message || "Login failed";
@@ -131,5 +151,6 @@ const userStore = create((set) => ({
     }
   },
 }));
+
 
 export default userStore;

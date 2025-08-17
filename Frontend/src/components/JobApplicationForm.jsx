@@ -32,7 +32,7 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
     if (!formData.phone) newErrors.phone = 'Phone number is required';
     if (!formData.resume) newErrors.resume = 'Resume is required';
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -41,7 +41,6 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
     e.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
-      // Simulate API call
       setTimeout(() => {
         onSubmit(formData);
         setIsSubmitting(false);
@@ -51,18 +50,18 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm">
-
-      <motion.div 
-        className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
+      <motion.div
+        className="bg-white rounded-xl w-full max-w-2xl h-full max-h-[90vh] flex flex-col overflow-hidden"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.4 }}
       >
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
+        {/* Header */}
+        <div className="px-6 pt-6 pb-4 shrink-0">
+          <div className="flex justify-between items-center mb-2">
             <h2 className="text-2xl font-bold text-gray-800">Apply for {job.title}</h2>
-            <button 
+            <button
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700"
             >
@@ -71,9 +70,13 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
               </svg>
             </button>
           </div>
-          
+        </div>
+
+        {/* Scrollable form */}
+        <div className="px-6 py-4 overflow-y-auto flex-1">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Full Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
                 <input
@@ -83,11 +86,11 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
                   onChange={handleChange}
                   className={`w-full p-2 border rounded-lg ${errors.fullName ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="John Doe"
-                  required
                 />
                 {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
               </div>
-              
+
+              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
                 <input
@@ -97,11 +100,11 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
                   onChange={handleChange}
                   className={`w-full p-2 border rounded-lg ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="john@example.com"
-                  required
                 />
                 {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
               </div>
-              
+
+              {/* Phone */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
                 <input
@@ -111,11 +114,11 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
                   onChange={handleChange}
                   className={`w-full p-2 border rounded-lg ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="+91 9876543210"
-                  required
                 />
                 {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
               </div>
-              
+
+              {/* Experience */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Years of Experience</label>
                 <select
@@ -132,7 +135,8 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
                   <option value="10+">10+ years</option>
                 </select>
               </div>
-              
+
+              {/* Current Company */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Current Company</label>
                 <input
@@ -144,7 +148,8 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
                   placeholder="Current company (if any)"
                 />
               </div>
-              
+
+              {/* Notice Period */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Notice Period</label>
                 <select
@@ -160,14 +165,15 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
                   <option value="3 months">3 months</option>
                 </select>
               </div>
-              
+
+              {/* Resume */}
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Resume/CV *</label>
                 <div className="mt-1 flex items-center">
-                  <label className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50">
+                  <label className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
                     <span>Upload File</span>
-                    <input 
-                      type="file" 
+                    <input
+                      type="file"
                       name="resume"
                       onChange={handleChange}
                       className="sr-only"
@@ -180,7 +186,8 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
                 </div>
                 {errors.resume && <p className="text-red-500 text-xs mt-1">{errors.resume}</p>}
               </div>
-              
+
+              {/* Cover Letter */}
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Cover Letter (Optional)</label>
                 <textarea
@@ -193,7 +200,8 @@ const JobApplicationForm = ({ job, onClose, onSubmit }) => {
                 />
               </div>
             </div>
-            
+
+            {/* Buttons */}
             <div className="flex justify-end space-x-3 pt-4">
               <button
                 type="button"

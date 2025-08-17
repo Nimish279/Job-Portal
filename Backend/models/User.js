@@ -30,6 +30,8 @@ const userSchema = new mongoose.Schema(
     degree: { type: String },
     github: { type: String },
     about: { type: String },
+    skills: [{ type: String }],
+    experience: { type: String },
     appliedJobs: [
       {
         type: mongoose.Schema.Types.ObjectId,

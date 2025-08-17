@@ -30,6 +30,7 @@ const Profile = () => {
   const [editedSkills, setEditedSkills] = useState(profileData.skills);
   const [isEditingAbout, setIsEditingAbout] = useState(false);
   const [editedAbout, setEditedAbout] = useState(profileData.about);
+<<<<<<< HEAD
 
   const [isEditingExperience, setIsEditingExperience] = useState(false);
   const [editedExperience, setEditedExperience] = useState(profileData.experience);
@@ -46,8 +47,63 @@ const Profile = () => {
       }));
       setEditedExperience(savedProfile.experience || prev.experience);
       setEditedAbout(savedProfile.about || prev.about);
+=======
+  const [isEditingExperience, setIsEditingExperience] = useState(false);
+  const [editedExperience, setEditedExperience] = useState(profileData.experience);
+
+  // useEffect(() => {
+  //   const savedProfile = JSON.parse(localStorage.getItem('profileData')) || {};
+  //   if (Object.keys(savedProfile).length > 0) {
+  //     setProfileData(prev => ({
+  //       ...prev,
+  //       ...savedProfile,
+  //       skills: savedProfile.skills || prev.skills,
+  //       experience: savedProfile.experience || prev.experience,
+  //       about: savedProfile.about || prev.about
+  //     }));
+  //     setEditedAbout(savedProfile.about || profileData.about);
+  //     setEditedExperience(savedProfile.experience || profileData.experience);
+  //   }
+  // }, []);
+  
+useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      const res = await fetch("/api/user/profile", {
+        credentials: "include",
+      });
+
+      // const text = await res.text(); // temp debug
+      // console.log(text); // see what's coming
+      // const data = JSON.parse(text);
+      const data = await res.json();
+
+      if (data.success) {
+        setProfileData({
+          name: data.user.name,
+          degree: data.user.degree || '',
+          university: data.user.university || '',
+          email: data.user.email,
+          city: data.user.city || '',
+          github: data.user.github || '',
+          about: data.user.about || '',
+          skills: data.user.skills || [],
+          profilePhoto: data.user.profilePhoto || null,
+          experience: data.user.experience || '',
+        });
+
+        setEditedAbout(data.user.about || '');
+        setEditedExperience(data.user.experience || '');
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+>>>>>>> d8a7f4b6c610f19ed7b4fef6d6cf38d1cfa668f9
     }
-  }, []);
+  };
+
+  fetchProfile();
+}, []);
+
   
   const handlePhotoUpload = (e) => {
     setProfilePhoto(URL.createObjectURL(e.target.files[0]));
@@ -58,13 +114,44 @@ const Profile = () => {
     setEditedSkills(profileData.skills);
   };
 
-  const handleSkillsSave = () => {
-    setProfileData(prev => ({
-      ...prev,
-      skills: editedSkills
-    }));
-    localStorage.setItem('profileData', JSON.stringify({ ...profileData, skills: editedSkills }));
-    setIsEditingSkills(false);
+  // const handleSkillsSave = () => {
+  //   setProfileData(prev => ({
+  //     ...prev,
+  //     skills: editedSkills
+  //   }));
+  //   localStorage.setItem('profileData', JSON.stringify({ ...profileData, skills: editedSkills }));
+  //   setIsEditingSkills(false);
+  // };
+
+const handleSkillsSave = async () => {
+  try {
+    const res = await fetch("/api/user/edit-profile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // JWT cookie bhejne ke liye
+      body: JSON.stringify({ skills: editedSkills }),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      setProfileData(prev => ({ ...prev, skills: editedSkills }));
+      setIsEditingSkills(false);
+    } else {
+      alert("Failed to save skills");
+    }
+  } catch (err) {
+    console.error("handleSkillsSave Error:", err);
+  }
+};
+
+
+
+  const handleAboutSave = () => {
+    setProfileData(prev => ({...prev, about: editedAbout}));
+    localStorage.setItem('profileData', JSON.stringify({ ...profileData, about: editedAbout}));
+    setIsEditingAbout(false);
   };
   const handleAboutSave = () => {
   setProfileData(prev => ({ ...prev, about: editedAbout }));
@@ -78,6 +165,35 @@ const handleExperienceSave = () => {
   setIsEditingExperience(false);
 };
 
+
+  // const handleExperienceSave = () => {
+  //   setProfileData(prev => ({...prev, experience:editedExperience}));
+  //   localStorage.setItem('profileData', JSON.stringify({ ...profileData, experience:editedExperience}));
+  //   setIsEditingExperience(false);
+  // }
+
+  const handleExperienceSave = async () => {
+  try {
+    const updated = { ...profileData, experience: editedExperience };
+
+    const res = await fetch("/api/user/edit-profile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(updated),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      setProfileData(updated);
+      setIsEditingExperience(false);
+    }
+  } catch (err) {
+    console.error("Failed to save experience:", err);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-green-50 font-sans">
@@ -191,6 +307,7 @@ const handleExperienceSave = () => {
           >
 
             {/* About Section */}
+<<<<<<< HEAD
             <Section
               title="About Me"
               icon={FiEdit}
@@ -211,6 +328,30 @@ const handleExperienceSave = () => {
               ) : (
                 <p className="text-gray-700 leading-relaxed">{profileData.about}</p>
               )}
+=======
+            <Section 
+            title="About Me" 
+            icon={FiEdit}
+            isEditing={isEditingAbout}
+            onEdit={() =>{
+              setIsEditingAbout(true);
+              setEditedAbout(profileData.about);
+            }}
+            onSave={handleAboutSave}
+            >
+            {isEditingAbout ? (
+              <textarea
+              className="w-full p-2 border rounded text-gray-700"
+              rows={4}
+              value={editedAbout}
+              onChange={(e) => setEditedAbout(e.target.value)}
+              />
+            ):(
+              <p className="text-gray-700 leading-relaxed">
+                {profileData.about}
+              </p>
+            )}
+>>>>>>> d8a7f4b6c610f19ed7b4fef6d6cf38d1cfa668f9
             </Section>
 
             {/* Skills Section with Edit on Card */}
@@ -270,6 +411,7 @@ const handleExperienceSave = () => {
             </Section>
 
             {/* Experience Section */}
+<<<<<<< HEAD
             <Section
               title="Experience"
               icon={FiEdit}
@@ -295,6 +437,32 @@ const handleExperienceSave = () => {
                 ) : (
                   <div className="text-gray-400">No experience added yet</div>
                 )
+=======
+            <Section title="Experience" 
+            icon={FiEdit}
+            isEditing={isEditingExperience}
+            onEdit={() => {
+              setIsEditingExperience(true);
+              setEditedExperience(profileData.experience);
+            }}
+            onSave={handleExperienceSave}
+            >
+              {isEditingExperience ? (
+                <textarea
+                className="w-full p-2 border rounded text-gray-700"
+                rows={4}
+                value={editedExperience}
+                onChange={(e) => setEditedExperience(e.target.value)}
+                />
+              ) : (
+              profileData.experience ? (
+                <div className="bg-white border-l-4 border-[#5F9D08] p-4 rounded-lg shadow">
+                  <p className="text-gray-700">{profileData.experience}</p>
+                </div>
+              ) : (
+                <div className="text-gray-400">No experience added yet</div>
+              )
+>>>>>>> d8a7f4b6c610f19ed7b4fef6d6cf38d1cfa668f9
               )}
             </Section>
 

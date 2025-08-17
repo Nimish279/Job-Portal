@@ -4,6 +4,7 @@ import { FaUserEdit, FaSave } from 'react-icons/fa';
 import { motion,AnimatePresence } from 'framer-motion';
 import NavSearchBar from '../components/Header/NavSearchBar';
 import Sidebar from '../components/SideBar';
+import { FiArrowLeft } from 'react-icons/fi';
 const EditProfile = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ const EditProfile = () => {
     degree: '',
     university: '',
     email: '',
+    skills: '',
+    experience: '',
     city: '',
     github: '',
     about: ''
@@ -28,6 +31,8 @@ const EditProfile = () => {
       email: savedProfile.email || '',
       city: savedProfile.city || '',
       github: savedProfile.github || '',
+      skills: savedProfile.skills || '',
+      experience: savedProfile.experience || '',
       about: savedProfile.about || ''
     });
   }, []);
@@ -40,13 +45,37 @@ const EditProfile = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const savedProfile = JSON.parse(localStorage.getItem('profileData')) || {};
-    const updatedProfile = { ...savedProfile, ...formData };
-    localStorage.setItem('profileData', JSON.stringify(updatedProfile));
-    navigate('/users/profile');
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const savedProfile = JSON.parse(localStorage.getItem('profileData')) || {};
+  //   const updatedProfile = { ...savedProfile, ...formData };
+  //   localStorage.setItem('profileData', JSON.stringify(updatedProfile));
+  //   navigate('/users/profile');
+  // };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await fetch("/api/user/edit-profile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      navigate("/users/profile");
+    } else {
+      alert("Failed to update profile");
+    }
+  } catch (error) {
+    console.error("Error updating profile:", error);
+  }
+};
+
 
   return (
     <div className="flex min-h-screen">
@@ -76,6 +105,14 @@ const EditProfile = () => {
         transition={{ duration: 0.6 }}
         className="bg-white border border-gray-200 rounded-2xl p-10 sm:p-10 w-full lg:ml-64"
       >
+        {/* Back Arrow */}
+        <button 
+        onClick={() => navigate(-1)}
+        className="flex items-center text-sm text-[#5F9D08] hover:text-[#4e7c07] mb-4 transition"
+        >
+          <FiArrowLeft className="mr-2"/>
+          Back
+        </button>
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-[#5F9D08] flex justify-center items-center gap-2">
@@ -100,6 +137,8 @@ const EditProfile = () => {
             { id: 'university', label: 'University' },
             { id: 'email', label: 'Email' },
             { id: 'city', label: 'City' },
+            { id: 'skills', label: 'Skills' },
+            { id: 'experience', label: 'Experience' },
             { id: 'github', label: 'GitHub' }
           ].map(field => (
             <div key={field.id}>

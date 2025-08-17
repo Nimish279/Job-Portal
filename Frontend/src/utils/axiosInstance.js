@@ -12,12 +12,19 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
+<<<<<<< HEAD
   baseURL: "http://localhost:8000/api", // 👈 Match your backend base URL
   withCredentials: true,
+=======
+  baseURL: 'http://localhost:8000/api',  // 👈 Ensure this matches your backend's base URL
+  // baseURL: 'https://job-portal-backend-swtv.onrender.com/api',  // ✅ Render backend URL
+  withCredentials: true,                 // 👈 Enables sending cookies (used for sessions/auth)
+>>>>>>> d8a7f4b6c610f19ed7b4fef6d6cf38d1cfa668f9
   headers: {
     "Content-Type": "application/json",
   },
 });
+<<<<<<< HEAD
 
 // ✅ Add request interceptor to inject token before every request
 axiosInstance.interceptors.request.use(
@@ -37,3 +44,6 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+=======
+ 
+>>>>>>> d8a7f4b6c610f19ed7b4fef6d6cf38d1cfa668f9

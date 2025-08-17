@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from './Notifications/Navbar';
@@ -57,6 +57,14 @@ function PostJob_Internship() {
   const [location, setLocation] = useState('');
   const [eligibilityCriteria, setEligibilityCriteria] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const isMobile = screenWidth < 768;
+  useEffect(() => {
+      const handleResize = () => setScreenWidth(window.innerWidth);
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
   
   const handleFileUpload = (e) => {
     // File upload handling logic
@@ -134,23 +142,25 @@ const resetForm = () => {
         </div>
 
         {/* Sidebar for desktop */}
-        <div className="hidden lg:block mt-6 ml-4">
+         {!isMobile && (
+        <div className="hidden lg:block fixed top-20 left-0 z-30">
           <Sidebar isOpen={true} isMobile={false} />
         </div>
+      )}
 
-        {/* Sidebar for mobile */}
-        <AnimatePresence>
-        {isSidebarOpen && (
+      {/* Sidebar for mobile (animated) */}
+      <AnimatePresence>
+        { isSidebarOpen && (
           <Sidebar
             isOpen={isSidebarOpen}
             onClose={() => setIsSidebarOpen(false)}
-            isMobile
+            isMobile={true}
           />
         )}
-        </AnimatePresence>
+      </AnimatePresence>
 
         {/* Main Content */}
-        <div className="flex-1 flex justify-center p-4 sm:p-8">
+        <div className="flex-1 flex justify-center lg:mt-8 lg:ml-64 p-4">
           <motion.div
             className="w-full max-w-3xl bg-white p-4 sm:p-6 rounded shadow-md"
             initial="hidden"

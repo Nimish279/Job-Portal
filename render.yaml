@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: job-portal-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && node index.js
+    envVars:
+      - key: PORT
+        value: 10000
+
+  - type: web
+    name: job-portal-frontend
+    env: static
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist

@@ -20,12 +20,28 @@ export const loginUser = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
+<<<<<<< HEAD
       //   secure: true,
       secure: false,
       sameSite: "Lax",
       maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
     });
     res.status(200).json({ success: true, message: "User login successful" });
+=======
+      secure: true,
+      sameSite: "Strict",
+      maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
+    });
+    res.status(200).json({
+      success: true,
+      message: "User login successful",
+      user: {
+        name: existingUser.name,
+        email: existingUser.email,
+        id: existingUser._id,
+      },
+    });
+>>>>>>> d8a7f4b6c610f19ed7b4fef6d6cf38d1cfa668f9
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -46,6 +62,7 @@ export const registerUser = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 export const editProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -76,6 +93,108 @@ export const editProfile = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error });
     console.log(error);
+=======
+// export const editProfile = async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user.id);
+//     console.log(user);
+//     const fields = ({ name, github, degree, university, email, city, about } =
+//       req.body);
+//     const updatedFields = [
+//       "name",
+//       "github",
+//       "degree",
+//       "city",
+//       "university",
+//       "email",
+//       "about",
+//     ];
+//     console.log(req.body.github);
+
+//     updatedFields.forEach((field) => {
+//       if (req.body[field]) {
+//         user[field] = req.body[field];
+//       }
+//     });
+
+//     await user.save();
+
+//     res
+//       .status(200)
+//       .json({ success: true, message: "User profile edited successfully" });
+//   } catch (error) {
+//     res.status(500).json({ error: error });
+//     console.log(error);
+//   }
+// };
+
+// export const editProfile = async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user.id);
+//     if (!user) return res.status(404).json({ message: "User not found" });
+
+//     const updatedFields = [
+//       "name",
+//       "github",
+//       "degree",
+//       "university",
+//       "email",
+//       "city",
+//       "about",
+//       "skills",
+//       "experience", // Added experience field
+//     ];
+
+//     updatedFields.forEach((field) => {
+//       if (req.body[field] !== undefined) {
+//         user[field] = req.body[field];
+//       }
+//     });
+
+//     await user.save();
+
+//     res.status(200).json({
+//       success: true,
+//       message: "User profile edited successfully",
+//     });
+//   } catch (error) {
+//     console.log("Edit profile error:", error);
+//     res
+//       .status(500)
+//       .json({ success: false, message: "Server error", error: error.message });
+//   }
+// };
+
+export const editProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const fieldsToUpdate = [
+      "name",
+      "github",
+      "degree",
+      "city",
+      "university",
+      "email",
+      "about",
+      "skills",
+      "experience",
+    ];
+
+    fieldsToUpdate.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        user[field] = req.body[field];
+      }
+    });
+
+    await user.save();
+
+    res.status(200).json({ success: true, message: "Profile updated" });
+  } catch (error) {
+    console.error("Edit Profile Error:", error);
+    res.status(500).json({ message: "Server error", error });
+>>>>>>> d8a7f4b6c610f19ed7b4fef6d6cf38d1cfa668f9
   }
 };
 
@@ -104,6 +223,7 @@ export const getJobs = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 // ✅ Inside userStore.js
 getJobs: async () => {
   try {
@@ -146,6 +266,35 @@ export const applyToJobs = async (req, res) => {
         });
 
     res.status(200).json({ message: "Applied To Job successfully", job });
+=======
+export const applyToJobs = async (req, res) => {
+  try {
+    const { jobId } = req.body;
+    const job = await Job.findById(jobId);
+    if (job === null) {
+      return res.status(404).json({ message: "Job Not found" });
+    }
+
+    if (job.status === "closed") {
+      return res.status(403).json({ message: "Job Opening Is closed" });
+    }
+    const user = req.user;
+
+    const alreadyApplied = job.candidates.includes(user._id);
+    if (alreadyApplied) {
+      return res.status(403).json({ message: "Already applied to this job" });
+    }
+    job.candidates.push(user._id); //ye job pe kitno ne apply kiya
+    user.appliedJobs.push(job._id); //ye bande ke kitne job pe apply kiya
+    await job.save({
+      validateBeforeSave: false,
+    });
+    await user.save({
+      validateBeforeSave: false,
+    });
+
+    res.status(200).json({ message: "Applied To Job successfully" });
+>>>>>>> d8a7f4b6c610f19ed7b4fef6d6cf38d1cfa668f9
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
@@ -173,3 +322,36 @@ export const getAppliedJobs = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+<<<<<<< HEAD
+=======
+
+// export const getCurrentUser = async (req, res) => {
+//   try {
+//     const user = req.user;
+//     res.status(200).json({
+//       success: true,
+//       user: {
+//         name: user.name,
+//         email: user.email,
+//         id: user._id,
+//       },
+//     });
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
+export const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+>>>>>>> d8a7f4b6c610f19ed7b4fef6d6cf38d1cfa668f9
