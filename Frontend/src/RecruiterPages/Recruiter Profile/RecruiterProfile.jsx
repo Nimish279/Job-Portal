@@ -6,6 +6,7 @@ import CompanyProfileForm from './CompanyProfileForm';
 import AmazonLogo from '../../assets/images/AmazonLogo.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu } from 'react-icons/fi';
+import { axiosInstance } from '../../utils/axiosInstance';
 import Sidebar from '../../components/SideBar_Recr';
 
 const RecruiterProfile = () => {
@@ -31,23 +32,29 @@ const RecruiterProfile = () => {
          }, []);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setUserName(user.name);
-      setEmail(user.email);
-      setLinkedin(user.linkedin);
-      setJobTitle(user.designation);
-      setPhone(user.phone);
-      setCompanyName(user.company_name);
-      setWebsite(user.website);
-      setAddress(user.address);
-      setIndustryType(user.industry_type);  
-      setcompany_name(user.company_name);  
-      const logoFromDB = user.logo_url;
-      setlogo_url(logoFromDB);
+  const fetchRecruiterProfile = async () => {
+    try {
+      const { data } = await axiosInstance.get("/recruiters/getProfile");
+      const recruiter = data.recruiter;
+
+      setUserName(recruiter.name || "");
+      setEmail(recruiter.email || "");
+      setLinkedin(recruiter.linkedin || "");
+      setJobTitle(recruiter.designation || "");
+      setPhone(recruiter.phone || "");
+      setCompanyName(recruiter.companyName || "");
+      setWebsite(recruiter.website || "");
+      setAddress(recruiter.address || "");
+      setIndustryType(recruiter.industryType || "");
+      setlogo_url(recruiter.logo_url || "");
+    } catch (error) {
+      console.error("Failed to fetch profile", error);
     }
-  }, []);
+  };
+
+  fetchRecruiterProfile();
+}, []);
+
 
   return (
     <motion.div

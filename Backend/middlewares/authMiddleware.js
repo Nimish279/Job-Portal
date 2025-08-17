@@ -58,7 +58,16 @@ export const protect = async (req, res, next) => {
 
 
 export const isRecruiter = async (req, res, next) => {
-  const recruiter = req.recruiter || await Recruiter.findById(req.user?._id);
+  // Ensure user exists first
+  if (!req.user) {
+    return res.status(401).json({ message: "Not authorized, user missing" });
+  }
+
+  // Check if recruiter already attached
+  let recruiter = req.recruiter;
+  if (!recruiter) {
+    recruiter = await Recruiter.findById(req.user._id);
+  }
 
   if (!recruiter || recruiter.role !== "Recruiter") {
     return res.status(403).json({ message: "Access denied: Not a recruiter" });
