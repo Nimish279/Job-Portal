@@ -4,7 +4,8 @@ import Sidebar from '../components/SideBar_Recr';
 import Search from '../assets/images/search00.png';
 import Notifications from '../assets/images/notifications00.png';
 import JobCard from './components/JobCard';
-import{ toast }from 'react-toastify';
+import{ toast,ToastContainer }from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu } from 'react-icons/fi';
@@ -23,6 +24,7 @@ function AllJobs_ClosedJobs() {
          window.addEventListener('resize', handleResize);
          return () => window.removeEventListener('resize', handleResize);
        }, []);
+
        const fetchJobs = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/recruiters/myJobs', {
@@ -70,13 +72,16 @@ function AllJobs_ClosedJobs() {
   const handleOpenJob=async(jobId)=>{
     
   try {
-      await axios.post(
+     const res= await axios.post(
         `http://localhost:8000/api/recruiters/openJob/${jobId}`,
         {},
         { withCredentials: true }
       );
+      if(res.data.success){
+      
       fetchJobs();
       toast.success("Job Opened successfully");
+      }
     } catch (error) {
       toast.error("Failed to open job");
       console.error("Error opening job:", error);
@@ -218,6 +223,7 @@ function AllJobs_ClosedJobs() {
           )}
         </motion.div>
       </div>
+      <ToastContainer position="top-center" theme="colored" />
     </div>
   );
 }

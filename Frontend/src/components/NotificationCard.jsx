@@ -1,4 +1,5 @@
-  import React from 'react';
+// C:\Users\Lenovo\Downloads\feature\Job-Portal\Frontend\src\components\NotificationCard.jsx
+import React from 'react';
 
   const NotificationCard = ({ companyLogo, notificationText, timeAgo }) => {
     return (
@@ -13,3 +14,4 @@
   };
 
   export default NotificationCard;
+

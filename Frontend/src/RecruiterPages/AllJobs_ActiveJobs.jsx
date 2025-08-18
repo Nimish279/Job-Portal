@@ -5,7 +5,8 @@ import Search from '../assets/images/search00.png';
 import Notifications from '../assets/images/notifications00.png';
 import ProfileImage from '../assets/images/Profile_pics/1.jpg';
 import JobCard from './components/JobCard';
-import{ toast }from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { motion ,AnimatePresence} from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -67,14 +68,32 @@ function JobPage() {
     fetchProfile()
   }, []);
 
-  const handleCloseJob = async (jobId) => {
+//   const handleCloseJob = async (jobId) => {
+//   try {
+//     await axios.post(
+//       `http://localhost:8000/api/recruiters/closeJob/${jobId}`,
+//       {},
+//       { withCredentials: true }
+//     );
+//     fetchJobs();
+//     toast.success("Job closed successfully");
+//   } catch (error) {
+//     toast.error("Failed to close job");
+//     console.error("Error closing job:", error);
+//   }
+// };
+
+const handleCloseJob = async (jobId) => {
   try {
     await axios.post(
       `http://localhost:8000/api/recruiters/closeJob/${jobId}`,
       {},
       { withCredentials: true }
     );
-    fetchJobs();
+
+    // Active jobs me se hatado
+    setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
+
     toast.success("Job closed successfully");
   } catch (error) {
     toast.error("Failed to close job");
@@ -220,6 +239,7 @@ function JobPage() {
           )}
         </motion.div>
       </motion.div>
+      <ToastContainer position="top-center" theme="colored" />
     </motion.div>
   );
 }

@@ -167,7 +167,7 @@ export const seeCandidates = async (req, res) => {
     if (!jobId) return res.status(500).json({ message: "No jobId mentioned" });
     const candidates = await Job.findById(jobId).populate("candidates");
     console.log(candidates);
-    if (candidates.length) {
+    if (candidates.length==0) {
       res.status(203).json({ message: "No Candidates Yet", candidates: [] });
     }
     res.status(200).json({ success: true, candidates });
@@ -320,27 +320,69 @@ export const getCurrentRecruiter = async (req, res) => {
   }
 };
 
-export const closeJob=async(req,res)=>{
+export const closeJob = async (req, res) => {
   try {
-    const jobId = req.params.id;
-    const job = await Job.findById(jobId);
-    job.status="closed";
-    await job.save();
-    res.status(200).json({ success: true, job });
+    // Find job by ID & recruiter (ownership check)
+    const job = await Job.findOneAndUpdate(
+      { _id: req.params.id, recruiter: req.recruiter._id },
+      { status: "closed" },
+      { new: true, runValidators: false } // validation skip
+    );
+
+    if (!job) {
+      return res
+        .status(404)
+        .json({ message: "Job not found or not authorized" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Job closed successfully",
+      job,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-    console.log(error);
+    console.error("❌ Error in closeJob:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-}
-export const openJob=async(req,res)=>{
+};
+
+export const openJob = async (req, res) => {
+  //   try {
+  //     const jobId = req.params.id;
+  //     const job = await Job.findById(jobId);
+  //     job.status = "open";
+  //     await job.save();
+  //     res.status(200).json({ success: true, job });
+  //   } catch (error) {
+  //     res.status(500).json({ error: error.message });
+  //     console.log(error);
+  //   }
+  // };
   try {
-    const jobId = req.params.id;
-    const job = await Job.findById(jobId);
-    job.status="open";
-    await job.save();
-    res.status(200).json({ success: true, job });
+    const job = await Job.findById(req.params.id);
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    // Recruiter owner check
+    if (
+      !req.recruiter ||
+      job.recruiter.toString() !== req.recruiter._id.toString()
+    ) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to open this job" });
+    }
+
+    job.status = "open";
+    await job.save({ validateModifiedOnly: true });
+
+    res
+      .status(200)
+      .json({ success: true, message: "Job opened successfully", job });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-    console.log(error);
+    console.error("❌ Error in openJob:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
