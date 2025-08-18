@@ -19,17 +19,24 @@ export const loginRecruiter = async (req, res) => {
       expiresIn: "1h",
     });
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            // sameSite: "Strict", deployed on different urls that why
-            sameSite: "None",
-            maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
-          });
-        res.status(200).json({success:true,message:"Login successfully"});
-    } catch(err){
-        res.status(500).json({error: err.message});
-    }
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      // sameSite: "None", for deployment only
+      sameSite: "Strict",
+      maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
+    });
+    res.status(200).json({
+      recruiter:{
+        id: recruiter._id,
+        email: recruiter.email,
+        companyName: recruiter.companyName,
+ 
+      },
+      success: true, message: "Login successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 export const registerRecruiter = async (req, res) => {
