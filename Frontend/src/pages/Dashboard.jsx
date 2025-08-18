@@ -22,6 +22,10 @@ const Dashboard = () => {
     //   if (!user) {
     //     navigate('/users/login');
     //   } else {
+    // const timer = setTimeout(() => {
+    //   if (!user) {
+    //     navigate('/users/login');
+    //   } else {
         setIsLoading(false);
       
     },); // Small delay to allow store to initialize
