@@ -17,10 +17,10 @@ const app = express();
 app.use(
   cors({
     origin: [
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:5175",
-        // "https://job-portal-2qza.onrender.com"  //ye frontend ka url hai deployed wala
+        // "http://localhost:5173",
+        // "http://localhost:5174",
+        // "http://localhost:5175",
+        "https://job-portal-2qza.onrender.com"  //ye frontend ka url hai deployed wala
     ],
     credentials: true,
   })
