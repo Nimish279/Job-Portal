@@ -280,7 +280,7 @@ export const getRecruiterJobs = async (req, res) => {
 export const getAllJobs = async (req, res) => {
   try {
     const jobs = await Job.find()
-      .populate("recruiter", "companyName") // show recruiter details if needed
+      .populate("recruiter", "companyName", "email") // show recruiter details if needed
       .sort({ createdAt: -1 });
 
     res.status(200).json({ success: true, jobs });

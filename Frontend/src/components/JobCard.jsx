@@ -23,7 +23,7 @@ const JobCard = ({ job }) => {
           </h2>
 
           {/* Company Name */}
-          <p className="text-[#5F9D08] font-medium">{job.recruiter.company || job.recruiter || 'N/A'}</p>
+          <p className="text-[#5F9D08] font-medium">{job.recruiter.company || job.recruiter || job.recruiter?.email || 'N/A'}</p>
 
           {/* Location, Role, CTC */}
           <div className="flex flex-wrap items-center mt-2 text-sm text-gray-600">
