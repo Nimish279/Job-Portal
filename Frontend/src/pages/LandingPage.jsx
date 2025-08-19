@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import landingImage from '../assets/images/landing_page.jpg';
+import SubscriptionPlans from './SubscriptionPlans';
 
 function LandingPage() {
   return (
@@ -76,14 +77,14 @@ function LandingPage() {
             </ul>
           </div>
 
-          <div>
+          {/* <div>
             <h4 className="text-lg font-bold mb-5 text-[#4CAF50]">Categories</h4>
             <ul className="space-y-2 text-gray-300">
               <li><a href="#technology" className="hover:text-[#4CAF50]">Technology</a></li>
               <li><a href="#tourism" className="hover:text-[#4CAF50]">Tourism</a></li>
               <li><a href="#construction" className="hover:text-[#4CAF50]">Construction</a></li>
             </ul>
-          </div>
+          </div> */}
 
           <div>
             <h4 className="text-lg font-bold mb-5 text-[#4CAF50]">Support</h4>
@@ -91,6 +92,15 @@ function LandingPage() {
               <li><a href="#faqs" className="hover:text-[#4CAF50]">FAQs</a></li>
               <li><a href="#contact" className="hover:text-[#4CAF50]">Contact</a></li>
               <li><a href="#terms" className="hover:text-[#4CAF50]">Terms</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-lg font-bold mb-5 text-[#4CAF50]">Subscription plans</h4>
+            <ul className="space-y-2 text-gray-300">
+              <li>
+              <Link to="/subscription" className="hover:text-[#4CAF50]">Plans</Link>
+            </li>
             </ul>
           </div>
 
