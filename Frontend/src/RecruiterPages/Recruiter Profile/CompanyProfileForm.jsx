@@ -17,6 +17,7 @@ const CompanyProfileForm = () => {
   });
   const [file, setFile] = useState(null);
   const [recruiter, setRecruiter] = useState(null);
+  const [isEditing, setIsEditing] = useState(true);  
 
   // Fetch recruiter details (email, phone, company)
   useEffect(() => {
@@ -26,6 +27,10 @@ const CompanyProfileForm = () => {
           withCredentials: true,
         });
         setRecruiter(res.data.recruiter);
+        setFormData((prev) =>({
+          ...prev,
+          ...res.data.recruiter,
+        }));
       } catch (err) {
         console.error('Failed to fetch recruiter data:', err);
       }
@@ -74,13 +79,42 @@ const CompanyProfileForm = () => {
       );
 
       console.log('Profile updated:', res.data);
+      setRecruiter(res.data.recruiter);
       alert('Company profile saved successfully!');
+      setIsEditing(false);
     } catch (error) {
       console.error('Error updating profile:', error.response || error);
       alert('Failed to save profile.');
     }
   };
 
+   if (!isEditing && recruiter) {
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="space-y-6 p-6 border rounded-lg shadow">
+        <h2 className="text-2xl font-bold">{recruiter.companyName}</h2>
+        <p><strong>Email:</strong> {recruiter.email}</p>
+        <p><strong>Phone:</strong> {recruiter.phone}</p>
+        <p><strong>Year Established:</strong> {recruiter.yearEstablished}</p>
+        <p><strong>Headquarters:</strong> {recruiter.headquarters}</p>
+        <p><strong>Industry:</strong> {recruiter.industry}</p>
+        <p><strong>CIN Number:</strong> {recruiter.cinNumber}</p>
+        <p><strong>LinkedIn:</strong> {recruiter.linkedin}</p>
+        <p><strong>Achievements:</strong> {recruiter.achievements}</p>
+        <p><strong>Culture:</strong> {recruiter.culture}</p>
+        <p><strong>Mission:</strong> {recruiter.mission}</p>
+        <p><strong>Contacts:</strong> {recruiter.contact1}, {recruiter.contact2}</p>
+
+        <motion.button
+          onClick={() => setIsEditing(true)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md"
+        >
+          Edit Profile
+        </motion.button>
+      </motion.div>
+    );
+  }
   return (
     <motion.form
       onSubmit={handleSubmit}
@@ -142,7 +176,7 @@ const CompanyProfileForm = () => {
         <input type="text" name="contact2" value={formData.contact2} onChange={handleChange} className="w-full p-2 border-2 border-gray-200 rounded-md" placeholder="Contact 2" />
       </motion.div>
 
-      {/* File Upload */}
+      {/* File Upload
       <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5, delay: 0.7 }} className="mt-4">
         <label className="block font-semibold mb-2">Upload PAN or GST Certificate</label>
         <div className="flex items-center">
@@ -152,7 +186,7 @@ const CompanyProfileForm = () => {
           <input id="file-upload" type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={handleFileChange} className="hidden" />
         </div>
         <p className="mt-1 text-xs text-gray-500">Accepted formats: PDF, JPG, PNG</p>
-      </motion.div>
+      </motion.div> */}
 
       {/* Save Button */}
       <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5, delay: 0.8 }} className="mt-4">

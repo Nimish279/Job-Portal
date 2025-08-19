@@ -15,6 +15,8 @@ import {
 } from '../controllers/recruiterController.js';
 import { isRecruiter, protect } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/multer.js';
+import { getRecruiterJobs } from '../controllers/recruiterController.js';
+import { getAllJobs } from "../controllers/recruiterController.js";
 
 const router = express.Router();
 
@@ -30,5 +32,6 @@ router.get('/getProfile', protect, isRecruiter, getProfile);
 router.post('/logout', protect, isRecruiter, recruiterLogout);
 router.get('/me', protect, isRecruiter, getCurrentRecruiter);
 router.put('/update', protect, isRecruiter, upload.single("companyPanCardOrGstFile"), updateRecruiterProfile);
-
+router.get("/myJobs", protect, getRecruiterJobs);
+router.get("/jobs", getAllJobs);
 export default router;

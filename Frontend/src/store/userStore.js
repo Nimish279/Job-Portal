@@ -82,20 +82,35 @@ const useUserStore = create((set, get) => {
       }
     },
 
-    getJobs: async () => {
-      set({ loading: true });
-      try {
-        const response = await axiosInstance.get('/users/getJobs');
-        set({ jobs: response.data.jobs, loading: false });
-        return { success: true };
-      } catch (error) {
-        const msg = error?.response?.data?.message || 'Failed to fetch jobs';
-        toast.error(msg);
-        set({ jobs: [], loading: false });
-        return { success: false, error: msg };
-      }
-    },
+    // getJobs: async () => {
+    //   set({ loading: true });
+    //   try {
+    //     const response = await axiosInstance.get('/users/getJobs');
+    //     set({ jobs: response.data.jobs, loading: false });
+    //     return { success: true };
+    //   } catch (error) {
+    //     const msg = error?.response?.data?.message || 'Failed to fetch jobs';
+    //     toast.error(msg);
+    //     set({ jobs: [], loading: false });
+    //     return { success: false, error: msg };
+    //   }
+    // },
 
+    getJobs: async () => {
+  set({ loading: true });
+  try {
+    const response = await axiosInstance.get('/users/getJobs');
+    // Handle backend returning array directly
+    const jobs = Array.isArray(response.data) ? response.data : response.data.jobs;
+    set({ jobs, loading: false });
+    return { success: true, data: jobs }; // include data so JobCards can check
+  } catch (error) {
+    const msg = error?.response?.data?.message || 'Failed to fetch jobs';
+    toast.error(msg);
+    set({ jobs: [], loading: false });
+    return { success: false, error: msg };
+  }
+},
     applyJob: async (jobId) => {
       try {
         const response = await axiosInstance.put('/users/applyJob', { jobId });

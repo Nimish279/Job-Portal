@@ -8,7 +8,7 @@ const jobSchema=new mongoose.Schema({
         dueDate: Date
       }],
     candidates:[{type:mongoose.Schema.ObjectId,ref:"User"}],
-    recruiter:{type:mongoose.Schema.ObjectId,ref:"Recruiter"},
+    recruiter:{type:mongoose.Schema.Types.ObjectId,ref:"Recruiter"},
     ctc:{type:String,required:true},
     requiredDocuments:{type:String,required:true},
     eligibilityCriteria:{type:String,required:true},

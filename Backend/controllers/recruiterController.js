@@ -188,41 +188,49 @@ export const deleteJob = async (req, res) => {
   }
 };
 
-// UPDATE RECRUITER PROFILE (fixed)
+// Update recruiter profile
 export const updateRecruiterProfile = async (req, res) => {
   try {
-    const recruiter = req.recruiter;
+    const recruiter = await Recruiter.findById(req.user.id); // assuming auth middleware sets req.user
 
-    // handle file
-    if (req.file) req.body.companyPanCardOrGstFile = req.file.path;
+    if (!recruiter) {
+      return res.status(404).json({ success: false, message: "Recruiter not found" });
+    }
 
-    // filter out undefined values
-    const updates = {};
-    Object.keys(req.body).forEach(key => {
-      if (req.body[key] !== undefined) updates[key] = req.body[key];
+    // Update only the fields that exist in body
+    const updatableFields = [
+      "phone",
+      "companyName",
+      "companyPanCardOrGstFile",
+      "yearEstablished",
+      "headquarters",
+      "industry",
+      "cinNumber",
+      "linkedinUrl",
+      "achievements",
+      "culture",
+      "mission",
+      "contact1",
+      "contact2",
+    ];
+
+    updatableFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        recruiter[field] = req.body[field];
+      }
     });
 
-    const updatedRecruiter = await Recruiter.findByIdAndUpdate(
-      recruiter._id,
-      updates,
-      { new: true, runValidators: true }
-    );
+    await recruiter.save();
 
-    if (!updatedRecruiter)
-      return res.status(404).json({ message: "Recruiter not found" });
-
-    res.status(200).json({
+    res.json({
       success: true,
       message: "Recruiter profile updated successfully",
-      recruiter: updatedRecruiter,
+      recruiter,
     });
   } catch (error) {
-    console.error("Update Recruiter Error:", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
-
 
 // MY JOBS
 export const myJobs = async (req, res) => {
@@ -252,5 +260,32 @@ export const getCurrentRecruiter = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ message: "Unauthenticated" });
+  }
+};
+
+// Get all jobs posted by a recruiter
+export const getRecruiterJobs = async (req, res) => {
+  try {
+    const recruiterId = req.user.id; // recruiter logged in
+    const jobs = await Job.find({ recruiter: recruiterId }).sort({ createdAt: -1 });
+
+    res.status(200).json(jobs);
+  } catch (error) {
+    console.error("Error fetching recruiter jobs:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get all jobs (for seekers to view)
+export const getAllJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find()
+      .populate("recruiter", "companyName") // show recruiter details if needed
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, jobs });
+  } catch (error) {
+    console.error("Error fetching all jobs:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

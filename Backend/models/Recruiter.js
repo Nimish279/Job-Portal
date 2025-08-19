@@ -80,7 +80,7 @@ const recruiterSchema = new mongoose.Schema({
     headquarters: { type: String },
     industry: { type: String },
     cinNumber: { type: String },
-    linkedinUrl: { type: String },
+    linkedin: { type: String },
     achievements: { type: String },
     culture: { type: String },
     mission: { type: String },
