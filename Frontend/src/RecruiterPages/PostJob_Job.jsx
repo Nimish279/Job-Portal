@@ -5,7 +5,7 @@ import { FiMenu } from "react-icons/fi";
 import Sidebar from "../components/SideBar_Recr";
 import { motion, AnimatePresence } from "framer-motion";
 import useRecruiterStore from "../store/recruiterStore";
-import { FaHome } from "react-icons/fa";
+import { FaHome,FaBell } from "react-icons/fa";
 import AmazonLogo from '../assets/images/AmazonLogo.png';
 import ProfileImage from '../assets/images/Profile_pics/1.jpg';
 import axios from "axios";
@@ -138,6 +138,9 @@ useEffect(()=>{
                 {/* <Link to="/recruiters/notifications">
                   <img src={NotificationsIcon} alt="Notifications" className="w-8 h-8" />
                 </Link> */}
+                <Link to="/recruiters/notifications">
+                                                      <FaBell className="text-2xl w-8 h-8  cursor-pointer hover:text-gray-300" />
+                                                    </Link>
                 <Link to="/recruiters/jobs/active">
                                       <FaHome className="text-2xl w-8 h-8  cursor-pointer hover:text-gray-300" />
                                     </Link>

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../components/SideBar_Recr';
 import Search from '../assets/images/search00.png';
-import Notifications from '../assets/images/notifications00.png';
 import ProfileImage from '../assets/images/Profile_pics/1.jpg';
+import Notifications from '../assets/images/notifications00.png';
+
 import JobCard from './components/JobCard';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

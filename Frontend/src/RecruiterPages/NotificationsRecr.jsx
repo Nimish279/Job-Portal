@@ -145,6 +145,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { AnimatePresence } from "framer-motion";
 import { FiMenu } from "react-icons/fi";
+import {FaHome} from 'react-icons/fa';
+import {motion} from "framer-motion";
+import Search from '../assets/images/search00.png';
+import ProfileImage from '../assets/images/Profile_pics/1.jpg';
 
 export default function NotificationsRecr() {
   const [notifications, setNotifications] = useState([]);
@@ -152,11 +156,27 @@ export default function NotificationsRecr() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const isMobile = screenWidth < 768;
+  const [userName, setUserName] = useState("");
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  useEffect(()=>{
+      const fetchProfile = async () => {
+            try {
+              const res = await axios.get('http://localhost:8000/api/recruiters/getProfile', {
+                withCredentials: true
+              });
+              setUserName(res.data.recruiter.companyName);
+            } catch (error) {
+              console.error("Error fetching profile:", error);
+            }
+          };
+      
+          
+          fetchProfile();
+        }, []);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -212,7 +232,41 @@ export default function NotificationsRecr() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col gap-10">
       {/* Navbar always on top */}
-      <Navbar pageName="Notifications" />
+      {/* <Navbar pageName="Notifications" /> */}
+      <motion.div 
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full">
+        <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto">
+          {/* <img src={Search} alt="Search Icon" className="w-8 h-8 sm:w-10 sm:h-10" /> //logo */}
+          {/* <input
+            type="text"
+            placeholder="Search"
+            className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
+          /> */}
+        </div>
+        <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
+          
+          <input
+            type="text"
+            placeholder="Search"
+            className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
+          />
+          <img src={Search} alt="Search Icon" className="w-8 h-8" />
+          <Link to="/recruiters/jobs/active">
+                                                <FaHome className="text-2xl w-8 h-8  cursor-pointer hover:text-gray-300" />
+                                              </Link>
+          
+          <Link to="/recruiters/getProfile" className='flex flex-row items-center gap-2'>
+          <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8">
+            <img src={ProfileImage} alt="" className="w-full h-full rounded-full" />
+          </div>
+          
+          <span className="text-sm sm:text-base">{userName || 'Loading...'}</span> 
+          </Link>
+        </div>
+      </motion.div>
 
       {/* Main Content Area Below Navbar */}
       <div className="flex flex-col lg:flex-row relative">
