@@ -3,7 +3,7 @@ import React from "react";
 const plans = [
   {
     title: "Bronze",
-    price: "₹199",
+    price: "₹99",
     features: [
       "Access to basic job postings",
       "Monthly newsletter",
@@ -14,8 +14,8 @@ const plans = [
     border: "border-yellow-500",
   },
   {
-    title: "Gold",
-    price: "₹499",
+    title: "Silver",
+    price: "₹199",
     features: [
       "All Bronze features",
       "Unlimited job applications",
@@ -27,8 +27,8 @@ const plans = [
     border: "border-yellow-600",
   },
   {
-    title: "Platinum",
-    price: "₹999",
+    title: "Gold",
+    price: "₹399",
     features: [
       "All Gold features",
       "1-on-1 mentorship",

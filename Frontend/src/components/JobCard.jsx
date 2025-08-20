@@ -19,11 +19,11 @@ const JobCard = ({ job }) => {
         <div className="flex-1">
           {/* Job Title */}
           <h2 className="text-lg md:text-xl font-bold text-gray-800">
-            {job.jobRole || job.title}
+            {job.jobRole }
           </h2>
 
           {/* Company Name */}
-          <p className="text-[#5F9D08] font-medium">{job.recruiter.company || job.recruiter || job.recruiter?.email || 'N/A'}</p>
+          <p className="text-[#5F9D08] font-medium">{job.recruiter?.companyName || job.recruiter || 'N/A'}</p>
 
           {/* Location, Role, CTC */}
           <div className="flex flex-wrap items-center mt-2 text-sm text-gray-600">
