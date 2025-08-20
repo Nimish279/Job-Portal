@@ -19,24 +19,39 @@ const CompanyProfileForm = () => {
   const [recruiter, setRecruiter] = useState(null);
   const [isEditing, setIsEditing] = useState(true);  
 
-  // Fetch recruiter details (email, phone, company)
+  // ✅ Load recruiter from localStorage + backend
   useEffect(() => {
+    const storedRecruiter = localStorage.getItem("recruiterProfile");
+    if (storedRecruiter) {
+      const parsed = JSON.parse(storedRecruiter);
+      setRecruiter(parsed);
+      setFormData(prev => ({
+        ...prev,
+        ...parsed,
+      }));
+    }
+
     const fetchRecruiterData = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/api/recruiters/me', {
+        const res = await axios.get("http://localhost:8000/api/recruiters/me", {
           withCredentials: true,
         });
+
         setRecruiter(res.data.recruiter);
-        setFormData((prev) =>({
+        setFormData(prev => ({
           ...prev,
           ...res.data.recruiter,
         }));
+
+        localStorage.setItem("recruiterProfile", JSON.stringify(res.data.recruiter));
       } catch (err) {
-        console.error('Failed to fetch recruiter data:', err);
+        console.error("Failed to fetch recruiter data:", err);
       }
     };
+
     fetchRecruiterData();
   }, []);
+
 
   const handleChange = (e) => {
     setFormData({
@@ -70,8 +85,8 @@ const CompanyProfileForm = () => {
       if (file) data.append('companyPanCardOrGstFile', file);
 
       const res = await axios.put(
-        'http://localhost:8000/api/recruiters/update',
-        data,
+        `http://localhost:8000/api/recruiters/update`,
+        data,  // ✅ send FormData not plain object
         {
           headers: { 'Content-Type': 'multipart/form-data' },
           withCredentials: true,
@@ -80,6 +95,10 @@ const CompanyProfileForm = () => {
 
       console.log('Profile updated:', res.data);
       setRecruiter(res.data.recruiter);
+
+      // ✅ Update localStorage with latest recruiter
+      localStorage.setItem("recruiterProfile", JSON.stringify(res.data.recruiter));
+
       alert('Company profile saved successfully!');
       setIsEditing(false);
     } catch (error) {
@@ -88,7 +107,7 @@ const CompanyProfileForm = () => {
     }
   };
 
-   if (!isEditing && recruiter) {
+  if (!isEditing && recruiter) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="space-y-6 p-6 border rounded-lg shadow">
         <h2 className="text-2xl font-bold">{recruiter.companyName}</h2>
@@ -98,7 +117,7 @@ const CompanyProfileForm = () => {
         <p><strong>Headquarters:</strong> {recruiter.headquarters}</p>
         <p><strong>Industry:</strong> {recruiter.industry}</p>
         <p><strong>CIN Number:</strong> {recruiter.cinNumber}</p>
-        <p><strong>LinkedIn:</strong> {recruiter.linkedin}</p>
+        <p><strong>LinkedIn:</strong> {recruiter.linkedinUrl}</p>
         <p><strong>Achievements:</strong> {recruiter.achievements}</p>
         <p><strong>Culture:</strong> {recruiter.culture}</p>
         <p><strong>Mission:</strong> {recruiter.mission}</p>
@@ -115,6 +134,7 @@ const CompanyProfileForm = () => {
       </motion.div>
     );
   }
+
   return (
     <motion.form
       onSubmit={handleSubmit}
@@ -146,9 +166,15 @@ const CompanyProfileForm = () => {
         </div>
 
         <div className="flex items-center">
-          <label className="w-1/4 font-semibold">LinkedIn Company URL</label>
-          <input type="url" name="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} className="w-full p-2 border-2 border-gray-200 rounded-md" />
-        </div>
+        <label className="w-1/4 font-semibold">LinkedIn Company URL</label>
+        <input
+          type="url"
+          name="linkedinUrl"
+          value={formData.linkedinUrl} // ✅ fixed field name
+          onChange={handleChange}
+          className="w-full p-2 border-2 border-gray-200 rounded-md"
+        />
+      </div>
       </motion.div>
 
       {/* Text Areas */}

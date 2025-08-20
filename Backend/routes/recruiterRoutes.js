@@ -26,4 +26,9 @@ router.get('/myJobs', protect, isRecruiter, myJobs);
 router.get('/getProfile', protect, isRecruiter, getProfile);
 router.get("/myJobs", protect, getRecruiterJobs);
 router.get("/jobs", getAllJobs);
+// // Get recruiter profile (for pre-filling form)
+// router.get("/:id", getRecruiterProfile);
+
+// Update recruiter profile
+// router.put("/update", updateRecruiterProfile);
 export default router;
