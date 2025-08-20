@@ -330,3 +330,30 @@ export const openJob = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+// Get all jobs posted by a recruiter
+export const getRecruiterJobs = async (req, res) => {
+  try {
+    const recruiterId = req.user.id; // recruiter logged in
+    const jobs = await Job.find({ recruiter: recruiterId }).sort({ createdAt: -1 });
+
+    res.status(200).json(jobs);
+  } catch (error) {
+    console.error("Error fetching recruiter jobs:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get all jobs (for seekers to view)
+export const getAllJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find()
+      .populate("recruiter", "companyName", "email") // show recruiter details if needed
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, jobs });
+  } catch (error) {
+    console.error("Error fetching all jobs:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
