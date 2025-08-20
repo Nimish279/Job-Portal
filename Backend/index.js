@@ -7,8 +7,7 @@ import userRoutes from "./routes/userRoutes.js";
 import upload from "./routes/upload.js";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
-
-
+import { Job } from "./models/Job.js";
 
 dotenv.config();
 const app = express();
@@ -35,6 +34,27 @@ app.use("/api/users", userRoutes);
 app.use("/api/upload", upload);
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+// Get all jobs
+app.get("/api/jobs", async (req, res) => {
+  try {
+    const jobs = await Job.find();
+    res.json(jobs);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching jobs", error: err.message });
+  }
+});
+// Get job by ID
+app.get("/api/jobs/:id", async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id).populate("recruiter", "companyName email");
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+    res.json(job);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching job", error: err.message });
+  }
+});
 const PORT = process.env.PORT || 8000;
 
 

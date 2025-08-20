@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isLoading, setIsLoading] = useState(true);
+  const [jobs, setJobs] = useState([]);
   const navigate = useNavigate();
   const user = useUserStore(state => state.user);
   const getAppliedJobs=useUserStore(state=>state.getAppliedJobs)
@@ -33,6 +34,24 @@ const Dashboard = () => {
   //   return () => clearTimeout(timer);
   // },);
 
+  useEffect(() =>{
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch ("http://localhost:8000/api/jobs");
+        const data = await res.json();
+        if(data.success) {
+          setJobs(data.jobs);
+        }
+      }
+      catch(err){
+        console.error("Failed to fetch jobs:", err);
+      }
+      finally{
+        setIsLoading(false);
+      }
+    };
+    fetchJobs();
+  }, []);
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -96,10 +115,12 @@ const Dashboard = () => {
             <h1 className="text-2xl font-bold text-gray-800 mb-2 ">Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''}!</h1>
             <p className="text-gray-600">Find your perfect job match from our listings.</p>
           </div>
-          <JobCards />
+          {/* Pass jobs into job cards */}
+          <JobCards jobs={jobs} />
+          {/* <JobCards />*/}
         </div>
-        <div className="md:w-1/4 ">
-          <AppliedJobs />
+        <div className="md:w-1/4 "> 
+          <AppliedJobs /> 
         </div>
       </div>
     </div>

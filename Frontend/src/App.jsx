@@ -28,9 +28,11 @@ import NotificationsPage from './pages/NotificationsPage.jsx';
 import ChangePassword from './RecruiterPages/RecruiterData/ChangePassword.jsx';
 import { useEffect } from 'react';
 import  userStore  from './store/userStore';
+import JobDetails from "./pages/JobDetails";
 // ✅ NEW IMPORT for Apply Now Page
 import ApplyJob from './pages/ApplyJob.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
+import SubscriptionPlans from './pages/SubscriptionPlans.jsx';
 
 function App() {
   const fetchUser = userStore((state) => state.fetchUser);
@@ -59,6 +61,8 @@ function App() {
         <Route path='/users/login' element={<Login />} />
         <Route path='/recruiters/register' element={<RecruiterRegister />} />
         <Route path='/recruiters/login' element={<RecruiterLogin />} />
+        <Route path="/subscription" element={<SubscriptionPlans />} />
+        <Route path="/users/job/:id" element={<JobDetails />} />
 
         {/* User Routes */}
           {/* <Route path='/users/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> */}

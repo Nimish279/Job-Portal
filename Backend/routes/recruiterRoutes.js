@@ -2,7 +2,8 @@ import express from 'express';
 import {deleteJob, getCurrentRecruiter, getProfile, loginRecruiter,  myJobs, postInternship, postJob, recruiterLogout, registerRecruiter,seeCandidates, updateJob,closeJob,openJob} from '../controllers/recruiterController.js';
 import { isRecruiter, protect } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/multer.js';
-
+import { getRecruiterJobs } from '../controllers/recruiterController.js';
+import { getAllJobs } from "../controllers/recruiterController.js";
 
 const router = express.Router();
 

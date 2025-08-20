@@ -3,58 +3,58 @@ import JobCard from './JobCard';
 import useUserStore from '../store/userStore.js';
 
 // Mock data for development when API fails
-const MOCK_JOBS = [
-  {
-    id: 1,
-    title: 'Senior Frontend Developer',
-    company: 'Tech Corp Inc.',
-    location: 'Mumbai, India',
-    type: 'Full-time',
-    salary: '₹15L - ₹25L',
-    posted: '2 days ago',
-    description: 'We are looking for an experienced frontend developer to join our team.'
-  },
-  {
-    id: 2,
-    title: 'Backend Engineer',
-    company: 'Data Systems Ltd',
-    location: 'Bangalore, India',
-    type: 'Full-time',
-    salary: '₹18L - ₹30L',
-    posted: '1 week ago',
-    description: 'Join our backend team to build scalable APIs and services.'
-  },
-  {
-    id: 3,
-    title: 'UI/UX Designer',
-    company: 'Creative Minds',
-    location: 'Remote',
-    type: 'Contract',
-    salary: '₹10L - ₹18L',
-    posted: '3 days ago',
-    description: 'Looking for a creative UI/UX designer to revamp our product interfaces.'
-  },
-  {
-    id: 4,
-    title: 'DevOps Engineer',
-    company: 'Cloud Solutions',
-    location: 'Pune, India',
-    type: 'Full-time',
-    salary: '₹20L - ₹35L',
-    posted: '5 days ago',
-    description: 'Help us build and maintain our cloud infrastructure and CI/CD pipelines.'
-  },
-  {
-    id: 5,
-    title: 'Product Manager',
-    company: 'InnovateX',
-    location: 'Delhi, India',
-    type: 'Full-time',
-    salary: '₹25L - ₹40L',
-    posted: '1 day ago',
-    description: 'Lead product development and work with cross-functional teams to deliver great products.'
-  }
-];
+// const MOCK_JOBS = [
+//   {
+//     id: 1,
+//     title: 'Senior Frontend Developer',
+//     company: 'Tech Corp Inc.',
+//     location: 'Mumbai, India',
+//     type: 'Full-time',
+//     salary: '₹15L - ₹25L',
+//     posted: '2 days ago',
+//     description: 'We are looking for an experienced frontend developer to join our team.'
+//   },
+//   {
+//     id: 2,
+//     title: 'Backend Engineer',
+//     company: 'Data Systems Ltd',
+//     location: 'Bangalore, India',
+//     type: 'Full-time',
+//     salary: '₹18L - ₹30L',
+//     posted: '1 week ago',
+//     description: 'Join our backend team to build scalable APIs and services.'
+//   },
+//   {
+//     id: 3,
+//     title: 'UI/UX Designer',
+//     company: 'Creative Minds',
+//     location: 'Remote',
+//     type: 'Contract',
+//     salary: '₹10L - ₹18L',
+//     posted: '3 days ago',
+//     description: 'Looking for a creative UI/UX designer to revamp our product interfaces.'
+//   },
+//   {
+//     id: 4,
+//     title: 'DevOps Engineer',
+//     company: 'Cloud Solutions',
+//     location: 'Pune, India',
+//     type: 'Full-time',
+//     salary: '₹20L - ₹35L',
+//     posted: '5 days ago',
+//     description: 'Help us build and maintain our cloud infrastructure and CI/CD pipelines.'
+//   },
+//   {
+//     id: 5,
+//     title: 'Product Manager',
+//     company: 'InnovateX',
+//     location: 'Delhi, India',
+//     type: 'Full-time',
+//     salary: '₹25L - ₹40L',
+//     posted: '1 day ago',
+//     description: 'Lead product development and work with cross-functional teams to deliver great products.'
+//   }
+// ];
 
 const JobCards = () => {
   const [loading, setLoading] = useState(true);
@@ -65,17 +65,16 @@ const JobCards = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const result = await getJobs();
-        if (!result?.success) {
-          console.log('Using mock data as fallback');
-          // If the API call fails, manually set mock data to global state
+        const result = await getJobs(); // now returns {success, data}
+        if (!result.success) {
+          console.log('API failed, using mock data as fallback');
           useUserStore.setState({ jobs: MOCK_JOBS });
         }
       } catch (err) {
         console.error('Error fetching jobs:', err);
         setError('Failed to load jobs. Please try again later.');
-        // Use mock data as fallback
         useUserStore.setState({ jobs: MOCK_JOBS });
       } finally {
         setLoading(false);
@@ -124,7 +123,7 @@ const JobCards = () => {
           ))
         ) : (
           <div className="text-gray-500 text-center py-8">
-            No jobs available at the moment. Loading mock data...
+            No jobs available at the moment.
           </div>
         )}
       </div>

@@ -5,6 +5,7 @@ import CompanyProfileForm from './CompanyProfileForm';
 import AmazonLogo from '../../assets/images/AmazonLogo.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu } from 'react-icons/fi';
+import { axiosInstance } from '../../utils/axiosInstance';
 import Sidebar from '../../components/SideBar_Recr';
 import Search from '../../assets/images/search00.png';
 import Notifications from '../../assets/images/notifications00.png';

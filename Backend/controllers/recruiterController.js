@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { Job } from "../models/Job.js";
 import { Internship } from "../models/Internship.js";
 
+// LOGIN RECRUITER
 export const loginRecruiter = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -21,53 +22,53 @@ export const loginRecruiter = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      // sameSite: "None", for deployment only
-      sameSite: "Strict",
-      maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+      maxAge: 1 * 60 * 60 * 1000, // 1 hour
     });
+
     res.status(200).json({
-      recruiter:{
+      recruiter: {
         id: recruiter._id,
         email: recruiter.email,
         companyName: recruiter.companyName,
- 
       },
-      success: true, message: "Login successfully" });
+      success: true,
+      message: "Login successfully",
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
+// REGISTER RECRUITER
 export const registerRecruiter = async (req, res) => {
   try {
     const { email, phone, password, companyName } = req.body;
     const existingRecruiter = await Recruiter.findOne({ email });
-    if (existingRecruiter) {
-      return res.status(400).json({ message: 'Recruiter already exists' });
-    }
+    if (existingRecruiter)
+      return res.status(400).json({ message: "Recruiter already exists" });
 
-    if (!req.file || !req.file.path) {
-      return res.status(400).json({ message: 'PAN or GST document is required' });
-    }
+    if (!req.file || !req.file.path)
+      return res
+        .status(400)
+        .json({ message: "PAN or GST document is required" });
 
-    
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    
     const newRecruiter = new Recruiter({
       email,
       phone,
       password: hashedPassword,
       companyName,
-      companyPanCardOrGstFile: req.file.path, 
+      companyPanCardOrGstFile: req.file.path,
     });
 
     await newRecruiter.save();
 
     res.status(201).json({
       success: true,
-      message: 'Recruiter registered successfully',
+      message: "Recruiter registered successfully",
       recruiter: {
         id: newRecruiter._id,
         email: newRecruiter.email,
@@ -76,11 +77,14 @@ export const registerRecruiter = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Register Error:', error);
-    res.status(500).json({ message: 'Server error during registration', error });
+    console.error("Register Error:", error);
+    res
+      .status(500)
+      .json({ message: "Server error during registration", error });
   }
 };
 
+// GET RECRUITER PROFILE
 export const getProfile = async (req, res) => {
   try {
     const recruiter = req.recruiter;
@@ -93,6 +97,7 @@ export const getProfile = async (req, res) => {
   }
 };
 
+// RECRUITER LOGOUT
 export const recruiterLogout = async (req, res) => {
   try {
     res.clearCookie("token", {
@@ -107,52 +112,13 @@ export const recruiterLogout = async (req, res) => {
   }
 };
 
+// POST JOB
 export const postJob = async (req, res) => {
   try {
-    const {
-      hiringWorkflow,
-      jobRole,
-      ctc,
-      experience,
-      requiredDocuments,
-      qualifications,
-      eligibilityCriteria,
-      skillsRequired,
-      jobDescription,
-      jobType,
-      location,
-    } = req.body;
-    //Testing Purposes postman
-    //     const attachedDocs=req.body.attachedDocs.map(file=>({
-    //     fileName:file.originalName,
-    //     fileType:file.mimeType,
-    //     fileSize:file.size,
-    //     url:`uploads/${file.originalName}`,
-    //     uploadedAt: new Date()
-    //   }))
-
-    //   const attachedDocs=req.files.map(file=>({
-    //     fileName:file.originalName,
-    //     fileType:file.mimeType,
-    //     fileSize:file.size,
-    //     url:`uploads/${file.originalName}`,
-    //     uploadedAt: new Date()
-    //   }))
-
     const recruiter = req.recruiter;
     const newJob = await Job.create({
       recruiter: recruiter._id,
-      hiringWorkflow,
-      jobRole,
-      ctc,
-      experience,
-      requiredDocuments,
-      qualifications,
-      eligibilityCriteria,
-      skillsRequired,
-      jobDescription,
-      jobType,
-      location,
+      ...req.body,
     });
     res.status(201).json({ message: "Job created successfully", job: newJob });
   } catch (error) {
@@ -161,10 +127,12 @@ export const postJob = async (req, res) => {
   }
 };
 
+// SEE CANDIDATES
 export const seeCandidates = async (req, res) => {
   try {
     const jobId = req.params.id;
     if (!jobId) return res.status(500).json({ message: "No jobId mentioned" });
+
     const candidates = await Job.findById(jobId).populate("candidates");
     console.log(candidates);
     if (candidates.length==0) {
@@ -173,137 +141,113 @@ export const seeCandidates = async (req, res) => {
     res.status(200).json({ success: true, candidates });
   } catch (error) {
     res.status(500).json({ error: error.message });
-    console.log(error);
   }
 };
 
+// UPDATE JOB
 export const updateJob = async (req, res) => {
   try {
     const jobId = req.params.id;
-    const {
-      hiringWorkflow,
-      jobRole,
-      ctc,
-      requiredDocuments,
-      eligibilityCriteria,
-      skillsRequired,
-      jobDescription,
-      location,
-    } = req.body;
     const job = await Job.findById(jobId);
-    if (job === null) {
-      return res.status(500).json({ error: "Job not Found" });
-    }
+    if (!job) return res.status(404).json({ message: "Job not found" });
 
-    if (jobRole) job.jobRole = jobRole;
-    if (ctc) job.ctc = ctc;
-    if (requiredDocuments) job.requiredDocuments = requiredDocuments;
-    if (eligibilityCriteria) job.eligibilityCriteria = eligibilityCriteria;
-    if (skillsRequired) job.skillsRequired = skillsRequired;
-    if (jobDescription) job.jobDescription = jobDescription;
-    if (hiringWorkflow) {
-      job.hiringWorkflow =
-        typeof hiringWorkflow === "string"
-          ? JSON.parse(hiringWorkflow)
-          : hiringWorkflow;
-    }
-    if (location) job.location = location;
+    Object.assign(job, req.body);
 
     const updatedJob = await job.save();
-
-    return res.status(200).json({ success: true, job: updatedJob });
+    res.status(200).json({ success: true, job: updatedJob });
   } catch (error) {
     res.status(500).json({ error: error.message });
-    console.log(error);
   }
 };
 
+// POST INTERNSHIP
 export const postInternship = async (req, res) => {
   try {
-    const {
-      internshipRole,
-      stipendAmount,
-      stipendType,
-      skillsRequired,
-      internshipDuration,
-      internshipType,
-      location,
-      eligibilityCriteria,
-    } = req.body;
-
     const recruiter = req.recruiter;
-
     const newInternship = await Internship.create({
       recruiter: recruiter._id,
-      internshipRole,
-      stipendAmount,
-      stipendType,
-      skillsRequired,
-      internshipDuration,
-      internshipType,
-      location,
-      eligibilityCriteria,
+      ...req.body,
     });
-
     res
       .status(201)
-      .json({
-        message: "Internship created successfully",
-        internship: newInternship,
-      });
+      .json({ message: "Internship created successfully", internship: newInternship });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
 
+// DELETE JOB
 export const deleteJob = async (req, res) => {
   try {
     const jobId = req.params.id;
     const job = await Job.findByIdAndDelete(jobId);
-
     res
       .status(200)
-      .json({
-        message: "Job Posting Deleted Successfully",
-        job,
-        success: true,
-      });
+      .json({ message: "Job Posting Deleted Successfully", job, success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
-    console.log(error);
   }
 };
 
-export const updateJobDocs = async (req, res) => {
+// Update recruiter profile
+export const updateRecruiterProfile = async (req, res) => {
   try {
-    const jobId = req.params.id;
-    const job = await Job.findById(jobId);
-    const attachedDocs = req.files.map((files) => ({
-      fileName: files.originalName,
-      fileSize: files.size,
-      fileType: files.mimeType,
-      url: `upload/${files.originalName}`,
-    }));
+    const recruiter = await Recruiter.findById(req.user.id); // assuming auth middleware sets req.user
+
+    if (!recruiter) {
+      return res.status(404).json({ success: false, message: "Recruiter not found" });
+    }
+
+    // Update only the fields that exist in body
+    const updatableFields = [
+      "phone",
+      "companyName",
+      "companyPanCardOrGstFile",
+      "yearEstablished",
+      "headquarters",
+      "industry",
+      "cinNumber",
+      "linkedinUrl",
+      "achievements",
+      "culture",
+      "mission",
+      "contact1",
+      "contact2",
+    ];
+
+    updatableFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        recruiter[field] = req.body[field];
+      }
+    });
+
+    await recruiter.save();
+
+    res.json({
+      success: true,
+      message: "Recruiter profile updated successfully",
+      recruiter,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
+// MY JOBS
 export const myJobs = async (req, res) => {
   try {
     const recruiter = req.recruiter;
     const jobs = await Job.find({ recruiter: recruiter._id });
     if (jobs.length === 0) {
-      res.status(203).json({ message: "No Jobs Posted by you", jobs: [] });
+      return res.status(203).json({ message: "No Jobs Posted by you", jobs: [] });
     }
-    res.status(200).json({ success: true, jobs });
+    return res.status(200).json({ success: true, jobs });
   } catch (error) {
     res.status(500).json({ error: error.message });
-    console.log(error);
   }
 };
+
+// GET CURRENT RECRUITER
 export const getCurrentRecruiter = async (req, res) => {
   try {
     const recruiter = req.recruiter;
