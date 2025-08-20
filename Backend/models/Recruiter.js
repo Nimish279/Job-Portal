@@ -76,16 +76,17 @@ const recruiterSchema = new mongoose.Schema({
     },
     
     // New optional fields from form
-    yearEstablished: { type: String },
-    headquarters: { type: String },
-    industry: { type: String },
-    cinNumber: { type: String },
+    // yearEstablished: { type: String },
+    // headquarters: { type: String },
+    // industry: { type: String },
+    // cinNumber: { type: String },
     linkedin: { type: String },
-    achievements: { type: String },
-    culture: { type: String },
-    mission: { type: String },
-    contact1: { type: String },
-    contact2: { type: String },
+    // achievements: { type: String },
+    // culture: { type: String },
+    // mission: { type: String },
+    // contact1: { type: String },
+    // contact2: { type: String },
+    website: { type: String },
 }, {
     timestamps: true,
 })

@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMenu } from "react-icons/fi";
 import { FaHome } from "react-icons/fa";
@@ -15,13 +16,16 @@ const UpdateRecruiter = () => {
     phone: "",
     companyName: "",
     password: "",
+    website: "",
   });
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
+  const navigate=useNavigate();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const isMobile = screenWidth < 768;
+  
 
   // ✅ Handle resize for responsive sidebar
   useEffect(() => {
@@ -44,7 +48,9 @@ const UpdateRecruiter = () => {
           phone: recruiter.phone || "",
           companyName: recruiter.companyName || "",
           password: "",
+          website: recruiter.website || "",
         });
+        console.log(recruiter);
       } catch (error) {
         toast.error("Failed to load recruiter details");
       }
@@ -75,11 +81,12 @@ const UpdateRecruiter = () => {
     updateData.append("email", formData.email);
     updateData.append("phone", formData.phone);
     updateData.append("companyName", formData.companyName);
+    updateData.append("website", formData.website);
     if (formData.password) updateData.append("password", formData.password);
     if (file) updateData.append("companyPanCardOrGstFile", file);
 
     try {
-      await axios.put(
+      const res=await axios.post(
         "http://localhost:8000/api/recruiters/update",
         updateData,
         {
@@ -87,7 +94,14 @@ const UpdateRecruiter = () => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      toast.success("Recruiter updated successfully!");
+      if(res.data.success){
+        console.log(res.data.message)
+        toast.success("Recruiter updated successfully!");
+        navigate("/recruiters/getProfile");
+      
+      }
+      
+      
     } catch (error) {
       toast.error(error.response?.data?.message || "Update failed");
     }
@@ -202,6 +216,8 @@ const UpdateRecruiter = () => {
                     label="Website"
                     type="url"
                     name="website"
+                    value={formData.website}
+                    onChange={handleChange}
                     placeholder="https://"
                   />
                 </div>
@@ -271,6 +287,7 @@ const UpdateRecruiter = () => {
           </motion.div>
         </div>
       </div>
+      <ToastContainer position="top-center" theme="colored" />
     </motion.div>
   );
 };

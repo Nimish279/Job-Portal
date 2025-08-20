@@ -1,5 +1,5 @@
 import express from 'express';
-import {deleteJob, getCurrentRecruiter, getProfile, loginRecruiter,  myJobs, postInternship, postJob, recruiterLogout, registerRecruiter,seeCandidates, updateJob,closeJob,openJob} from '../controllers/recruiterController.js';
+import {deleteJob, getCurrentRecruiter, getProfile, loginRecruiter,  myJobs, postInternship, postJob, recruiterLogout, registerRecruiter,seeCandidates, updateJob,closeJob,openJob,updateRecruiterProfile} from '../controllers/recruiterController.js';
 import { isRecruiter, protect } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/multer.js';
 import { getRecruiterJobs } from '../controllers/recruiterController.js';
@@ -23,7 +23,8 @@ router.post('/closeJob/:id',protect,isRecruiter,closeJob)
 router.post('/openJob/:id',protect,isRecruiter,openJob)
 // router.delete('/deleteJob/:id',protect,isRecruiter,deleteJob)
 router.get('/myJobs', protect, isRecruiter, myJobs);
-router.get('/getProfile', protect, isRecruiter, getProfile);
+// router.get('/getProfile', protect, isRecruiter, getProfile);
 router.get("/myJobs", protect, getRecruiterJobs);
 router.get("/jobs", getAllJobs);
+router.post("/update",protect,isRecruiter,upload.single("panCardOrGstFile"), updateRecruiterProfile);
 export default router;

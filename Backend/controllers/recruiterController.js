@@ -203,17 +203,19 @@ export const updateRecruiterProfile = async (req, res) => {
       "phone",
       "companyName",
       "companyPanCardOrGstFile",
-      "yearEstablished",
-      "headquarters",
-      "industry",
-      "cinNumber",
+      // "yearEstablished",
+      // "headquarters",
+      // "industry",
+      // "cinNumber",
       "linkedinUrl",
-      "achievements",
-      "culture",
-      "mission",
-      "contact1",
-      "contact2",
+      "website",
+      // "achievements",
+      // "culture",
+      // "mission",
+      // "contact1",
+      // "contact2",
     ];
+    console.log(req.body);
 
     updatableFields.forEach((field) => {
       if (req.body[field] !== undefined) {
@@ -357,3 +359,5 @@ export const getAllJobs = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
