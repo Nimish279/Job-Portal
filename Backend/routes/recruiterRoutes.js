@@ -22,4 +22,9 @@ router.get('/me',protect,isRecruiter,getCurrentRecruiter)
 router.post('/closeJob/:id',protect,isRecruiter,closeJob)
 router.post('/openJob/:id',protect,isRecruiter,openJob)
 // router.delete('/deleteJob/:id',protect,isRecruiter,deleteJob)
+router.get('/myJobs', protect, isRecruiter, myJobs);
+router.get('/getProfile', protect, isRecruiter, getProfile);
+router.put('/update', protect, isRecruiter, upload.single("companyPanCardOrGstFile"), updateRecruiterProfile);
+router.get("/myJobs", protect, getRecruiterJobs);
+router.get("/jobs", getAllJobs);
 export default router;
