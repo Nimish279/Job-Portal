@@ -3,6 +3,7 @@ import {
   deleteJob,
   getCurrentRecruiter,
   getProfile,
+  getRecruiterProfile,
   loginRecruiter,
   myJobs,
   postInternship,
@@ -34,4 +35,9 @@ router.get('/me', protect, isRecruiter, getCurrentRecruiter);
 router.put('/update', protect, isRecruiter, upload.single("companyPanCardOrGstFile"), updateRecruiterProfile);
 router.get("/myJobs", protect, getRecruiterJobs);
 router.get("/jobs", getAllJobs);
+// // Get recruiter profile (for pre-filling form)
+// router.get("/:id", getRecruiterProfile);
+
+// Update recruiter profile
+// router.put("/update", updateRecruiterProfile);
 export default router;

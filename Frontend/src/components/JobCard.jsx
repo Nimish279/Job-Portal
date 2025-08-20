@@ -12,7 +12,7 @@ const JobCard = ({ job }) => {
         {/* Company Initial */}
         <div className="bg-green-50 p-3 rounded-full mr-4 hidden md:flex items-center justify-center">
           <div className="w-10 h-10 flex items-center justify-center text-[#5F9D08] font-bold text-xl">
-            {job.recruiter.company ? job.recruiter.company.charAt(0) : job.jobRole ? job.jobRole.charAt(0) : '?'}
+            {job.companyName ? job.companyName.charAt(0) : job.jobRole ? job.jobRole.charAt(0) : '?'}
           </div>
         </div>
 
