@@ -8,7 +8,7 @@ const CompanyProfileForm = () => {
     headquarters: '',
     industry: '',
     cinNumber: '',
-    linkedinUrl: '',
+    linkedin: '',
     achievements: '',
     culture: '',
     mission: '',
@@ -117,7 +117,7 @@ const CompanyProfileForm = () => {
         <p><strong>Headquarters:</strong> {recruiter.headquarters}</p>
         <p><strong>Industry:</strong> {recruiter.industry}</p>
         <p><strong>CIN Number:</strong> {recruiter.cinNumber}</p>
-        <p><strong>LinkedIn:</strong> {recruiter.linkedinUrl}</p>
+        <p><strong>LinkedIn:</strong> {recruiter.linkedin}</p>
         <p><strong>Achievements:</strong> {recruiter.achievements}</p>
         <p><strong>Culture:</strong> {recruiter.culture}</p>
         <p><strong>Mission:</strong> {recruiter.mission}</p>
@@ -170,7 +170,7 @@ const CompanyProfileForm = () => {
         <input
           type="url"
           name="linkedinUrl"
-          value={formData.linkedinUrl} // ✅ fixed field name
+          value={formData.linkedin} // ✅ fixed field name
           onChange={handleChange}
           className="w-full p-2 border-2 border-gray-200 rounded-md"
         />

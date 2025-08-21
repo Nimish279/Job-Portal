@@ -12,7 +12,8 @@ import {
   registerRecruiter,
   seeCandidates,
   updateJob,
-  updateRecruiterProfile
+  updateRecruiterProfile,
+  getJobById
 } from '../controllers/recruiterController.js';
 import { isRecruiter, protect } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/multer.js';
@@ -40,4 +41,5 @@ router.get("/jobs", getAllJobs);
 
 // Update recruiter profile
 // router.put("/update", updateRecruiterProfile);
+router.get('/jobs/:id', protect, getJobById);
 export default router;
