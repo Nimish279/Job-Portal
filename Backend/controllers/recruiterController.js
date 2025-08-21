@@ -372,13 +372,11 @@ export const openJob = async (req, res) => {
         .sort({ createdAt: -1 });
 
     res.status(200).json({ success: true, jobs });
-  } catch (error) {
-    console.error("Error fetching all jobs:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-
+    } catch (error) {
+      console.error("Error fetching all jobs:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  };
 
   export const getJobById = async (req, res) => {
     try {

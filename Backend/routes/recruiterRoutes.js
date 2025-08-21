@@ -1,5 +1,5 @@
 import express from 'express';
-import {deleteJob, getCurrentRecruiter, getProfile, loginRecruiter,  myJobs, postInternship, postJob, recruiterLogout, registerRecruiter,seeCandidates, updateJob,closeJob,openJob,updateRecruiterProfile} from '../controllers/recruiterController.js';
+import {deleteJob, getCurrentRecruiter, getProfile, loginRecruiter,  myJobs, postInternship, postJob, recruiterLogout, registerRecruiter,seeCandidates, updateJob,closeJob,openJob,updateRecruiterProfile,getJobById} from '../controllers/recruiterController.js';
 import { isRecruiter, protect } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/multer.js';
 import { getRecruiterJobs } from '../controllers/recruiterController.js';
