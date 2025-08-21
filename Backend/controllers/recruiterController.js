@@ -379,3 +379,21 @@ export const openJob = async (req, res) => {
 };
 
 
+
+  export const getJobById = async (req, res) => {
+    try {
+        const job = await Job.findById(req.params.id);
+
+        if (!job) {
+            return res.status(404).json({ message: 'Job not found.' });
+        }
+
+        res.status(200).json(job);
+    } catch (error) {
+        // Handle invalid ID format (e.g., if ID is not a valid ObjectId)
+        if (error.kind === 'ObjectId') {
+            return res.status(404).json({ message: 'Invalid job ID format.' });
+        }
+        res.status(500).json({ message: 'Server error.', error: error.message });
+    }
+};

@@ -26,5 +26,10 @@ router.get('/myJobs', protect, isRecruiter, myJobs);
 // router.get('/getProfile', protect, isRecruiter, getProfile);
 router.get("/myJobs", protect, getRecruiterJobs);
 router.get("/jobs", getAllJobs);
-router.post("/update",protect,isRecruiter,upload.single("panCardOrGstFile"), updateRecruiterProfile);
+// // Get recruiter profile (for pre-filling form)
+// router.get("/:id", getRecruiterProfile);
+
+// Update recruiter profile
+// router.put("/update", updateRecruiterProfile);
+router.get('/jobs/:id', protect, getJobById);
 export default router;
