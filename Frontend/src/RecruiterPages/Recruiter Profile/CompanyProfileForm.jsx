@@ -17,41 +17,30 @@ const CompanyProfileForm = () => {
   });
   const [file, setFile] = useState(null);
   const [recruiter, setRecruiter] = useState(null);
-  const [isEditing, setIsEditing] = useState(true);  
 
-  // ✅ Load recruiter from localStorage + backend
-  useEffect(() => {
-    const storedRecruiter = localStorage.getItem("recruiterProfile");
-    if (storedRecruiter) {
-      const parsed = JSON.parse(storedRecruiter);
-      setRecruiter(parsed);
-      setFormData(prev => ({
-        ...prev,
-        ...parsed,
-      }));
-    }
+  // ✅ Detect edit mode based on localStorage
+  const [isEditing, setIsEditing] = useState(true);
 
-    const fetchRecruiterData = async () => {
-      try {
-        const res = await axios.get("http://localhost:8000/api/recruiters/me", {
-          withCredentials: true,
-        });
-
+  // ✅ Load recruiter from localStorage or backend
+  const fetchRecruiterData = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/recruiters/getProfile", {
+        withCredentials: true,
+      });
+      if (res.data?.recruiter) {
         setRecruiter(res.data.recruiter);
-        setFormData(prev => ({
-          ...prev,
-          ...res.data.recruiter,
-        }));
-
-        localStorage.setItem("recruiterProfile", JSON.stringify(res.data.recruiter));
-      } catch (err) {
-        console.error("Failed to fetch recruiter data:", err);
+        setFormData(prev => ({ ...prev, ...res.data.recruiter }));
+        setIsEditing(false); // show view mode if recruiter exists
+      } else {
+        setIsEditing(true); // new recruiter → show edit mode
       }
-    };
+    } catch (err) {
+      console.error("Failed to fetch recruiter data:", err);
+      setIsEditing(true);
+    }
+  };
 
-    fetchRecruiterData();
-  }, []);
-
+  fetchRecruiterData();
 
   const handleChange = (e) => {
     setFormData({
@@ -86,7 +75,7 @@ const CompanyProfileForm = () => {
 
       const res = await axios.put(
         `http://localhost:8000/api/recruiters/update`,
-        data,  // ✅ send FormData not plain object
+        data,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
           withCredentials: true,
@@ -96,8 +85,8 @@ const CompanyProfileForm = () => {
       console.log('Profile updated:', res.data);
       setRecruiter(res.data.recruiter);
 
-      // ✅ Update localStorage with latest recruiter
-      localStorage.setItem("recruiterProfile", JSON.stringify(res.data.recruiter));
+      // ✅ Update localStorage
+      // localStorage.setItem("recruiterProfile", JSON.stringify(res.data.recruiter));
 
       alert('Company profile saved successfully!');
       setIsEditing(false);
@@ -107,6 +96,7 @@ const CompanyProfileForm = () => {
     }
   };
 
+  // ✅ View Mode
   if (!isEditing && recruiter) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="space-y-6 p-6 border rounded-lg shadow">
@@ -135,6 +125,7 @@ const CompanyProfileForm = () => {
     );
   }
 
+  // ✅ Edit Mode (form)
   return (
     <motion.form
       onSubmit={handleSubmit}
@@ -166,15 +157,15 @@ const CompanyProfileForm = () => {
         </div>
 
         <div className="flex items-center">
-        <label className="w-1/4 font-semibold">LinkedIn Company URL</label>
-        <input
-          type="url"
-          name="linkedinUrl"
-          value={formData.linkedin} // ✅ fixed field name
-          onChange={handleChange}
-          className="w-full p-2 border-2 border-gray-200 rounded-md"
-        />
-      </div>
+          <label className="w-1/4 font-semibold">LinkedIn Company URL</label>
+          <input
+            type="url"
+            name="linkedin"
+            value={formData.linkedin}
+            onChange={handleChange}
+            className="w-full p-2 border-2 border-gray-200 rounded-md"
+          />
+        </div>
       </motion.div>
 
       {/* Text Areas */}
@@ -201,18 +192,6 @@ const CompanyProfileForm = () => {
         <input type="text" name="contact1" value={formData.contact1} onChange={handleChange} className="w-full p-2 border-2 border-gray-200 rounded-md mb-2" placeholder="Contact 1" />
         <input type="text" name="contact2" value={formData.contact2} onChange={handleChange} className="w-full p-2 border-2 border-gray-200 rounded-md" placeholder="Contact 2" />
       </motion.div>
-
-      {/* File Upload
-      <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5, delay: 0.7 }} className="mt-4">
-        <label className="block font-semibold mb-2">Upload PAN or GST Certificate</label>
-        <div className="flex items-center">
-          <label htmlFor="file-upload" className="cursor-pointer bg-white text-black px-4 py-2 border-2 border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition">
-            Choose File
-          </label>
-          <input id="file-upload" type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={handleFileChange} className="hidden" />
-        </div>
-        <p className="mt-1 text-xs text-gray-500">Accepted formats: PDF, JPG, PNG</p>
-      </motion.div> */}
 
       {/* Save Button */}
       <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5, delay: 0.8 }} className="mt-4">

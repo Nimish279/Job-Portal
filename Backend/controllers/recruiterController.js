@@ -192,55 +192,31 @@
   // Update recruiter profile
   export const updateRecruiterProfile = async (req, res) => {
   try {
-    // Use recruiter from auth
-    const recruiter = req.recruiter || req.user;
-
-    if (!recruiter) {
+    if (!req.recruiter) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    const existingRecruiter = await Recruiter.findById(recruiter._id);
-    if (!existingRecruiter) {
-      return res.status(404).json({ success: false, message: "Recruiter not found" });
+    const updates = { ...req.body };
+    if (req.file) {
+      updates.companyPanCardOrGstFile = req.file.path;
     }
 
-    const updatableFields = [
-      "phone",
-      "companyName",
-      "companyPanCardOrGstFile",
-      // "yearEstablished",
-      // "headquarters",
-      // "industry",
-      // "cinNumber",
-      "linkedinUrl",
-      "website",
-      // "achievements",
-      // "culture",
-      // "mission",
-      // "contact1",
-      // "contact2",
-    ];
-    console.log(req.body);
+    const updatedRecruiter = await Recruiter.findByIdAndUpdate(
+      req.recruiter._id, // 🔑 only update the logged-in recruiter
+      updates,
+      { new: true }
+    );
 
-    updatableFields.forEach((field) => {
-      if (req.body[field] !== undefined) {
-        existingRecruiter[field] = req.body[field];
-      }
-    });
-
-    await existingRecruiter.save();
-
-    res.json({
+    return res.status(200).json({
       success: true,
+      recruiter: updatedRecruiter,
       message: "Recruiter profile updated successfully",
-      recruiter: existingRecruiter,
     });
   } catch (error) {
-    console.error("Update profile error:", error);
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Error updating recruiter profile:", error);
+    res.status(500).json({ success: false, message: "Server error updating profile" });
   }
 };
-
 
   // ✅ Get recruiter profile by ID
   export const getRecruiterProfile = async (req, res) => {

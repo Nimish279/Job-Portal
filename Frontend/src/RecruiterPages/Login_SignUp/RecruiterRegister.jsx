@@ -72,7 +72,7 @@ console.log("isFile?", formData.panCardOrGstFile instanceof File);
 
   const result = await register(combinedFormData);
   if (result?.success) {
-    navigate("/recruiters/getProfile");
+    navigate("/recruiters/login");
   } else {
     toast.error(result?.message || "Registration failed");
   }

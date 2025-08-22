@@ -29,6 +29,7 @@ const RecruiterProfile = () => {
   const [industryType, setIndustryType] = useState('');
   const [company_name, setcompany_name] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const isMobile = screenWidth < 768;
 
