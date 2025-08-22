@@ -33,6 +33,7 @@ import  userStore  from './store/userStore';
 import ApplyJob from './pages/ApplyJob.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import SubscriptionPlans from './pages/SubscriptionPlans.jsx';
+import LearnMore from './pages/LearnMore.jsx';
 
 function App() {
   const fetchUser = userStore((state) => state.fetchUser);
@@ -62,6 +63,7 @@ function App() {
         <Route path='/recruiters/register' element={<RecruiterRegister />} />
         <Route path='/recruiters/login' element={<RecruiterLogin />} />
         <Route path="/subscription" element={<SubscriptionPlans />} />
+        <Route path="/learn-more" element={<LearnMore />} />
         {/* <Route path="/users/job/:id" element={<JobDetails />} /> */}
 
         {/* User Routes */}
