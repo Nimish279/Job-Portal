@@ -37,10 +37,10 @@ app.use("/api/auth", authRoutes);
 // Get all jobs
 app.get("/api/jobs", async (req, res) => {
   try {
-    const jobs = await Job.find();
+    const jobs = await Job.find().populate("recruiter", "companyName name email");
     res.json(jobs);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching jobs", error: err.message });
+    res.status(500).json({ error: "Failed to fetch jobs" });
   }
 });
 // Get job by ID

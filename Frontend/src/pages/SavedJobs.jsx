@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { FiMenu } from 'react-icons/fi';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-import Sidebar from '../components/SideBar';
-import NavSearchBar from '../components/Header/NavSearchBar';
-import JobCard from '../components/JobCard';
+import Sidebar from "../components/SideBar";
+import NavSearchBar from "../components/Header/NavSearchBar";
+import JobCard from "../components/JobCard";
 
 const SavedJobs = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -13,12 +12,12 @@ const SavedJobs = () => {
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    const storedJobs = localStorage.getItem('savedJobs');
+    const storedJobs = localStorage.getItem("savedJobs");
     if (storedJobs) {
       setSavedJobs(JSON.parse(storedJobs));
     }
@@ -28,10 +27,20 @@ const SavedJobs = () => {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  };
+
+  // ✅ Remove single job
+  const handleRemoveJob = (jobId) => {
+    const updatedJobs = savedJobs.filter((job) => job._id !== jobId && job.id !== jobId);
+    setSavedJobs(updatedJobs);
+    localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
+  };
+
+  // ✅ Clear all jobs
+  const handleClearAll = () => {
+    setSavedJobs([]);
+    localStorage.removeItem("savedJobs");
   };
 
   return (
@@ -48,7 +57,7 @@ const SavedJobs = () => {
       )}
 
       <AnimatePresence>
-        { isSidebarOpen && (
+        {isSidebarOpen && (
           <Sidebar
             isOpen={isSidebarOpen}
             onClose={() => setIsSidebarOpen(false)}
@@ -59,17 +68,28 @@ const SavedJobs = () => {
 
       <div className="flex-1 flex flex-col pt-24 lg:pl-64 px-4 md:px-8">
         <motion.div
-          className="mb-4"
+          className="mb-4 flex justify-between items-center"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-2xl font-bold text-gray-800 border-l-4 border-[#5F9D08] pl-3">
-            Saved Jobs
-          </h1>
-          <p className="text-gray-600 mt-2 pl-4">
-            Jobs you've saved for later application
-          </p>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800 border-l-4 border-[#5F9D08] pl-3">
+              Saved Jobs
+            </h1>
+            <p className="text-gray-600 mt-2 pl-4">
+              Jobs you've saved for later application
+            </p>
+          </div>
+
+          {savedJobs.length > 0 && (
+            <button
+              onClick={handleClearAll}
+              className="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700"
+            >
+              Clear All
+            </button>
+          )}
         </motion.div>
 
         <motion.div
@@ -82,13 +102,22 @@ const SavedJobs = () => {
             {savedJobs.length > 0 ? (
               savedJobs.map((job, index) => (
                 <motion.div
-                  key={job.id}
+                  key={job._id || job.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                   whileHover={{ scale: 1.01 }}
+                  className="relative"
                 >
                   <JobCard job={job} />
+
+                  {/* ✅ Remove button on each job */}
+                  <button
+                    onClick={() => handleRemoveJob(job._id || job.id)}
+                    className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600"
+                  >
+                    Remove
+                  </button>
                 </motion.div>
               ))
             ) : (

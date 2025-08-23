@@ -26,8 +26,8 @@ function LandingPage() {
           <div className="text-2xl font-bold text-[#4CAF50]">JobPortal</div>
 
           {/* Links */}
-          <ul className="hidden md:flex gap-8 text-gray-700 font-medium">
-            <li><Link to="/" className="hover:text-[#4CAF50]">Home</Link></li>
+          <ul className="hidden md:flex gap-8 text-gray-700 font-medium flex-1 justify-center">
+            {/* <li><Link to="/" className="hover:text-[#4CAF50]">Home</Link></li> */}
             <li><Link to="/about" className="hover:text-[#4CAF50]">About</Link></li>
             <li><Link to="/subscription" className="hover:text-[#4CAF50]">Plans</Link></li>
             <li><Link to="/support" className="hover:text-[#4CAF50]">Support</Link></li>

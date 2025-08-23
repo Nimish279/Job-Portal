@@ -12,7 +12,7 @@ const JobCard = ({ job }) => {
         {/* Company Initial */}
         <div className="bg-green-50 p-3 rounded-full mr-4 hidden md:flex items-center justify-center">
           <div className="w-10 h-10 flex items-center justify-center text-[#5F9D08] font-bold text-xl">
-            {job.companyName ? job.companyName.charAt(0) : job.jobRole ? job.jobRole.charAt(0) : '?'}
+            {job.recruiter?.companyName || "N/A"}
           </div>
         </div>
 
@@ -23,7 +23,7 @@ const JobCard = ({ job }) => {
           </h2>
 
           {/* Company Name */}
-          <p className="text-[#5F9D08] font-medium">{job.recruiter?.companyName || job.recruiter || 'N/A'}</p>
+          <p className="text-[#5F9D08] font-medium">{job.recruiter?.companyName ? job.recruiter?.companyName : "Unknown Company"}</p>
 
           {/* Location, Role, CTC */}
           <div className="flex flex-wrap items-center mt-2 text-sm text-gray-600">

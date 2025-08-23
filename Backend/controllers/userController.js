@@ -267,3 +267,20 @@ export const getCurrentUser = async (req, res) => {
     res.status(500).json({ message: unauthenticated });
   }
 };
+
+export const removeSavedJob = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const userId = req.user._id; // from protect middleware
+
+    await User.findByIdAndUpdate(userId, {
+      $pull: { savedJobs: jobId }
+    });
+
+    res.json({ success: true, message: "Job removed from saved jobs" });
+  } catch (error) {
+    console.error("Error removing saved job:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+

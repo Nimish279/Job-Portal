@@ -344,7 +344,7 @@ export const openJob = async (req, res) => {
   export const getAllJobs = async (req, res) => {
     try {
       const jobs = await Job.find()
-        .populate("recruiter", "companyName", "email") // show recruiter details if needed
+        .populate("recruiter", "companyName recruiterName email") // show recruiter details if needed
         .sort({ createdAt: -1 });
 
     res.status(200).json({ success: true, jobs });
@@ -355,19 +355,19 @@ export const openJob = async (req, res) => {
   };
 
   export const getJobById = async (req, res) => {
-    try {
-        const job = await Job.findById(req.params.id);
+  try {
+    const job = await Job.findById(req.params.id)
+      .populate("recruiter", "companyName recruiterName email"); // ✅ populate recruiter details
 
-        if (!job) {
-            return res.status(404).json({ message: 'Job not found.' });
-        }
-
-        res.status(200).json(job);
-    } catch (error) {
-        // Handle invalid ID format (e.g., if ID is not a valid ObjectId)
-        if (error.kind === 'ObjectId') {
-            return res.status(404).json({ message: 'Invalid job ID format.' });
-        }
-        res.status(500).json({ message: 'Server error.', error: error.message });
+    if (!job) {
+      return res.status(404).json({ message: "Job not found." });
     }
+
+    res.status(200).json(job);
+  } catch (error) {
+    if (error.kind === "ObjectId") {
+      return res.status(404).json({ message: "Invalid job ID format." });
+    }
+    res.status(500).json({ message: "Server error.", error: error.message });
+  }
 };

@@ -6,31 +6,35 @@ const LearnMore = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
       <div className="max-w-3xl bg-white shadow-lg rounded-2xl p-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Learn More About Our Platform
+          Learn More About JobPortal
         </h1>
         <p className="text-gray-600 mb-6">
-          Our platform connects talented job seekers with top recruiters. 
-          Whether you are looking for your dream job or searching for the right 
-          candidate, we provide tools and resources to make the process seamless.
+          JobPortal is designed to connect talented job seekers with recruiters 
+          looking for the right candidates. Whether you’re applying for your 
+          first job or hiring for your growing team, our platform makes the 
+          process simple and effective.
         </p>
 
         <h2 className="text-xl font-semibold text-gray-700 mb-2">
-          Features
+          Key Features
         </h2>
         <ul className="list-disc pl-5 text-gray-600 mb-6">
-          <li>Smart job matching with AI recommendations</li>
-          <li>Recruiter dashboards with analytics</li>
-          <li>Profile builder for candidates</li>
-          <li>Real-time notifications & updates</li>
+          <li>Easy registration for both Job Seekers and Recruiters</li>
+          <li>Dedicated dashboards to manage applications and postings</li>
+          <li>Simple job posting with clear details for recruiters</li>
+          <li>Browse and apply to jobs with just a few clicks</li>
+          <li>Support for users through our help center</li>
+          <li>Subscription plans tailored for recruiters</li>
         </ul>
 
         <h2 className="text-xl font-semibold text-gray-700 mb-2">
           Why Choose Us?
         </h2>
         <p className="text-gray-600 mb-6">
-          We make hiring and job searching easier, faster, and more effective. 
-          Our focus is on creating meaningful connections that help both recruiters 
-          and job seekers succeed.
+          We provide a professional, user-friendly platform that bridges the 
+          gap between opportunity and talent. With our streamlined process, 
+          recruiters save time finding the right candidates, and job seekers 
+          get access to the latest openings in one place.
         </p>
 
         <div className="flex justify-between items-center">

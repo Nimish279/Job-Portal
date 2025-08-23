@@ -1,48 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FiMenu } from 'react-icons/fi';
-import { motion, AnimatePresence } from 'framer-motion';
-import NavSearchBar from '../components/Header/NavSearchBar';
-import Sidebar from '../components/SideBar';
-import jobsData from '../data/jobsData.json';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import NavSearchBar from "../components/Header/NavSearchBar";
+import Sidebar from "../components/SideBar";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const JobRecommendations = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [savedJobs, setSavedJobs] = useState(() => {
-    const stored = localStorage.getItem('savedJobs');
+    const stored = localStorage.getItem("savedJobs");
     return stored ? JSON.parse(stored) : [];
   });
+  const [jobs, setJobs] = useState([]);
 
   const navigate = useNavigate();
   const isMobile = screenWidth < 768;
 
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // 🔹 Fetch jobs from backend
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/jobs");
+        const data = await response.json();
+        setJobs(data);
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+        toast.error("Failed to load jobs");
+      }
+    };
+    fetchJobs();
+  }, []);
+
+  // 🔹 Save / Unsave job
   const handleSaveJob = (job) => {
     const normalizedJob = {
       ...job,
-      title: job.jobTitle,
+      title: job.jobRole,
     };
-    const isSaved = savedJobs.some((saved) => saved.id === job.id);
+    const isSaved = savedJobs.some((saved) => saved._id === job._id);
     const updatedJobs = isSaved
-      ? savedJobs.filter((saved) => saved.id !== job.id)
+      ? savedJobs.filter((saved) => saved._id !== job._id)
       : [...savedJobs, normalizedJob];
 
     setSavedJobs(updatedJobs);
-    localStorage.setItem('savedJobs', JSON.stringify(updatedJobs));
+    localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
 
-    // ✅ Show toast notification
     if (isSaved) {
-      toast.info('Removed from saved jobs');
+      toast.info("Removed from saved jobs");
     } else {
-      toast.success('Job saved successfully!');
+      toast.success("Job saved successfully!");
     }
   };
 
@@ -85,7 +99,8 @@ const JobRecommendations = () => {
             Job Recommendations
           </h1>
           <p className="text-gray-600 mt-2 pl-4">
-            Here are some job recommendations based on your skills and experience.
+            Here are some job recommendations based on your skills and
+            experience.
           </p>
         </motion.div>
 
@@ -95,11 +110,11 @@ const JobRecommendations = () => {
           initial="hidden"
           animate="visible"
         >
-          {jobsData.map((job, index) => {
-            const isJobSaved = savedJobs.some((saved) => saved.id === job.id);
+          {jobs.map((job, index) => {
+            const isJobSaved = savedJobs.some((saved) => saved._id === job._id);
             return (
               <motion.div
-                key={job.id}
+                key={job._id}
                 className="relative bg-white lg:p-5 p-3 rounded-xl shadow-md mb-4 md:mx-4 lg:mx-4 mx-2 hover:shadow-xl transition-all duration-300 border border-gray-100"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -109,53 +124,33 @@ const JobRecommendations = () => {
                 <div className="flex items-center">
                   <div className="bg-green-50 p-2 rounded-full mr-3 hidden md:block">
                     <div className="w-10 h-10 flex items-center justify-center text-[#5F9D08] font-bold text-xl">
-                      {job.company.charAt(0)}
+                      {job.recruiter?.companyName?.charAt(0) || "J"}
                     </div>
                   </div>
                   <div>
                     <h3 className="m-0 text-sm lg:text-lg font-semibold text-gray-800">
-                      {job.jobTitle}
+                      {job.jobRole}
                     </h3>
                     <p className="text-xs lg:text-md font-medium text-[#5F9D08]">
-                      {job.company}
+                      {job.recruiter.companyName ? job.recruiter.companyName : "Unknown Company"}
                     </p>
                     <p className="text-gray-600 text-xs lg:text-sm mt-1">
                       <span className="inline-flex items-center">
                         <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
                         {job.experience}
-                      </span>{' '}
-                      |{' '}
+                      </span>{" "}
+                      |{" "}
                       <span className="inline-flex items-center">
                         <span className="w-2 h-2 bg-blue-500 rounded-full mx-1"></span>
                         {job.jobType}
-                      </span>{' '}
-                      |{' '}
+                      </span>{" "}
+                      |{" "}
                       <span className="inline-flex items-center">
                         <span className="w-2 h-2 bg-yellow-500 rounded-full mx-1"></span>
-                        {job.salary}
+                        {job.ctc}
                       </span>
                     </p>
                   </div>
-                </div>
-
-                <div className="absolute top-2 lg:top-3 right-16 lg:right-28 pr-4 text-gray-500 text-xs lg:text-sm font-medium">
-                  <span className="flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1 text-[#5F9D08]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    Posted {job.timeAgo}
-                  </span>
                 </div>
 
                 <div className="absolute top-2 lg:top-3 right-2 lg:right-10 text-gray-600 text-xs lg:text-sm space-x-2">
@@ -172,13 +167,13 @@ const JobRecommendations = () => {
 
                 <div className="absolute bottom-2 lg:bottom-4 right-2 lg:right-4 flex items-center">
                   <button
-                    onClick={() => navigate(`/users/apply/${job.id}`)}
+                    onClick={() => navigate(`/users/apply/${job._id}`)}
                     className="bg-gradient-to-r from-[#5F9D08] to-[#4A8B07] text-xs lg:text-md md:text-sm text-white px-4 py-1.5 rounded-lg hover:shadow-lg transition-all duration-300 mr-3 font-medium"
                   >
                     Apply Now
                   </button>
                   <button
-                    onClick={() => navigate(`/users/job/${job.id}`)}
+                    onClick={() => navigate(`/users/job/${job._id}`)}
                     className="bg-white text-[#5F9D08] border-2 text-xs lg:text-md md:text-sm border-[#5F9D08] px-4 py-1.5 rounded-lg hover:bg-green-50 transition-all duration-300 font-medium"
                   >
                     Know More

@@ -1,35 +1,51 @@
 import express from 'express';
-import {deleteJob, getCurrentRecruiter, getProfile, loginRecruiter,  myJobs, postInternship, postJob, recruiterLogout, registerRecruiter,seeCandidates, updateJob,closeJob,openJob,updateRecruiterProfile,getJobById} from '../controllers/recruiterController.js';
-import { isRecruiter, protect } from '../middlewares/authMiddleware.js';
+import Job from "../models/jobModel.js";
 import upload from '../middlewares/multer.js';
-import { getRecruiterJobs } from '../controllers/recruiterController.js';
-import { getAllJobs } from "../controllers/recruiterController.js";
+import { isRecruiter, protect } from '../middlewares/authMiddleware.js';
+import {
+  deleteJob,
+  getCurrentRecruiter,
+  getProfile,
+  loginRecruiter,
+  myJobs,
+  postInternship,
+  postJob,
+  recruiterLogout,
+  registerRecruiter,
+  seeCandidates,
+  updateJob,
+  closeJob,
+  openJob,
+  updateRecruiterProfile,
+  getJobById,
+  getRecruiterJobs,
+  getAllJobs
+} from '../controllers/recruiterController.js';
 
 const router = express.Router();
 
-router.post('/register',upload.single("panCardOrGstFile"), registerRecruiter); // WOrking //GST or PAN added (by-tushar)
-router.post('/login', loginRecruiter); // WOrking
-router.post('/postJob',protect,isRecruiter,postJob) // WOrking
-router.post('/postInternship', protect, isRecruiter, postInternship);
-router.get('/job/:jobId/candidates',protect,isRecruiter,seeCandidates) 
-router.put('/updateJob/:id',protect,isRecruiter,updateJob) 
-router.delete('/deleteJob/:id',protect,isRecruiter,deleteJob) // WOrking
-router.put('/job/:id/uploadDocs',protect,isRecruiter)
-router.get('/myJobs',protect,isRecruiter,myJobs) // WOrking
-router.get('/getProfile',protect,isRecruiter,getProfile)// WOrking
-router.post('/logout',protect,isRecruiter,recruiterLogout)
-router.get('/me',protect,isRecruiter,getCurrentRecruiter)
-router.post('/closeJob/:id',protect,isRecruiter,closeJob)
-router.post('/openJob/:id',protect,isRecruiter,openJob)
-// router.delete('/deleteJob/:id',protect,isRecruiter,deleteJob)
-router.get('/myJobs', protect, isRecruiter, myJobs);
-// router.get('/getProfile', protect, isRecruiter, getProfile);
-router.get("/myJobs", protect, getRecruiterJobs);
-router.get("/jobs", getAllJobs);
-// // Get recruiter profile (for pre-filling form)
-// router.get("/:id", getRecruiterProfile);
+// Recruiter auth
+router.post('/register', upload.single("panCardOrGstFile"), registerRecruiter);
+router.post('/login', loginRecruiter);
+router.post('/logout', protect, isRecruiter, recruiterLogout);
 
-// Update recruiter profile
-// router.put("/update", updateRecruiterProfile);
+// Recruiter profile
+router.get('/getProfile', protect, isRecruiter, getProfile);
+router.get('/me', protect, isRecruiter, getCurrentRecruiter);
+router.put('/update', protect, isRecruiter, updateRecruiterProfile);
+
+// Job management
+router.post('/postJob', protect, isRecruiter, postJob);
+router.post('/postInternship', protect, isRecruiter, postInternship);
+router.get('/myJobs', protect, isRecruiter, getRecruiterJobs); // keep only one
+router.get('/jobs', getAllJobs);
 router.get('/jobs/:id', protect, getJobById);
+router.put('/updateJob/:id', protect, isRecruiter, updateJob);
+router.delete('/deleteJob/:id', protect, isRecruiter, deleteJob);
+router.post('/closeJob/:id', protect, isRecruiter, closeJob);
+router.post('/openJob/:id', protect, isRecruiter, openJob);
+
+// Candidates
+router.get('/job/:jobId/candidates', protect, isRecruiter, seeCandidates);
+
 export default router;
