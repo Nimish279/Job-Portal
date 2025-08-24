@@ -1,5 +1,5 @@
 import express from 'express';
-import Job from "../models/jobModel.js";
+import {Job} from "../models/Job.js";
 import upload from '../middlewares/multer.js';
 import { isRecruiter, protect } from '../middlewares/authMiddleware.js';
 import {
