@@ -36,7 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/recruiters", recruiterRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/upload", upload);
-app.use("/api/user", userRoutes);
+// app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 // Get all jobs
 app.get("/api/jobs", async (req, res) => {

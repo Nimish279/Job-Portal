@@ -37,7 +37,7 @@ const Dashboard = () => {
   useEffect(() =>{
     const fetchJobs = async () => {
       try {
-        const res = await fetch ("http://localhost:8000/api/jobs");
+        const res = await fetch ("https://job-portal-backend-swtv.onrender.com/api/jobs");
         const data = await res.json();
         if(data.success) {
           setJobs(data.jobs);
