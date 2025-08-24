@@ -104,6 +104,7 @@
         httpOnly: true,
         secure: true,
         sameSite: "Strict",
+        maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
       });
       res.status(200).json({ message: "Logout Sucessfull" });
     } catch (error) {
@@ -129,19 +130,24 @@
 
   // SEE CANDIDATES
   export const seeCandidates = async (req, res) => {
-    try {
-      const jobId = req.params.id;
-      if (!jobId) return res.status(500).json({ message: "No jobId mentioned" });
+  try {
+    const jobId = req.params.id;
+    const job = await Job.findById(jobId).populate({
+      path: 'candidates',
+      select: 'name degree photo email', // select the fields you need
+    });
 
-      const candidates = await Job.findById(jobId).populate("candidates");
-      if (!candidates) {
-        return res.status(203).json({ message: "No Candidates Yet", candidates: [] });
-      }
-      res.status(200).json({ success: true, candidates });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+    if (!job) {
+      return res.status(404).json({ message: 'Job not found' });
     }
-  };
+
+    res.status(200).json({ candidates: job.candidates });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 
   // UPDATE JOB
   export const updateJob = async (req, res) => {

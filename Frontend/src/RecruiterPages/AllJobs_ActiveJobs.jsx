@@ -183,7 +183,7 @@ function JobPage() {
                   opened={job.created_at}
                   actionButtonText="View Applicants"
                   secondaryButtonText="Close Job"
-                  actionButtonLink={`/recruiters/applicants`}
+                  actionButtonLink={`/recruiters/applicants/${job._id}`}
                   onSecondaryButtonClick={() => console.log(`Closing job ${job._id}`)}
                   statusText={job.status === 1 ? 'Active' : 'Inactive'}
                 />

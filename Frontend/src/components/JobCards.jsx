@@ -61,6 +61,8 @@ const JobCards = () => {
   const [error, setError] = useState(null);
   const { getJobs } = useUserStore();
   const jobs = useUserStore(state => state.jobs);
+  const appliedJobs = useUserStore(state => state.appliedJobs); // array of job IDs
+  const getAppliedJobs = useUserStore(state => state.getAppliedJobs);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -83,6 +85,12 @@ const JobCards = () => {
     
     fetchJobs();
   }, [getJobs]);
+
+  useEffect(() => {
+  if (getAppliedJobs) {
+    getAppliedJobs(); // fetch applied jobs for current user
+  }
+}, [getAppliedJobs]);
 
   if (loading) {
     return (
@@ -119,7 +127,8 @@ const JobCards = () => {
       <div className="flex flex-col space-y-4">
         {jobs.length > 0 ? (
           jobs.map((job) => (
-            <JobCard key={job._id || job.id} job={job} />
+            <JobCard key={job._id || job.id} job={job}
+            currentUserAppliedJobs={appliedJobs.map(j => j._id || j.id)}  />
           ))
         ) : (
           <div className="text-gray-500 text-center py-8">

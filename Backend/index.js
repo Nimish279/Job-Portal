@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
@@ -8,6 +9,9 @@ import upload from "./routes/upload.js";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
 import { Job } from "./models/Job.js";
+import { seeCandidates } from "./controllers/recruiterController.js";
+import { protect, isRecruiter } from "./middlewares/authMiddleware.js";
+import { User } from "./models/User.js";
 
 dotenv.config();
 const app = express();
@@ -52,6 +56,22 @@ app.get("/api/jobs/:id", async (req, res) => {
     res.json(job);
   } catch (err) {
     res.status(500).json({ message: "Error fetching job", error: err.message });
+  }
+});
+app.get("/api/jobs/:id/candidates", protect, isRecruiter, seeCandidates);
+app.get('/api/applicants/:applicantId', protect, isRecruiter, async (req, res) => {
+  try {
+    const { applicantId } = req.params;
+
+    // Find the applicant in the User collection
+    const applicant = await User.findById(applicantId);
+    if (!applicant) {
+      return res.status(404).json({ message: "Applicant not found" });
+    }
+
+    res.json(applicant);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching applicant", error: err.message });
   }
 });
 const PORT = process.env.PORT || 8000;
