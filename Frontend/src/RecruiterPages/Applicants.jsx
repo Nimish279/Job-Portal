@@ -34,7 +34,7 @@ function Applicants() {
   const fetchApplicants = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/jobs/${jobId}/candidates`,
+        `https://job-portal-backend-swtv.onrender.com/api/jobs/${jobId}/candidates`,
         { withCredentials: true }
       );
       console.log(res.data);

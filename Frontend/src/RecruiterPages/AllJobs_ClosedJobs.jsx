@@ -27,7 +27,7 @@ function AllJobs_ClosedJobs() {
 
        const fetchJobs = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/recruiters/myJobs', {
+        const response = await axios.get('https://job-portal-backend-swtv.onrender.com/api/recruiters/myJobs', {
           withCredentials: true, // <-- THIS is required to send cookies
         });
         const recruiterAllJobs=response.data.jobs.filter((job) => job.status === 'closed'); //added a filter (by-tushar)
@@ -52,7 +52,7 @@ function AllJobs_ClosedJobs() {
   useEffect(() => {
     const fetchProfile=async()=>{
       try {
-        const res=await axios.get('http://localhost:8000/api/recruiters/getProfile',{
+        const res=await axios.get('https://job-portal-backend-swtv.onrender.com/api/recruiters/getProfile',{
           withCredentials:true
         })
         const recruiter=res.data.recruiter
@@ -73,7 +73,7 @@ function AllJobs_ClosedJobs() {
     
   try {
      const res= await axios.post(
-        `http://localhost:8000/api/recruiters/openJob/${jobId}`,
+        `https://job-portal-backend-swtv.onrender.com/api/recruiters/openJob/${jobId}`,
         {},
         { withCredentials: true }
       );
@@ -92,7 +92,7 @@ function AllJobs_ClosedJobs() {
     
   try {
       await axios.delete(
-        `http://localhost:8000/api/recruiters/deleteJob/${jobId}`,
+        `https://job-portal-backend-swtv.onrender.com/api/recruiters/deleteJob/${jobId}`,
         
         { withCredentials: true }
       );
@@ -198,7 +198,7 @@ function AllJobs_ClosedJobs() {
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : jobs.length === 0 ? (
-            <p>No active jobs found.</p>
+            <p>No closed jobs found.</p>
           ) : (
             <div className="space-y-4">
               {jobs.map((job) => (
@@ -212,14 +212,14 @@ function AllJobs_ClosedJobs() {
                   eligibilityCriteria={job.eligibilityCriteria}
                   status={job.status}
                   opened={job.created_at}
-                  // actionButtonText="Open Job"
-                  // secondaryButtonText="Delete Job"
-                  // actionButtonLink={()=>{handleOpenJob(job._id)}}
-                  // onSecondaryButtonClick={() => {handleDeleteJob(job._id)}}
-                  actionButtonText="View Applicants"
-                  secondaryButtonText="Close Job"
-                  actionButtonLink={`/recruiters/applicants/${job._id}`}
-                  onSecondaryButtonClick={() => console.log(`Closing job ${job._id}`)}
+                  actionButtonText="Open Job"
+                  secondaryButtonText="Delete Job"
+                  actionButtonLink={()=>{handleOpenJob(job._id)}}
+                  onSecondaryButtonClick={() => {handleDeleteJob(job._id)}}
+                  // actionButtonText="View Applicants"
+                  // secondaryButtonText="Close Job"
+                  // actionButtonLink={`/recruiters/applicants/${job._id}`}
+                  // onSecondaryButtonClick={() => console.log(`Closing job ${job._id}`)}
                   statusText={job.status === 1 ? 'Active' : 'Inactive'}
                 />
               ))}

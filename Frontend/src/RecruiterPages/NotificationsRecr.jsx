@@ -165,7 +165,7 @@ export default function NotificationsRecr() {
   useEffect(()=>{
       const fetchProfile = async () => {
             try {
-              const res = await axios.get('http://localhost:8000/api/recruiters/getProfile', {
+              const res = await axios.get('https://job-portal-backend-swtv.onrender.com/api/recruiters/getProfile', {
                 withCredentials: true
               });
               setUserName(res.data.recruiter.companyName);

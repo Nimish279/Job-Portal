@@ -16,7 +16,7 @@ const ApplicantsProfile = () => {
     const fetchApplicant = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/applicants/${applicantId}`,
+          `https://job-portal-backend-swtv.onrender.com/api/applicants/${applicantId}`,
           { withCredentials: true }
         );
         setProfile(response.data);

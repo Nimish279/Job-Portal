@@ -39,7 +39,7 @@ const UpdateRecruiter = () => {
     const fetchRecruiter = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/api/recruiters/getProfile",
+          "https://job-portal-backend-swtv.onrender.com/api/recruiters/getProfile",
           { withCredentials: true }
         );
         const recruiter = res.data.recruiter;
@@ -87,7 +87,7 @@ const UpdateRecruiter = () => {
 
     try {
       const res=await axios.post(
-        "http://localhost:8000/api/recruiters/update",
+        "https://job-portal-backend-swtv.onrender.com/api/recruiters/update",
         updateData,
         {
           withCredentials: true,

@@ -36,7 +36,7 @@ const ProfileGreen = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/recruiters/getProfile', {
+        const response = await axios.get('https://job-portal-backend-swtv.onrender.com/api/recruiters/getProfile', {
           withCredentials: true,
         });
         const recruiter = response.data.recruiter;

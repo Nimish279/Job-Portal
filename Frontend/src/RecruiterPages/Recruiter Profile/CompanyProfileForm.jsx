@@ -24,7 +24,7 @@ const CompanyProfileForm = () => {
   // ✅ Load recruiter from localStorage or backend
   const fetchRecruiterData = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/recruiters/getProfile", {
+      const res = await axios.get("https://job-portal-backend-swtv.onrender.com/api/recruiters/getProfile", {
         withCredentials: true,
       });
       if (res.data?.recruiter) {
@@ -74,7 +74,7 @@ const CompanyProfileForm = () => {
       if (file) data.append('companyPanCardOrGstFile', file);
 
       const res = await axios.put(
-        `http://localhost:8000/api/recruiters/update`,
+        `https://job-portal-backend-swtv.onrender.com/api/recruiters/update`,
         data,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

@@ -338,7 +338,7 @@ export const openJob = async (req, res) => {
       const recruiterId = req.user.id; // recruiter logged in
       const jobs = await Job.find({ recruiter: recruiterId }).sort({ createdAt: -1 });
 
-      res.status(200).json(jobs);
+      res.status(200).json({jobs});
     } catch (error) {
       console.error("Error fetching recruiter jobs:", error);
       res.status(500).json({ message: "Server error" });

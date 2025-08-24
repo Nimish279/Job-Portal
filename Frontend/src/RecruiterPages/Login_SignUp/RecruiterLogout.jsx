@@ -9,7 +9,7 @@ const Logout = () => {
   useEffect(() => {
     const logoutUser = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/recruiters/logout', {
+        const response = await fetch('https://job-portal-backend-swtv.onrender.com/api/recruiters/logout', {
           method: 'POST', // Or GET if your backend handles it that way
           credentials: 'include', // Important for sending cookies
         });
