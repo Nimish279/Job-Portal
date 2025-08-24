@@ -548,7 +548,7 @@ const JobPage = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`http://localhost:8000/api/jobs/${id}`);
+        const response = await fetch(`https://job-portal-backend-swtv.onrender.com/api/jobs/${id}`);
         if (!response.ok) {
           throw new Error('Job not found');
         }

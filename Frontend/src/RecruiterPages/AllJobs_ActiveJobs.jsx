@@ -32,6 +32,7 @@ function JobPage() {
           withCredentials: true, // <-- THIS is required to send cookies
         });
         const recruiterAllJobs=response.data.jobs.filter((job) => job.status === 'open'); //added a filter (by-tushar)
+        console.log(recruiterAllJobs)
         setJobs(recruiterAllJobs);
         setLoading(false);
         console.log(response.data.jobs)
@@ -100,6 +101,10 @@ const handleCloseJob = async (jobId) => {
     toast.error("Failed to close job");
     console.error("Error closing job:", error);
   }
+};
+
+const handleViewApplicants= (jobId) => {
+  navigate(`/recruiters/applicants/${jobId}`);
 };
 
   
@@ -230,7 +235,8 @@ const handleCloseJob = async (jobId) => {
                   opened={job.created_at}
                   actionButtonText="View Applicants"
                   secondaryButtonText="Close Job"
-                  actionButtonLink={`/recruiters/applicants/${job._id}`}
+                  actionButtonLink={()=>handleViewApplicants(job._id)}
+                  activejob={true}
                   onSecondaryButtonClick={() => handleCloseJob(job._id)}
                   statusText={job.status === 1 ? 'Active' : 'Inactive'}
                 />
