@@ -216,6 +216,10 @@ function AllJobs_ClosedJobs() {
                   secondaryButtonText="Delete Job"
                   actionButtonLink={()=>{handleOpenJob(job._id)}}
                   onSecondaryButtonClick={() => {handleDeleteJob(job._id)}}
+                  actionButtonText="View Applicants"
+                  secondaryButtonText="Close Job"
+                  actionButtonLink={`/recruiters/applicants/${job._id}`}
+                  onSecondaryButtonClick={() => console.log(`Closing job ${job._id}`)}
                   statusText={job.status === 1 ? 'Active' : 'Inactive'}
                 />
               ))}

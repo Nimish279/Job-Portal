@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu } from 'react-icons/fi';
-import AmazonLogo from '../assets/images/AmazonLogo.png';
+import axios from 'axios';
+
 import Sidebar from '../components/SideBar_Recr';
 import Navbar from './Notifications/Navbar';
 import { FaHome,FaBell } from 'react-icons/fa';
@@ -21,26 +22,17 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      ease: "easeOut",
-      duration: 0.3,
-    }
+    transition: { staggerChildren: 0.2, ease: "easeOut", duration: 0.3 }
   }
 };
-
-// const itemVariants = {
-//   hidden: { y: 30, opacity: 0 },
-//   visible: {
-//     y: 0,
-//     opacity: 1,
-//     transition: { type: 'spring', stiffness: 120 }
-//   }
-// };
 
 function Applicants() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [applicants, setApplicants] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { jobId } = useParams();
   const isMobile = screenWidth < 768;
   const [userName, setUserName] = useState('');
   useEffect(() => {
@@ -68,6 +60,29 @@ function Applicants() {
           
           fetchProfile();
         }, []);
+  }, []);
+
+  useEffect(() => {
+  const fetchApplicants = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8000/api/jobs/${jobId}/candidates`,
+        { withCredentials: true }
+      );
+      console.log(res.data);
+      setApplicants(res.data.candidates || []);  // <-- Add this
+      setLoading(false);                        // <-- Add this
+    } catch (err) {
+      console.error("Error fetching applicants:", err.response?.data || err.message);
+      setError(err.response?.data?.message || err.message);  // <-- Add this
+      setLoading(false);
+    }
+  };
+  fetchApplicants();
+}, [jobId]);
+
+  if (loading) return <div className="p-8 text-center">Loading applicants...</div>;
+  if (error) return <div className="p-8 text-center text-red-600">{error}</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -116,10 +131,7 @@ function Applicants() {
       <div className="flex flex-col lg:flex-row relative">
         {/* Hamburger Button (Mobile) */}
         <div className="lg:hidden p-4">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-3xl text-[#5F9D08] cursor-pointer"
-          >
+          <button onClick={() => setIsSidebarOpen(true)} className="text-3xl text-[#5F9D08] cursor-pointer">
             <FiMenu />
           </button>
         </div>
@@ -160,13 +172,15 @@ function Applicants() {
             </motion.h2>
 
             <div className="space-y-5">
-              {applicantsData.map((applicant, index) => (
+              {applicants.length === 0 && (
+                <p className="text-center text-gray-500">No applicants found for this job.</p>
+              )}
+              {applicants.map((applicant, index) => (
                 <motion.div
-                  key={index}
+                  key={applicant._id || index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  // variants={itemVariants}
                   whileHover={{ scale: 1.015 }}
                   className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-gray-100 rounded-lg bg-gray-50 hover:shadow transition-all duration-300"
                 >
@@ -174,20 +188,20 @@ function Applicants() {
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-dotted border-gray-300 p-1">
                       <img
-                        src={applicant.image}
+                        src={applicant.photo || '/default-avatar.png'}
                         alt={applicant.name}
                         className="w-full h-full rounded-full object-cover"
                       />
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800">{applicant.name}</h3>
-                      <p className="text-sm text-gray-500">{applicant.course}</p>
+                      <p className="text-sm text-gray-500">{applicant.degree}</p>
                     </div>
                   </div>
 
                   {/* Buttons */}
                   <div className="flex flex-col sm:flex-row gap-2 mt-4 sm:mt-0">
-                    <Link to={`/recruiters/applicantsProfile/${index + 1}`}>
+                    <Link to={`/recruiters/applicantsProfile/${jobId}/${applicant._id}`}>
                       <motion.button
                         className="bg-[#5F9D08] hover:bg-green-700 text-white px-5 py-2 rounded-md text-sm font-medium"
                         whileHover={{ scale: 1.05 }}

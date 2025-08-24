@@ -52,6 +52,14 @@ const Dashboard = () => {
     };
     fetchJobs();
   }, []);
+   // Fetch applied jobs for the current user
+  useEffect(() => {
+    const fetchApplied = async () => {
+      if (user) await getAppliedJobs();
+    };
+    fetchApplied();
+  }, [user, getAppliedJobs]);
+
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -116,7 +124,7 @@ const Dashboard = () => {
             <p className="text-gray-600">Find your perfect job match from our listings.</p>
           </div>
           {/* Pass jobs into job cards */}
-          <JobCards jobs={jobs} />
+          <JobCards jobs={jobs} appliedJobs={appliedJobs.map(j => j._id)} />
           {/* <JobCards />*/}
         </div>
         <div className="md:w-1/4 "> 

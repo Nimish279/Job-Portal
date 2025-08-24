@@ -230,8 +230,8 @@ const handleCloseJob = async (jobId) => {
                   opened={job.created_at}
                   actionButtonText="View Applicants"
                   secondaryButtonText="Close Job"
-                  actionButtonLink={()=>{navigate(`/recruiters/Applicants`)}}
-                  onSecondaryButtonClick={()=>{handleCloseJob(job._id)}}
+                  actionButtonLink={`/recruiters/applicants/${job._id}`}
+                  onSecondaryButtonClick={() => console.log(`Closing job ${job._id}`)}
                   statusText={job.status === 1 ? 'Active' : 'Inactive'}
                 />
                 </motion.div>
