@@ -212,10 +212,10 @@ function AllJobs_ClosedJobs() {
                   eligibilityCriteria={job.eligibilityCriteria}
                   status={job.status}
                   opened={job.created_at}
-                  actionButtonText="Open Job"
-                  secondaryButtonText="Delete Job"
-                  actionButtonLink={()=>{handleOpenJob(job._id)}}
-                  onSecondaryButtonClick={() => {handleDeleteJob(job._id)}}
+                  // actionButtonText="Open Job"
+                  // secondaryButtonText="Delete Job"
+                  // actionButtonLink={()=>{handleOpenJob(job._id)}}
+                  // onSecondaryButtonClick={() => {handleDeleteJob(job._id)}}
                   actionButtonText="View Applicants"
                   secondaryButtonText="Close Job"
                   actionButtonLink={`/recruiters/applicants/${job._id}`}
