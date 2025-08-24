@@ -77,6 +77,10 @@ app.get('/api/applicants/:applicantId', protect, isRecruiter, async (req, res) =
 });
 const PORT = process.env.PORT || 8000;
 
+app.get("/", (req, res) => {
+  res.send("Hello from backend");
+})
+
 
 
 connectDB()

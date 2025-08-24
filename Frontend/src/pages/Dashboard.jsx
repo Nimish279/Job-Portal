@@ -53,12 +53,12 @@ const Dashboard = () => {
     fetchJobs();
   }, []);
    // Fetch applied jobs for the current user
-  useEffect(() => {
-    const fetchApplied = async () => {
-      if (user) await getAppliedJobs();
-    };
-    fetchApplied();
-  }, [user, getAppliedJobs]);
+  // useEffect(() => {
+  //   const fetchApplied = async () => {
+  //     if (user) await getAppliedJobs();
+  //   };
+  //   fetchApplied();
+  // }, [user, getAppliedJobs]);
 
   useEffect(() => {
     const handleResize = () => {
