@@ -1,56 +1,201 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion,AnimatePresence } from "framer-motion"
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
-const About = () => {
+function AboutPage() {
+  
+  
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+    // Motion variants
+    const sidebarVariants = {
+      hidden: { x: "100%",opacity: 0 },
+      visible: { x: 0, transition: { duration: 0.4, ease: "easeInOut" }, opacity: 1 },
+      exit: { x: "100%", transition: { duration: 0.3, ease: "easeInOut" } }
+    };
+  
+    const fadeUp = {
+      hidden: { opacity: 0, y: 50 },
+      visible: { opacity: 1, y: 0 }
+    };
+
   return (
-    <motion.div
-      className="max-w-3xl mx-auto p-8 mt-10 bg-white shadow-lg rounded-2xl"
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-    >
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">About Us</h1>
-      <p className="text-gray-600 leading-relaxed mb-4">
-        Our Job Portal is designed to make hiring simple, transparent, and
-        efficient. Whether you are a job seeker or a recruiter, our platform
-        brings you the tools you need to succeed.
-      </p>
+    <main>
+      {/* Hero Section */}
+      <header className="bg-white shadow-md sticky top-0 z-50">
+              <nav className="flex justify-between items-center py-4 px-6 md:px-16">
+                {/* Logo */}
+                <div className="text-2xl font-bold text-[#4CAF50]"><Link to="/" className="hover:text-[#4CAF50]">JobPortal</Link></div>
+      
+                {/* Desktop Menu */}
+                <ul className="hidden md:flex gap-8 text-gray-700 font-medium flex-1 justify-center">
+                  <li><Link to="/about" className="hover:text-[#4CAF50]">About</Link></li>
+                  <li><Link to="/subscription" className="hover:text-[#4CAF50]">Plans</Link></li>
+                  <li><Link to="/support" className="hover:text-[#4CAF50]">Support</Link></li>
+                </ul>
+      
+                {/* Desktop CTA */}
+                <div className="hidden md:flex items-center gap-4">
+                  <Link to="/users/login" className="hover:text-[#4CAF50] font-medium">Login</Link>
+                  <Link
+                    to="/recruiters/register"
+                    className="bg-[#4CAF50] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#45a049] transition shadow-md"
+                  >
+                    Post a Job
+                  </Link>
+                </div>
+      
+                {/* Mobile Hamburger */}
+                <button
+                  className="md:hidden flex flex-col gap-1 focus:outline-none"
+                  onClick={() => setIsMenuOpen(true)}
+                >
+                  <span className="w-6 h-0.5 bg-gray-800"></span>
+                  <span className="w-6 h-0.5 bg-gray-800"></span>
+                  <span className="w-6 h-0.5 bg-gray-800"></span>
+                </button>
+              </nav>
+            </header>
+      
+            {/* Sidebar for Mobile */}
+            <AnimatePresence>
+              {isMenuOpen && (
+                <motion.aside
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  variants={sidebarVariants}
+                  className="absolute top-0 right-0 min-w-1/4 sm:w-1/4 bg-white rounded-xl shadow-2xl z-50 p-8 flex flex-col"
+                >
+                  {/* Close Button */}
+                  <button
+                    className="self-end text-2xl mb-8 text-gray-600 hover:text-[#4CAF50]"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    ✕
+                  </button>
+      
+                  {/* Nav Links */}
+                  <ul className="flex flex-col gap-6 text-lg font-medium text-gray-700">
+                    <li><Link to="/about" onClick={() => setIsMenuOpen(false)}>About</Link></li>
+                    <li><Link to="/subscription" onClick={() => setIsMenuOpen(false)}>Plans</Link></li>
+                    <li><Link to="/support" onClick={() => setIsMenuOpen(false)}>Support</Link></li>
+                    <li><Link to="/users/login" onClick={() => setIsMenuOpen(false)}>Login</Link></li>
+                    <li>
+                      <Link
+                        to="/recruiters/register"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="bg-[#4CAF50] text-white px-4 py-2 rounded-md shadow hover:bg-[#45a049] transition"
+                      >
+                        Post a Job
+                      </Link>
+                    </li>
+                  </ul>
+                </motion.aside>
+              )}
+            </AnimatePresence>
+      <section className="py-24 px-6 md:px-20 bg-gradient-to-b from-[#e0ffe0] to-[#c0f0c0] text-center">
+        <motion.h1
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.8 }}
+          className="text-5xl md:text-6xl font-extrabold text-gray-800 drop-shadow-lg mb-6"
+        >
+          About <span className="text-[#4CAF50]">JobPortal</span>
+        </motion.h1>
+        <motion.p
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 1 }}
+          className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto"
+        >
+          Our mission is to simplify the way job seekers and recruiters connect —
+          empowering careers, building companies, and shaping the future of work.
+        </motion.p>
+      </section>
 
-      <h2 className="text-xl font-semibold text-gray-700 mb-2">👩‍💼 For Job Seekers</h2>
-      <p className="text-gray-600 leading-relaxed mb-4">
-        We provide personalized job recommendations, application tracking, and
-        notifications about your hiring status. With features like{" "}
-        <span className="font-semibold">application accept/reject updates</span>{" "}
-        and saved filters, you stay informed and never miss out on opportunities.
-      </p>
+      {/* Mission / Vision Section */}
+      <section className="py-20 px-6 md:px-20 bg-white">
+        <div className="grid md:grid-cols-2 gap-12">
+          {[
+            {
+              title: "Our Mission",
+              desc: "To bridge the gap between opportunity and talent by providing a seamless, transparent, and efficient platform."
+            },
+            {
+              title: "Our Vision",
+              desc: "To become the most trusted global career platform — where every job seeker finds the right opportunity and every recruiter finds the right talent."
+            }
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: i % 2 === 0 ? -80 : 80 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="bg-gradient-to-br from-white to-gray-50 p-10 rounded-2xl shadow-xl hover:shadow-2xl transition"
+            >
+              <h2 className="text-3xl font-bold text-[#4CAF50] mb-4">{item.title}</h2>
+              <p className="text-gray-600 text-lg leading-relaxed">{item.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-      <h2 className="text-xl font-semibold text-gray-700 mb-2">🏢 For Recruiters</h2>
-      <p className="text-gray-600 leading-relaxed mb-4">
-        Recruiters can manage applicants with ease using{" "}
-        <span className="font-semibold">hiring workflows</span>, send instant
-        updates, and organize candidates in one place. From reviewing profiles
-        to shortlisting, accepting, or rejecting applicants — everything is
-        streamlined.
-      </p>
+      {/* Core Values Section */}
+      <section className="py-20 px-6 md:px-20 bg-gray-50 text-center">
+        <motion.h2
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          transition={{ duration: 0.8 }}
+          className="text-4xl font-bold text-gray-800 mb-16"
+        >
+          Our Core Values
+        </motion.h2>
+        <div className="grid md:grid-cols-3 gap-12">
+          {[
+            { title: "Transparency", desc: "We value honesty and clarity in every interaction." },
+            { title: "Innovation", desc: "We constantly push boundaries to create smarter solutions." },
+            { title: "Trust", desc: "We prioritize building long-lasting relationships with our users." },
+          ].map((val, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="bg-white p-10 rounded-2xl shadow-xl hover:shadow-2xl transition"
+            >
+              <h3 className="text-2xl font-semibold text-[#4CAF50] mb-4">{val.title}</h3>
+              <p className="text-gray-600">{val.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-      <h2 className="text-xl font-semibold text-gray-700 mb-2">🚀 Our Mission</h2>
-      <p className="text-gray-600 leading-relaxed mb-6">
-        We believe in empowering careers and building meaningful professional
-        connections. By combining smart recommendations with clear communication
-        tools, we make the job search and recruitment journey easier for
-        everyone.
-      </p>
-
-      {/* Back to Home */}
-      <Link
-        to="/"
-        className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition"
-      >
-        Back to Home
-      </Link>
-    </motion.div>
+      {/* Final CTA */}
+      <section className="py-20 bg-gradient-to-r from-[#4CAF50] to-[#45a049] text-center text-white relative">
+        <motion.h2
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          transition={{ duration: 0.8 }}
+          className="text-4xl md:text-5xl font-extrabold mb-6 drop-shadow-lg"
+        >
+          Be Part of Our Journey
+        </motion.h2>
+        <p className="text-lg mb-8 opacity-90">Let’s shape the future of work together.</p>
+        <motion.a
+          whileHover={{ scale: 1.08, y: -3 }}
+          href="/users/register"
+          className="px-8 py-4 bg-white text-[#4CAF50] font-bold rounded-xl shadow-lg hover:shadow-xl hover:bg-gray-100 transition"
+        >
+          Get Started
+        </motion.a>
+      </section>
+    </main>
   );
-};
+}
 
-export default About;
+export default AboutPage;

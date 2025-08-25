@@ -1,152 +1,346 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import landingImage from '../assets/images/landing_page.jpg';
-import About from './About';
-import PrivacyPolicy from './PrivacyPolicy';
-import Support from './Support';
-import TermsAndConditions from './TermsAndConditions';
+
+
+
+
+
+
+
+import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import landingImage from "../assets/images/landing_page.jpg";
 
 function LandingPage() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  // Motion variants
+  const sidebarVariants = {
+    hidden: { x: "100%",opacity: 0 },
+    visible: { x: 0, transition: { duration: 0.4, ease: "easeInOut" }, opacity: 1 },
+    exit: { x: "100%", transition: { duration: 0.3, ease: "easeInOut" } }
+  };
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 }
+  };
 
   return (
     <>
-      {/* Navbar Section */}
+      {/* Navbar */}
       <header className="bg-white shadow-md sticky top-0 z-50">
-        <nav className="flex justify-between items-center py-4 px-8 md:px-16">
+        <nav className="flex justify-between items-center py-4 px-6 md:px-16">
           {/* Logo */}
           <div className="text-2xl font-bold text-[#4CAF50]">JobPortal</div>
 
-          {/* Links */}
+          {/* Desktop Menu */}
           <ul className="hidden md:flex gap-8 text-gray-700 font-medium flex-1 justify-center">
-            {/* <li><Link to="/" className="hover:text-[#4CAF50]">Home</Link></li> */}
             <li><Link to="/about" className="hover:text-[#4CAF50]">About</Link></li>
             <li><Link to="/subscription" className="hover:text-[#4CAF50]">Plans</Link></li>
             <li><Link to="/support" className="hover:text-[#4CAF50]">Support</Link></li>
           </ul>
 
-          {/* Right Side Actions */}
-          <div className="flex items-center gap-4">
-            <Link to="/users/login" className="hover:text-[#4CAF50] font-medium">
-              Login
-            </Link>
-
-            {/* Register Dropdown (click-based) */}
-            {/* <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="font-medium text-gray-700 hover:text-[#4CAF50] flex items-center"
-              >
-                Register ▾
-              </button>
-              {isDropdownOpen && (
-                <ul className="absolute bg-white shadow-md rounded-md mt-2 py-2 w-40 z-50">
-                  <li>
-                    <Link
-                      to="/users/register"
-                      className="block px-4 py-2 hover:bg-gray-100"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      Job Seeker
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/recruiters/register"
-                      className="block px-4 py-2 hover:bg-gray-100"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      Recruiter
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </div> */}
-
-            {/* Highlighted CTA */}
+          {/* Desktop CTA */}
+          <div className="hidden md:flex items-center gap-4">
+            <Link to="/users/login" className="hover:text-[#4CAF50] font-medium">Login</Link>
             <Link
               to="/recruiters/register"
-              className="hidden md:inline-block bg-[#4CAF50] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#45a049] transition"
+              className="bg-[#4CAF50] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#45a049] transition shadow-md"
             >
               Post a Job
             </Link>
           </div>
+
+          {/* Mobile Hamburger */}
+          <button
+            className="md:hidden flex flex-col gap-1 focus:outline-none"
+            onClick={() => setIsMenuOpen(true)}
+          >
+            <span className="w-6 h-0.5 bg-gray-800"></span>
+            <span className="w-6 h-0.5 bg-gray-800"></span>
+            <span className="w-6 h-0.5 bg-gray-800"></span>
+          </button>
         </nav>
       </header>
 
-      {/* Hero Section */}
+      {/* Sidebar for Mobile */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.aside
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={sidebarVariants}
+            className="absolute top-0 right-0  min-w-1/4  bg-white rounded-xl shadow-2xl z-50 p-8 flex flex-col"
+          >
+            {/* Close Button */}
+            <button
+              className="self-end text-2xl mb-8 text-gray-600 hover:text-[#4CAF50]"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              ✕
+            </button>
+
+            {/* Nav Links */}
+            <ul className="flex flex-col gap-6 text-lg font-medium text-gray-700">
+              <li><Link to="/about" onClick={() => setIsMenuOpen(false)}>About</Link></li>
+              <li><Link to="/subscription" onClick={() => setIsMenuOpen(false)}>Plans</Link></li>
+              <li><Link to="/support" onClick={() => setIsMenuOpen(false)}>Support</Link></li>
+              <li><Link to="/users/login" onClick={() => setIsMenuOpen(false)}>Login</Link></li>
+              <li>
+                <Link
+                  to="/recruiters/register"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="bg-[#4CAF50] text-white px-4 py-2 rounded-md shadow hover:bg-[#45a049] transition"
+                >
+                  Post a Job
+                </Link>
+              </li>
+            </ul>
+          </motion.aside>
+        )}
+      </AnimatePresence>
+
       <main>
-        <section
-          id="home"
-          className="flex flex-col md:flex-row items-center justify-between py-24 px-5 min-h-[80vh] bg-gradient-to-b from-[#e0ffe0] to-[#c0f0c0] md:py-20 md:px-16"
-        >
-          {/* Left Side - Text Content */}
-          <div className="w-full md:w-1/2 text-center md:text-left mb-10 md:mb-0">
-            <h1 className="text-5xl font-bold text-gray-800 mb-5 leading-tight">
+        {/* Hero */}
+        <section className="flex flex-col md:flex-row items-center justify-between py-20 md:py-24 px-6 md:px-20 bg-gradient-to-b from-[#e0ffe0] to-[#c0f0c0]">
+          <motion.div
+            initial={{ opacity: 0, x: -80 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="w-full md:w-1/2 text-center md:text-left mb-12 md:mb-0"
+          >
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-800 leading-tight mb-6 drop-shadow-lg">
               Find Your <span className="text-[#4CAF50]">Dream Job</span> Today!
             </h1>
-            <p className="text-xl text-gray-600 mb-10 max-w-xl leading-relaxed">
-              Connecting Talent with Opportunity – Your Gateway to Career Success.
+            <p className="text-lg sm:text-xl text-gray-600 mb-10 max-w-xl leading-relaxed mx-auto md:mx-0">
+              A modern career platform connecting job seekers and recruiters with
+              efficiency, transparency, and trust.
             </p>
-            <div className="flex flex-wrap gap-5 justify-center md:justify-start">
+            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
               <Link to="/users/register">
-                <button className="py-3 px-6 rounded-md text-lg font-semibold bg-[#4CAF50] text-white hover:bg-[#45a049] transition-transform transform hover:-translate-y-0.5">
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="py-3 px-6 rounded-md text-base sm:text-lg font-semibold bg-[#4CAF50] text-white shadow-lg hover:shadow-xl hover:bg-[#45a049] transition-transform"
+                >
                   I’m a Job Seeker
-                </button>
+                </motion.button>
               </Link>
               <Link to="/recruiters/register">
-                <button className="py-3 px-6 rounded-md text-lg font-semibold border-2 border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white transition-transform transform hover:-translate-y-0.5">
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="py-3 px-6 rounded-md text-base sm:text-lg font-semibold border-2 border-[#4CAF50] text-[#4CAF50] bg-white shadow-lg hover:bg-[#4CAF50] hover:text-white transition-transform"
+                >
                   I’m a Recruiter
-                </button>
+                </motion.button>
               </Link>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Right Side - Image */}
-          <div className="w-full md:w-1/2 flex justify-center">
+          <motion.div
+            initial={{ opacity: 0, x: 80 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="w-full md:w-1/2 flex justify-center"
+          >
             <img
               src={landingImage}
               alt="Job Portal Illustration"
-              className="max-w-full h-auto rounded-lg shadow-lg"
+              className="max-w-full h-auto rounded-lg shadow-2xl"
             />
+          </motion.div>
+        </section>
+
+        {/* ... keep rest of your sections same (How It Works, Features, Stats, Testimonials, CTA, Footer) ... */}
+        <section className="bg-white py-20 px-6 md:px-20 text-center">
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl font-bold text-gray-800 mb-16"
+          >
+            How It Works
+          </motion.h2>
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              { step: "1", title: "Sign Up", desc: "Register as a job seeker or recruiter in just a few steps." },
+              { step: "2", title: "Explore", desc: "Job seekers browse jobs, recruiters explore candidates." },
+              { step: "3", title: "Connect", desc: "Apply, shortlist, and hire with one simple platform." },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-gradient-to-br from-white to-gray-50 p-10 rounded-2xl shadow-xl hover:shadow-2xl transition relative overflow-hidden"
+              >
+                <div className="absolute -top-6 -right-6 w-20 h-20 bg-[#4CAF50]/10 rounded-full blur-2xl"></div>
+                <div className="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-[#4CAF50] text-white text-xl font-bold rounded-full shadow-lg">
+                  {item.step}
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-800 mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </section>
 
-        {/* Company Info Section */}
-        <section className="flex flex-col items-center text-center py-20 px-5 bg-white md:py-16 md:px-4">
-          <h2 className="text-4xl font-bold text-gray-800 mb-6 max-w-2xl">
-            Good Life Begins With a Great Company
-          </h2>
-          <p className="text-lg text-gray-600 mb-10 max-w-2xl leading-relaxed">
-            Elevate your career with companies that value talent, growth, and innovation. Discover opportunities that align with your goals and unlock your full potential.
-          </p>
+        {/* Features */}
+        <section className="py-20 px-6 md:px-20 bg-gray-50">
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            transition={{ duration: 0.6 }}
+            className="text-4xl font-bold text-center text-gray-800 mb-16"
+          >
+            Features for Everyone
+          </motion.h2>
+          <div className="grid md:grid-cols-2 gap-12">
+            {[
+              {
+                title: "For Job Seekers",
+                features: [
+                  "✔ Save jobs for later",
+                  "✔ Track applied jobs & statuses",
+                  "✔ Get company insights",
+                  "✔ Build your professional profile"
+                ]
+              },
+              {
+                title: "For Recruiters",
+                features: [
+                  "✔ Post jobs quickly",
+                  "✔ Manage candidates effortlessly",
+                  "✔ Shortlist, reject, or accept instantly",
+                  "✔ Advanced analytics & insights"
+                ]
+              }
+            ].map((section, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -60 : 60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                className="bg-white p-10 rounded-2xl shadow-xl hover:shadow-2xl transition relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[#4CAF50]/5 to-transparent pointer-events-none"></div>
+                <h3 className="text-2xl font-bold text-[#4CAF50] mb-6">{section.title}</h3>
+                <ul className="text-gray-600 space-y-3 text-left">
+                  {section.features.map((f, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <span className="text-[#4CAF50] text-lg">•</span> {f}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+        </section>
 
-          {/* Learn More Button */}
-          <Link to="/learn-more">
-            <button className="py-3 px-6 rounded-md text-lg font-semibold bg-[#4CAF50] text-white hover:bg-[#45a049] transition-transform transform hover:-translate-y-0.5">
-              Learn More
-            </button>
-          </Link>
+        {/* Stats */}
+        <section className="bg-white py-20 px-6 md:px-20">
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            transition={{ duration: 0.6 }}
+            className="text-4xl font-bold text-center text-gray-800 mb-16"
+          >
+            Our Impact
+          </motion.h2>
+          <div className="grid md:grid-cols-4 gap-12 text-center">
+            {[
+              { value: "500K+", label: "Active Job Seekers" },
+              { value: "50K+", label: "Recruiters" },
+              { value: "1M+", label: "Jobs Posted" },
+              { value: "95%", label: "Success Rate" },
+            ].map((stat, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.08, y: -5 }}
+                className="p-10 bg-gray-50 rounded-2xl shadow-xl hover:shadow-2xl transition"
+              >
+                <h3 className="text-4xl font-extrabold text-[#4CAF50] drop-shadow-md">{stat.value}</h3>
+                <p className="text-gray-600 mt-2">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section className="py-20 px-6 md:px-20 bg-gray-50">
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            transition={{ duration: 0.6 }}
+            className="text-4xl font-bold text-center text-gray-800 mb-16"
+          >
+            What Our Users Say
+          </motion.h2>
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              { name: "Sarah M.", role: "Job Seeker", feedback: "I found my dream job in just 2 weeks. The application tracking made it so easy!" },
+              { name: "David K.", role: "Recruiter", feedback: "The candidate management tools streamlined our hiring process." },
+              { name: "Lisa P.", role: "Designer", feedback: "I love how clean the UI is – applying for jobs has never been this smooth." },
+            ].map((user, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition relative"
+              >
+                <div className="absolute -top-6 -left-6 w-20 h-20 bg-[#4CAF50]/10 rounded-full blur-2xl"></div>
+                <p className="text-gray-600 italic">"{user.feedback}"</p>
+                <h3 className="mt-6 font-semibold text-[#4CAF50]">{user.name}</h3>
+                <p className="text-gray-500 text-sm">{user.role}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="py-24 bg-gradient-to-r from-[#4CAF50] to-[#45a049] text-center text-white relative overflow-hidden">
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            transition={{ duration: 0.6 }}
+            className="text-5xl font-extrabold mb-6 drop-shadow-lg"
+          >
+            Ready to Take the Next Step?
+          </motion.h2>
+          <p className="text-lg mb-12 opacity-90">
+            Join thousands of job seekers and recruiters building their future with us.
+          </p>
+          <div className="flex flex-wrap justify-center gap-8">
+            <Link to="/users/register">
+              <motion.button
+                whileHover={{ scale: 1.08, y: -3 }}
+                className="px-10 py-4 bg-white text-[#4CAF50] font-bold rounded-xl shadow-lg hover:shadow-xl hover:bg-gray-100 transition"
+              >
+                Join as Job Seeker
+              </motion.button>
+            </Link>
+            <Link to="/recruiters/register">
+              <motion.button
+                whileHover={{ scale: 1.08, y: -3 }}
+                className="px-10 py-4 bg-[#111e2d] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:bg-gray-900 transition"
+              >
+                Join as Recruiter
+              </motion.button>
+            </Link>
+          </div>
         </section>
       </main>
 
-      <div className="text-center py-4 bg-[#111e2d] text-gray-400 text-sm px-4">
-        © 2025 Job Portal. |{' '}
-        <a href="/privacy-policy" className="hover:text-[#4CAF50]">Privacy Policy</a> |{' '}
+      {/* Footer */}
+      <div className="text-center py-6 bg-[#111e2d] text-gray-400 text-sm px-4">
+        © 2025 Job Portal. |{" "}
+        <a href="/privacy-policy" className="hover:text-[#4CAF50]">Privacy Policy</a> |{" "}
         <a href="/terms-and-conditions" className="hover:text-[#4CAF50]">Terms & Conditions</a>
       </div>
+    
     </>
   );
 }
