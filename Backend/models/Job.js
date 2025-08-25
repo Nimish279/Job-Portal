@@ -1,6 +1,16 @@
 import mongoose from "mongoose";
 import { Recruiter } from "./Recruiter.js";
 
+const applicantSchema = new mongoose.Schema(
+  {
+    candidate: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    status: { type: String, enum: ["Pending", "Accepted", "Rejected"], default: "Pending" },
+    appliedAt: { type: Date, default: Date.now },
+    note: { type: String, default: "" },
+  },
+  { _id: false }
+);
+
 const jobSchema=new mongoose.Schema({
     hiringWorkflow: [{
         name: String,
@@ -27,7 +37,7 @@ const jobSchema=new mongoose.Schema({
     // }],
     location:{type:String,required:true},
     status:{type:String,enum:['closed','open'],default:"open"}
-
+    
 })
 
 

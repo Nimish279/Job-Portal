@@ -1,55 +1,78 @@
 import express from "express";
-import { CandidateApplication } from "../models/CandidateApplication.js";
+import { Job } from "../models/Job.js";
+import { protect, isRecruiter } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// Apply for a job
+/**
+ * Apply for a job
+ * body: { jobId, candidateId }
+ */
 router.post("/apply", async (req, res) => {
   try {
     const { jobId, candidateId } = req.body;
+    const job = await Job.findById(jobId);
+    if (!job) return res.status(404).json({ message: "Job not found" });
 
-    // prevent duplicate applications
-    const existing = await CandidateApplication.findOne({ job: jobId, candidate: candidateId });
-    if (existing) return res.status(400).json({ message: "Already applied" });
+    const already = job.applicants?.some(
+      (a) => a.candidate?.toString() === candidateId
+    );
+    if (already) return res.status(400).json({ message: "Already applied" });
 
-    const application = new CandidateApplication({
-      job: jobId,
-      candidate: candidateId,
-    });
+    job.applicants.push({ candidate: candidateId });
+    await job.save();
 
-    await application.save();
-    res.status(201).json({ message: "Application submitted", application });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(201).json({ message: "Application submitted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
-// Update status (Accept/Reject)
-router.put("/:id/status", async (req, res) => {
-  try {
-    const { status } = req.body;
-    const application = await CandidateApplication.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true }
-    ).populate("candidate job");
-
-    res.json(application);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Get applications for a job
+/**
+ * Get all applications (applicants) for a job
+ * GET /api/applications/job/:jobId
+ */
 router.get("/job/:jobId", async (req, res) => {
   try {
-    const applications = await CandidateApplication.find({ job: req.params.jobId })
-      .populate("candidate", "name email")
-      .populate("job", "title company");
+    const job = await Job.findById(req.params.jobId)
+      .populate("applicants.candidate", "name email photo degree university location github about skills experiences");
 
-    res.json(applications);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (!job) return res.status(404).json({ message: "Job not found" });
+    res.json(job.applicants || []);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+/**
+ * Update a candidate's application status for a job
+ * PUT /api/applications/job/:jobId/candidate/:candidateId/status
+ * body: { status: "Accepted" | "Rejected", message?: string }
+ */
+router.put("/job/:jobId/candidate/:candidateId/status", protect, isRecruiter, async (req, res) => {
+  try {
+    const { status, message = "" } = req.body;
+
+    const updatedJob = await Job.findOneAndUpdate(
+      { _id: req.params.jobId, "applicants.candidate": req.params.candidateId },
+      {
+        $set: {
+          "applicants.$.status": status,
+          "applicants.$.note": message,
+        },
+      },
+      { new: true }
+    ).populate("applicants.candidate", "name email");
+
+    if (!updatedJob) return res.status(404).json({ message: "Job or application not found" });
+
+    const updated = updatedJob.applicants.find(
+      (a) => a.candidate._id.toString() === req.params.candidateId
+    );
+
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
