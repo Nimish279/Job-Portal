@@ -60,19 +60,13 @@ app.get("/api/jobs/:id", async (req, res) => {
     res.status(500).json({ message: "Error fetching job", error: err.message });
   }
 });
-app.get("/api/jobs/:id/candidates", protect, isRecruiter, seeCandidates);
+// app.get("/api/jobs/:id/candidates", protect, isRecruiter, seeCandidates);
 app.get('/api/applicants/:applicantId', protect, isRecruiter, async (req, res) => {
   try {
-    // Find the application for this candidate
-    const application = await CandidateApplication.findOne({ candidate: req.params.applicantId })
-      .populate("job")       // get full job info
-      .populate("candidate"); // get full user info
-
-    if (!application) {
-      return res.status(404).json({ message: "Application not found for this applicant" });
-    }
-
-    res.json(application); // send application object, includes candidate & job
+    const user = await User.findById(req.params.applicantId)
+      .select("name email photo degree university location github about skills experiences");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
   } catch (err) {
     res.status(500).json({ message: "Error fetching applicant", error: err.message });
   }
