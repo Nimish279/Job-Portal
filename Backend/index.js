@@ -12,6 +12,7 @@ import { Job } from "./models/Job.js";
 import { seeCandidates } from "./controllers/recruiterController.js";
 import { protect, isRecruiter } from "./middlewares/authMiddleware.js";
 import { User } from "./models/User.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -62,19 +63,22 @@ app.get("/api/jobs/:id", async (req, res) => {
 app.get("/api/jobs/:id/candidates", protect, isRecruiter, seeCandidates);
 app.get('/api/applicants/:applicantId', protect, isRecruiter, async (req, res) => {
   try {
-    const { applicantId } = req.params;
+    // Find the application for this candidate
+    const application = await CandidateApplication.findOne({ candidate: req.params.applicantId })
+      .populate("job")       // get full job info
+      .populate("candidate"); // get full user info
 
-    // Find the applicant in the User collection
-    const applicant = await User.findById(applicantId);
-    if (!applicant) {
-      return res.status(404).json({ message: "Applicant not found" });
+    if (!application) {
+      return res.status(404).json({ message: "Application not found for this applicant" });
     }
 
-    res.json(applicant);
+    res.json(application); // send application object, includes candidate & job
   } catch (err) {
     res.status(500).json({ message: "Error fetching applicant", error: err.message });
   }
 });
+
+app.use("/api/applications", applicationRoutes);
 const PORT = process.env.PORT || 8000;
 
 app.get("/", (req, res) => {

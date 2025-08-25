@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import landingImage from '../assets/images/landing_page.jpg';
+import About from './About';
+import PrivacyPolicy from './PrivacyPolicy';
+import Support from './Support';
+import TermsAndConditions from './TermsAndConditions';
 
 function LandingPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -40,7 +44,7 @@ function LandingPage() {
             </Link>
 
             {/* Register Dropdown (click-based) */}
-            <div className="relative" ref={dropdownRef}>
+            {/* <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="font-medium text-gray-700 hover:text-[#4CAF50] flex items-center"
@@ -69,7 +73,7 @@ function LandingPage() {
                   </li>
                 </ul>
               )}
-            </div>
+            </div> */}
 
             {/* Highlighted CTA */}
             <Link
@@ -140,8 +144,8 @@ function LandingPage() {
 
       <div className="text-center py-4 bg-[#111e2d] text-gray-400 text-sm px-4">
         © 2025 Job Portal. |{' '}
-        <a href="#privacy" className="hover:text-[#4CAF50]">Privacy Policy</a> |{' '}
-        <a href="#terms-conditions" className="hover:text-[#4CAF50]">Terms & Conditions</a>
+        <a href="/privacy-policy" className="hover:text-[#4CAF50]">Privacy Policy</a> |{' '}
+        <a href="/terms-and-conditions" className="hover:text-[#4CAF50]">Terms & Conditions</a>
       </div>
     </>
   );

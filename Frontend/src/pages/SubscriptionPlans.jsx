@@ -42,15 +42,17 @@ const plans = [
 const SubscriptionPlans = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-16 px-6 flex flex-col items-center">
-      {/* Left-aligned Home Icon */}
+      {/* Back to Home Button (similar style to other pages) */}
       <div className="w-full max-w-6xl mb-8 flex justify-start">
         <Link
           to="/"
-          className="inline-flex items-center p-3 bg-white border border-gray-300 rounded-lg shadow-md hover:bg-gray-100 transition-transform transform hover:-translate-y-1"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
         >
-          <Home className="w-6 h-6 text-blue-600" />
+          <Home className="w-5 h-5" />
+          Back to Home
         </Link>
       </div>
+
       {/* Subscription plans */}
       <h1 className="text-4xl font-bold mb-6 text-gray-900">Recruiter Plans</h1>
       <p className="text-gray-600 mb-12 text-center max-w-2xl">

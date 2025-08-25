@@ -34,6 +34,10 @@ import ApplyJob from './pages/ApplyJob.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import SubscriptionPlans from './pages/SubscriptionPlans.jsx';
 import LearnMore from './pages/LearnMore.jsx';
+import TermsAndConditions from './pages/TermsAndConditions.jsx';
+import About from './pages/About.jsx';
+import Support from './pages/Support.jsx';
+import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
 
 function App() {
   const fetchUser = userStore((state) => state.fetchUser);
@@ -64,6 +68,10 @@ function App() {
         <Route path='/recruiters/login' element={<RecruiterLogin />} />
         <Route path="/subscription" element={<SubscriptionPlans />} />
         <Route path="/learn-more" element={<LearnMore />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/support" element={<Support />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         {/* <Route path="/users/job/:id" element={<JobDetails />} /> */}
 
         {/* User Routes */}
