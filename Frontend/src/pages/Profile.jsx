@@ -51,7 +51,7 @@ const Profile = () => {
 useEffect(() => {
   const fetchProfile = async () => {
     try {
-      const res = await fetch("/api/user/profile", {
+      const res = await fetch("/api/users/profile", {
         credentials: "include",
       });
 
@@ -106,7 +106,7 @@ useEffect(() => {
 
 const handleSkillsSave = async () => {
   try {
-    const res = await fetch("/api/user/edit-profile", {
+    const res = await fetch("/api/users/edit-profile", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -145,7 +145,7 @@ const handleSkillsSave = async () => {
   try {
     const updated = { ...profileData, experience: editedExperience };
 
-    const res = await fetch("/api/user/edit-profile", {
+    const res = await fetch("/api/users/edit-profile", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -1,11 +1,4 @@
-
-
-
-
-
-
-
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import landingImage from "../assets/images/landing_page.jpg";
@@ -15,7 +8,7 @@ function LandingPage() {
 
   // Motion variants
   const sidebarVariants = {
-    hidden: { x: "100%",opacity: 0 },
+    hidden: { x: "100%", opacity: 0 },
     visible: { x: 0, transition: { duration: 0.4, ease: "easeInOut" }, opacity: 1 },
     exit: { x: "100%", transition: { duration: 0.3, ease: "easeInOut" } }
   };
@@ -35,6 +28,7 @@ function LandingPage() {
 
           {/* Desktop Menu */}
           <ul className="hidden md:flex gap-8 text-gray-700 font-medium flex-1 justify-center">
+            <li><Link to="/" className="hover:text-[#4CAF50]">Home</Link></li>
             <li><Link to="/about" className="hover:text-[#4CAF50]">About</Link></li>
             <li><Link to="/subscription" className="hover:text-[#4CAF50]">Plans</Link></li>
             <li><Link to="/support" className="hover:text-[#4CAF50]">Support</Link></li>
@@ -71,7 +65,7 @@ function LandingPage() {
             animate="visible"
             exit="exit"
             variants={sidebarVariants}
-            className="absolute top-0 right-0  min-w-1/4  bg-white rounded-xl shadow-2xl z-50 p-8 flex flex-col"
+            className="absolute top-0 right-0 min-w-1/4 bg-white rounded-xl shadow-2xl z-50 p-8 flex flex-col"
           >
             {/* Close Button */}
             <button
@@ -83,6 +77,7 @@ function LandingPage() {
 
             {/* Nav Links */}
             <ul className="flex flex-col gap-6 text-lg font-medium text-gray-700">
+              <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
               <li><Link to="/about" onClick={() => setIsMenuOpen(false)}>About</Link></li>
               <li><Link to="/subscription" onClick={() => setIsMenuOpen(false)}>Plans</Link></li>
               <li><Link to="/support" onClick={() => setIsMenuOpen(false)}>Support</Link></li>
