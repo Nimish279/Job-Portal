@@ -86,7 +86,7 @@ const UpdateRecruiter = () => {
     if (file) updateData.append("companyPanCardOrGstFile", file);
 
     try {
-      const res=await axios.post(
+      const res=await axios.put(
         "https://job-portal-backend-swtv.onrender.com/api/recruiters/update",
         updateData,
         {
