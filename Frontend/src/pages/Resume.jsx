@@ -72,7 +72,7 @@ const handleUpload = async () => {
       const formData = new FormData();
       formData.append("resume", newPdf.file);
 
-      await axios.post("http://localhost:8000/api/upload/resume", formData, {
+      await axios.post("https://job-portal-backend-swtv.onrender.com/api/upload/resume", formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         },
@@ -98,7 +98,7 @@ const handleUpload = async () => {
 useEffect(() => {
   const fetchResumes = async () => {   //Fetching resume as soon as the page opens (By Tushar)
     try {
-      const response = await axios.get("http://localhost:8000/api/upload/resume", {
+      const response = await axios.get("https://job-portal-backend-swtv.onrender.com/api/upload/resume", {
         withCredentials: true,
       });
 
@@ -141,7 +141,7 @@ const handleDelete = async (index) => {
   }
 
   try {
-    await axios.delete(`http://localhost:8000/api/upload/resume/${encodeURIComponent(publicId)}`, {
+    await axios.delete(`https://job-portal-backend-swtv.onrender.com/api/upload/resume/${encodeURIComponent(publicId)}`, {
       withCredentials: true,
     });
 
