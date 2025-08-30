@@ -52,11 +52,11 @@ const EditProfile = () => {
   //   localStorage.setItem('profileData', JSON.stringify(updatedProfile));
   //   navigate('/users/profile');
   // };
-
+const backend_url = import.meta.env.VITE_BACKEND_URL
   const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const res = await fetch("/api/user/edit-profile", {
+    const res = await fetch(backend_url+"/user/edit-profile", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -84,12 +84,12 @@ const EditProfile = () => {
         showHamburger={true}
       />  
 
-        {/* Sidebar for large screens */}
+        
         <div className="hidden lg:block mt-20 fixed top-0 left-0 min-h-screen">
           <Sidebar isOpen={true} isMobile={false} />
         </div>
 
-        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
+        
         <AnimatePresence>
           {isSidebarOpen && (
             <Sidebar
@@ -105,7 +105,7 @@ const EditProfile = () => {
         transition={{ duration: 0.6 }}
         className="bg-white border border-gray-200 rounded-2xl p-10 sm:p-10 w-full lg:ml-64"
       >
-        {/* Back Arrow */}
+       
         <button 
         onClick={() => navigate(-1)}
         className="flex items-center text-sm text-[#5F9D08] hover:text-[#4e7c07] mb-4 transition"
@@ -113,14 +113,14 @@ const EditProfile = () => {
           <FiArrowLeft className="mr-2"/>
           Back
         </button>
-        {/* Header */}
+        
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-[#5F9D08] flex justify-center items-center gap-2">
             <FaUserEdit /> Edit Your Profile
           </h2>
         </div>
 
-        {/* Avatar */}
+       
         <div className="flex justify-center mb-6">
           <img
             src="https://ui-avatars.com/api/?name=User"
@@ -129,7 +129,7 @@ const EditProfile = () => {
           />
         </div>
 
-        {/* Form */}
+        
         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {[
             { id: 'name', label: 'Name' },
@@ -156,7 +156,6 @@ const EditProfile = () => {
             </div>
           ))}
 
-          {/* About (Full width) */}
           <div className="sm:col-span-2">
             <label htmlFor="about" className="block text-gray-700 font-medium mb-1">
               About

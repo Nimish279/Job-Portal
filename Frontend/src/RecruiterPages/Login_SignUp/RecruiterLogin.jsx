@@ -27,6 +27,42 @@ const RecruiterLogin = () => {
     };
   
     return (
+<>
+      <header className="bg-white shadow-md sticky top-0 z-50">
+                  <nav className="flex justify-between items-center py-4 px-6 md:px-16">
+                    {/* Logo */}
+                    <div className="text-2xl font-bold text-[#4CAF50]">JobPortal</div>
+          
+                    {/* Desktop Menu */}
+                    <ul className="hidden md:flex gap-8 text-gray-700 font-medium flex-1 justify-center">
+                      <li><Link to="/" className="hover:text-[#4CAF50]">Home</Link></li>
+                      <li><Link to="/about" className="hover:text-[#4CAF50]">About</Link></li>
+                      <li><Link to="/subscription" className="hover:text-[#4CAF50]">Plans</Link></li>
+                      <li><Link to="/support" className="hover:text-[#4CAF50]">Support</Link></li>
+                    </ul>
+          
+                    {/* Desktop CTA */}
+                    <div className="hidden md:flex items-center gap-4">
+                      <Link to="/users/login" className="hover:text-[#4CAF50] font-medium">Find Job</Link>
+                      {/* <Link
+                        to="/recruiters/register"
+                        className="bg-[#4CAF50] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#45a049] transition shadow-md"
+                      >
+                        Post a Job
+                      </Link> */}
+                    </div>
+          
+                    {/* Mobile Hamburger */}
+                    <button
+                      className="md:hidden flex flex-col gap-1 focus:outline-none"
+                      onClick={() => setIsMenuOpen(true)}
+                    >
+                      <span className="w-6 h-0.5 bg-gray-800"></span>
+                      <span className="w-6 h-0.5 bg-gray-800"></span>
+                      <span className="w-6 h-0.5 bg-gray-800"></span>
+                    </button>
+                  </nav>
+                </header>
       <div className="flex min-h-screen bg-gradient-to-r from-gray-100 to-gray-50 justify-center items-center">
         <div className="relative flex w-full max-w-7xl">
           <div className="w-full bg-white rounded-2xl shadow-xl min-h-[600px] flex items-center justify-center">
@@ -86,6 +122,7 @@ const RecruiterLogin = () => {
         </div>
         <ToastContainer position="top-center" theme="colored" />
       </div>
+      </>
     );
 };
 

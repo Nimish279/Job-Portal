@@ -541,14 +541,14 @@ const JobPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const applyjob = useUserStore((state) => state.applyJob);
-
+const backend_url = import.meta.env.VITE_BACKEND_URL
   // === NEW API FETCHING LOGIC ===
   useEffect(() => {
     const fetchJobDetails = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`https://job-portal-backend-swtv.onrender.com/api/jobs/${id}`);
+        const response = await fetch(`${backend_url}/jobs/${id}`);
         if (!response.ok) {
           throw new Error('Job not found');
         }

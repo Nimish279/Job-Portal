@@ -9,6 +9,7 @@ import { FaLinkedin, FaTwitter, FaGlobe } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 // import Navbar from '../components/Header/UserNavbar'; // ya jahan bhi User Navbar ka path ho
 import NavSearchBar from '../components/Header/NavSearchBar';
+import axios from 'axios';
 
 
 const Profile = () => {
@@ -47,19 +48,21 @@ const Profile = () => {
   //     setEditedExperience(savedProfile.experience || profileData.experience);
   //   }
   // }, []);
-  
+  const backend_url = import.meta.env.VITE_BACKEND_URL
 useEffect(() => {
   const fetchProfile = async () => {
     try {
-      const res = await fetch("/api/users/profile", {
-        credentials: "include",
+      const res = await axios.get(backend_url+"/users/profile", {
+        
+        withCredentials: true // ✅ Required for cookie-based auth
       });
 
       // const text = await res.text(); // temp debug
       // console.log(text); // see what's coming
       // const data = JSON.parse(text);
-      const data = await res.json();
-
+      const data = await res.data
+      console.log(data)
+      console.log(data.user)
       if (data.success) {
         setProfileData({
           name: data.user.name,
@@ -106,16 +109,13 @@ useEffect(() => {
 
 const handleSkillsSave = async () => {
   try {
-    const res = await fetch("/api/users/edit-profile", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include", // JWT cookie bhejne ke liye
-      body: JSON.stringify({ skills: editedSkills }),
-    });
-
-    const data = await res.json();
+    const res = await axios.put(backend_url+"/users/edit-profile",
+      {skills: editedSkills},
+      {withCredentials:true}, // JWT cookie bhejne ke liye
+      
+    );
+    console.log(res.data)
+    const data =res.data
     if (data.success) {
       setProfileData(prev => ({ ...prev, skills: editedSkills }));
       setIsEditingSkills(false);
@@ -129,11 +129,13 @@ const handleSkillsSave = async () => {
 
 
 
-  const handleAboutSave = () => {
-    setProfileData(prev => ({...prev, about: editedAbout}));
-    localStorage.setItem('profileData', JSON.stringify({ ...profileData, about: editedAbout}));
-    setIsEditingAbout(false);
-  };
+
+
+  // const handleAboutSave = () => {
+  //   setProfileData(prev => ({...prev, about: editedAbout}));
+  //   localStorage.setItem('profileData', JSON.stringify({ ...profileData, about: editedAbout}));
+  //   setIsEditingAbout(false);
+  // };
 
   // const handleExperienceSave = () => {
   //   setProfileData(prev => ({...prev, experience:editedExperience}));
@@ -145,19 +147,35 @@ const handleSkillsSave = async () => {
   try {
     const updated = { ...profileData, experience: editedExperience };
 
-    const res = await fetch("/api/users/edit-profile", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(updated),
-    });
-
-    const data = await res.json();
+    const res = await axios.put(backend_url+"/users/edit-profile",
+      updated,
+      {withCredentials: true},
+      
+    );
+    console.log(res.data.experience)
+    const data =res.data
     if (data.success) {
       setProfileData(updated);
       setIsEditingExperience(false);
+    }
+  } catch (err) {
+    console.error("Failed to save experience:", err);
+  }
+};
+const handleAboutSave = async () => {
+  try {
+    const updated = { ...profileData, about: editedAbout };
+
+    const res = await axios.put(backend_url+"/users/edit-profile",
+      updated,
+      {withCredentials: true},
+      
+    );
+    console.log(res.data.about)
+    const data =res.data
+    if (data.success) {
+      setProfileData(updated);
+      setIsEditingAbout(false);
     }
   } catch (err) {
     console.error("Failed to save experience:", err);

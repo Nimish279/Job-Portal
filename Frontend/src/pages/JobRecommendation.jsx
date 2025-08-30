@@ -14,7 +14,7 @@ const JobRecommendations = () => {
     return stored ? JSON.parse(stored) : [];
   });
   const [jobs, setJobs] = useState([]);
-
+const backend_url = import.meta.env.VITE_BACKEND_URL
   const navigate = useNavigate();
   const isMobile = screenWidth < 768;
 
@@ -28,7 +28,7 @@ const JobRecommendations = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/jobs");
+        const response = await fetch(backend_url+"/jobs");
         const data = await response.json();
         setJobs(data);
       } catch (error) {

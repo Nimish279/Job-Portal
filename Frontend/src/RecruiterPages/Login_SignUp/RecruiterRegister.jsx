@@ -33,8 +33,34 @@ const RecruiterRegister = () => {
 
   const handleNext = () => {
   const { companyName, phone, password, confirmPassword } = formData;
+
   if (!companyName || !phone || !password || !confirmPassword) {
     toast.error("Please fill all required fields in Step 1.");
+    return;
+  }
+
+  if (password.length < 6) {
+    toast.error("Password must be at least 6 characters long.");
+    return;
+  }
+
+  // Password strength checks
+  const capitalRegex = /[A-Z]/;
+  const numberRegex = /[0-9]/;
+  const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+
+  if (!capitalRegex.test(password)) {
+    toast.error("Password must contain at least one uppercase letter.");
+    return;
+  }
+
+  if (!numberRegex.test(password)) {
+    toast.error("Password must contain at least one number.");
+    return;
+  }
+
+  if (!specialCharRegex.test(password)) {
+    toast.error("Password must contain at least one special character.");
     return;
   }
 
@@ -48,6 +74,7 @@ const RecruiterRegister = () => {
 
   setStep(2);
 };
+
 
 
 const handleSubmit = async (e) => {
@@ -81,6 +108,42 @@ console.log("isFile?", formData.panCardOrGstFile instanceof File);
 
 
   return (
+    <>
+    <header className="bg-white shadow-md sticky top-0 z-50">
+            <nav className="flex justify-between items-center py-4 px-6 md:px-16">
+              {/* Logo */}
+              <div className="text-2xl font-bold text-[#4CAF50]">JobPortal</div>
+    
+              {/* Desktop Menu */}
+              <ul className="hidden md:flex gap-8 text-gray-700 font-medium flex-1 justify-center">
+                <li><Link to="/" className="hover:text-[#4CAF50]">Home</Link></li>
+                <li><Link to="/about" className="hover:text-[#4CAF50]">About</Link></li>
+                <li><Link to="/subscription" className="hover:text-[#4CAF50]">Plans</Link></li>
+                <li><Link to="/support" className="hover:text-[#4CAF50]">Support</Link></li>
+              </ul>
+    
+              {/* Desktop CTA */}
+              <div className="hidden md:flex items-center gap-4">
+                <Link to="/users/login" className="hover:text-[#4CAF50] font-medium">Find Job</Link>
+                {/* <Link
+                  to="/recruiters/register"
+                  className="bg-[#4CAF50] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#45a049] transition shadow-md"
+                >
+                  Post a Job
+                </Link> */}
+              </div>
+    
+              {/* Mobile Hamburger */}
+              <button
+                className="md:hidden flex flex-col gap-1 focus:outline-none"
+                onClick={() => setIsMenuOpen(true)}
+              >
+                <span className="w-6 h-0.5 bg-gray-800"></span>
+                <span className="w-6 h-0.5 bg-gray-800"></span>
+                <span className="w-6 h-0.5 bg-gray-800"></span>
+              </button>
+            </nav>
+          </header>
     <div className="flex min-h-screen bg-gradient-to-r from-gray-200 to-gray-50 justify-center items-center px-4 py-16">
       <div className="flex flex-col lg:flex-row w-full max-w-7xl min-h-[600px] bg-white shadow-xl rounded-lg overflow-hidden">
         
@@ -206,6 +269,7 @@ console.log("isFile?", formData.panCardOrGstFile instanceof File);
       </div>
       <ToastContainer position="top-center" theme="colored" />
     </div>
+    </>
   );
 };
 

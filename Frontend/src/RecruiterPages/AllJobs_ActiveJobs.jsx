@@ -26,9 +26,10 @@ function JobPage() {
        window.addEventListener('resize', handleResize);
        return () => window.removeEventListener('resize', handleResize);
      }, []);
+     const backend_url = import.meta.env.VITE_BACKEND_URL
      const fetchJobs = async () => {
       try {
-        const response = await axios.get('https://job-portal-backend-swtv.onrender.com/api/recruiters/myJobs', {
+        const response = await axios.get(backend_url+'/recruiters/myJobs', {
           withCredentials: true, // <-- THIS is required to send cookies
         });
         const recruiterAllJobs=response.data.jobs.filter((job) => job.status === 'open'); //added a filter (by-tushar)
@@ -53,7 +54,7 @@ function JobPage() {
   useEffect(() => {
     const fetchProfile=async()=>{
       try {
-        const res=await axios.get('https://job-portal-backend-swtv.onrender.com/api/recruiters/getProfile',{
+        const res=await axios.get(backend_url+'/recruiters/getProfile',{
           withCredentials:true
         })
         const recruiter=res.data.recruiter
@@ -88,7 +89,7 @@ function JobPage() {
 const handleCloseJob = async (jobId) => {
   try {
     await axios.post(
-      `https://job-portal-backend-swtv.onrender.com/api/recruiters/closeJob/${jobId}`,
+      backend_url+`/recruiters/closeJob/${jobId}`,
       {},
       { withCredentials: true }
     );

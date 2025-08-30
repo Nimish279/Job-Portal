@@ -29,12 +29,12 @@ function Applicants() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
+const backend_url = import.meta.env.VITE_BACKEND_URL
   useEffect(() => {
   const fetchApplicants = async () => {
     try {
       const res = await axios.get(
-        `https://job-portal-backend-swtv.onrender.com/api/jobs/${jobId}/candidates`,
+        `${backend_url}/jobs/${jobId}/candidates`,
         { withCredentials: true }
       );
       console.log(res.data);

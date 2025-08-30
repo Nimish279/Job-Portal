@@ -9,7 +9,7 @@ function AboutPage() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-    // Motion variants
+    
     const sidebarVariants = {
       hidden: { x: "100%",opacity: 0 },
       visible: { x: 0, transition: { duration: 0.4, ease: "easeInOut" }, opacity: 1 },
@@ -23,13 +23,13 @@ function AboutPage() {
 
   return (
     <main>
-      {/* Hero Section */}
+      
       <header className="bg-white shadow-md sticky top-0 z-50">
               <nav className="flex justify-between items-center py-4 px-6 md:px-16">
-                {/* Logo */}
+                
                 <div className="text-2xl font-bold text-[#4CAF50]"><Link to="/" className="hover:text-[#4CAF50]">JobPortal</Link></div>
       
-                {/* Desktop Menu */}
+                
                 <ul className="hidden md:flex gap-8 text-gray-700 font-medium flex-1 justify-center">
                   <li><Link to="/" className="hover:text-[#4CAF50]">Home</Link></li>
                   <li><Link to="/about" className="hover:text-[#4CAF50]">About</Link></li>
@@ -37,7 +37,7 @@ function AboutPage() {
                   <li><Link to="/support" className="hover:text-[#4CAF50]">Support</Link></li>
                 </ul>
       
-                {/* Desktop CTA */}
+               
                 <div className="hidden md:flex items-center gap-4">
                   <Link to="/users/login" className="hover:text-[#4CAF50] font-medium">Login</Link>
                   <Link
@@ -48,7 +48,7 @@ function AboutPage() {
                   </Link>
                 </div>
       
-                {/* Mobile Hamburger */}
+                
                 <button
                   className="md:hidden flex flex-col gap-1 focus:outline-none"
                   onClick={() => setIsMenuOpen(true)}
@@ -60,7 +60,7 @@ function AboutPage() {
               </nav>
             </header>
       
-            {/* Sidebar for Mobile */}
+            
             <AnimatePresence>
               {isMenuOpen && (
                 <motion.aside
@@ -70,7 +70,7 @@ function AboutPage() {
                   variants={sidebarVariants}
                   className="absolute top-0 right-0 min-w-1/4 sm:w-1/4 bg-white rounded-xl shadow-2xl z-50 p-8 flex flex-col"
                 >
-                  {/* Close Button */}
+                  
                   <button
                     className="self-end text-2xl mb-8 text-gray-600 hover:text-[#4CAF50]"
                     onClick={() => setIsMenuOpen(false)}
@@ -78,7 +78,7 @@ function AboutPage() {
                     ✕
                   </button>
       
-                  {/* Nav Links */}
+                  
                   <ul className="flex flex-col gap-6 text-lg font-medium text-gray-700">
                     <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
                     <li><Link to="/about" onClick={() => setIsMenuOpen(false)}>About</Link></li>
@@ -120,7 +120,7 @@ function AboutPage() {
         </motion.p>
       </section>
 
-      {/* Mission / Vision Section */}
+     
       <section className="py-20 px-6 md:px-20 bg-white">
         <div className="grid md:grid-cols-2 gap-12">
           {[
@@ -147,7 +147,7 @@ function AboutPage() {
         </div>
       </section>
 
-      {/* Core Values Section */}
+      
       <section className="py-20 px-6 md:px-20 bg-gray-50 text-center">
         <motion.h2
           variants={fadeUp}
@@ -176,7 +176,7 @@ function AboutPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
+      
       <section className="py-20 bg-gradient-to-r from-[#4CAF50] to-[#45a049] text-center text-white relative">
         <motion.h2
           variants={fadeUp}

@@ -26,11 +26,12 @@ const ApplicantsProfile = () => {
       navigate('/recruiters/login');
       return;
     }
+    const backend_url = import.meta.env.VITE_BACKEND_URL
 
     const fetchApplicant = async () => {
       try {
         const response = await axios.get(
-          `https://job-portal-backend-swtv.onrender.com/api/jobs/${jobId}`,
+          `${backend_url}/recruiters/jobs/${jobId}`,
           { withCredentials: true }
         );
         setProfile(response.data);
@@ -54,7 +55,7 @@ const ApplicantsProfile = () => {
 
   try {
     const res = await axios.put(
-      `https://job-portal-backend-swtv.onrender.com/api/applications/job/${jobId}/candidate/${applicantId}/status`,
+      `${backend_url}/applications/job/${jobId}/candidate/${applicantId}/status`,
       {
         status: "Accepted",
         message: roundDetails || "You have been shortlisted for the next round.",
@@ -75,7 +76,7 @@ const handleReject = async () => {
 
   try {
     const res = await axios.put(
-      `https://job-portal-backend-swtv.onrender.com/api/applications/job/${jobId}/candidate/${applicantId}/status`,
+      `${backend_url}/applications/job/${jobId}/candidate/${applicantId}/status`,
       {
         status: "Rejected",
         message: "We regret to inform you that your application was not selected.",

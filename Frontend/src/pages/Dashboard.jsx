@@ -33,11 +33,11 @@ const Dashboard = () => {
 
   //   return () => clearTimeout(timer);
   // },);
-
+const backend_url = import.meta.env.VITE_BACKEND_URL
   useEffect(() =>{
     const fetchJobs = async () => {
       try {
-        const res = await fetch ("https://job-portal-backend-swtv.onrender.com/api/jobs");
+        const res = await fetch (backend_url+"/jobs");
         const data = await res.json();
         if(data.success) {
           setJobs(data.jobs);

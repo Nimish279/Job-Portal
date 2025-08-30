@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema(
     about: { type: String },
     skills: [{ type: String }],
     experience: { type: String },
+    profilePhoto: { type: String },
     appliedJobs: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -75,11 +75,11 @@ function PostJob_Internship() {
     console.log('Files selected:', e.target.files);
     // You can add more logic here to handle the file upload
   };
-  
+  const backend_url = import.meta.env.VITE_BACKEND_URL
   useEffect(()=>{
     const fetchProfile = async () => {
           try {
-            const res = await axios.get('https://job-portal-backend-swtv.onrender.com/api/recruiters/getProfile', {
+            const res = await axios.get(backend_url+'/recruiters/getProfile', {
               withCredentials: true
             });
             setUserName(res.data.recruiter.companyName);
@@ -110,7 +110,7 @@ function PostJob_Internship() {
         eligibilityCriteria
       };
 
-    const response = await fetch("https://job-portal-backend-swtv.onrender.com/api/recruiters/postInternship", {
+    const response = await fetch(backend_url + "/recruiters/postInternship", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

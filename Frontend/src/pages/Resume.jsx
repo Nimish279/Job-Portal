@@ -65,14 +65,14 @@ const Resume = () => {
   //   }
   // };
 
-
+const backend_url = import.meta.env.VITE_BACKEND_URL
 const handleUpload = async () => {
   if (newPdf.file) {
     try {
       const formData = new FormData();
       formData.append("resume", newPdf.file);
 
-      await axios.post("https://job-portal-backend-swtv.onrender.com/api/upload/resume", formData, {
+      await axios.post(backend_url+"/upload/resume", formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         },
@@ -98,7 +98,7 @@ const handleUpload = async () => {
 useEffect(() => {
   const fetchResumes = async () => {   //Fetching resume as soon as the page opens (By Tushar)
     try {
-      const response = await axios.get("https://job-portal-backend-swtv.onrender.com/api/upload/resume", {
+      const response = await axios.get(backend_url+"/upload/resume", {
         withCredentials: true,
       });
 
@@ -141,7 +141,7 @@ const handleDelete = async (index) => {
   }
 
   try {
-    await axios.delete(`https://job-portal-backend-swtv.onrender.com/api/upload/resume/${encodeURIComponent(publicId)}`, {
+    await axios.delete(`${backend_url}/upload/resume/${encodeURIComponent(publicId)}`, {
       withCredentials: true,
     });
 

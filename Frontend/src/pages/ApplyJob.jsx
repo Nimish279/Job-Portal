@@ -17,6 +17,7 @@ const ApplyJob = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const backend_url = import.meta.env.VITE_BACKEND_URL
 
   // Handle text input changes
   const handleChange = (e) => {
@@ -53,7 +54,7 @@ const ApplyJob = () => {
       form.append("coverLetter", formData.coverLetter);
       form.append("resume", formData.resume);
 
-      const res = await fetch("http://localhost:8000/api/users/applyJob", {
+      const res = await fetch(backend_url+"/users/applyJob", {
         method: "PUT",
         credentials: "include", // include cookies for auth
         body: form, // multipart/form-data

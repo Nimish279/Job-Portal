@@ -38,11 +38,11 @@ const RecruiterProfile = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
+const backend_url = import.meta.env.VITE_BACKEND_URL
   useEffect(() => {
     const fetchProfile=async()=>{
       try {
-        const res=await axios.get('https://job-portal-backend-swtv.onrender.com/api/recruiters/getProfile',{
+        const res=await axios.get(backend_url+'/recruiters/getProfile',{
           withCredentials:true
         })
         const recruiter=res.data.recruiter

@@ -24,6 +24,7 @@ export const loginUser = async (req, res) => {
       sameSite: "None",
       maxAge: 1 * 60 * 60 * 1000, // 1 hour but in cookie form
     });
+    console.log('User login successful');
     res.status(200).json({
       success: true,
       message: "User login successful",
@@ -149,7 +150,7 @@ export const editProfile = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ success: true, message: "Profile updated" });
+    res.status(200).json({ success: true, message: "Profile updated", experience: user.experience });
   } catch (error) {
     console.error("Edit Profile Error:", error);
     res.status(500).json({ message: "Server error", error });
@@ -261,6 +262,13 @@ export const getCurrentUser = async (req, res) => {
         name: user.name,
         email: user.email,
         id: user._id,
+        degree: user.degree,
+        city: user.city,
+        university: user.university,
+        github: user.github,
+        about: user.about,
+        skills: user.skills,
+        experience: user.experience,
       },
     });
   } catch (err) {

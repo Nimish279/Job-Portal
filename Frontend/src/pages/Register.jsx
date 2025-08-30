@@ -144,50 +144,108 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const firstName = firstNameRef.current.value.trim();
-    const lastName = lastNameRef.current.value.trim();
-    const email = emailRef.current.value.trim();
-    const password = passwordRef.current.value;
-    const confirmPassword = confirmPasswordRef.current.value;
+  const firstName = firstNameRef.current.value.trim();
+  const lastName = lastNameRef.current.value.trim();
+  const email = emailRef.current.value.trim();
+  const password = passwordRef.current.value;
+  const confirmPassword = confirmPasswordRef.current.value;
 
-    if (!firstName || !lastName || !email || !password || !confirmPassword) {
-      toast.error("Please fill in all fields");
-      return;
-    }
+  if (!firstName || !lastName || !email || !password || !confirmPassword) {
+    toast.error("Please fill in all fields");
+    return;
+  }
 
-    if (firstName.length < 3 || lastName.length < 3) {
-      toast.error("Full name must be at least 3 characters long");
-      return;
-    }
+  if (firstName.length < 3 || lastName.length < 3) {
+    toast.error("Full name must be at least 3 characters long");
+    return;
+  }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast.error("Please enter a valid email address");
-      return;
-    }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    toast.error("Please enter a valid email address");
+    return;
+  }
 
-    if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
-      return;
-    }
+  if (password.length < 6) {
+    toast.error("Password must be at least 6 characters");
+    return;
+  }
 
-    if (password !== confirmPassword) {
-      toast.error("Passwords don't match!");
-      return;
-    }
-    const name=`${firstName} ${lastName}`
-    console.log(name);
-    const result = await register({ name, email, password });
-    if (result?.success) {
-      navigate('/users/login');
-    } else {
-      toast.error(result.message || "Registration failed");
-    }
-  };
+  // Password strength checks
+  const capitalRegex = /[A-Z]/;
+  const numberRegex = /[0-9]/;
+  const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+
+  if (!capitalRegex.test(password)) {
+    toast.error("Password must contain at least one uppercase letter");
+    return;
+  }
+
+  if (!numberRegex.test(password)) {
+    toast.error("Password must contain at least one number");
+    return;
+  }
+
+  if (!specialCharRegex.test(password)) {
+    toast.error("Password must contain at least one special character");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    toast.error("Passwords don't match!");
+    return;
+  }
+
+  const name = `${firstName} ${lastName}`;
+  console.log(name);
+
+  const result = await register({ name, email, password });
+  if (result?.success) {
+    navigate('/users/login');
+  } else {
+    toast.error(result.message || "Registration failed");
+  }
+};
+
 
   return (
+    <><header className="bg-white shadow-md sticky top-0 z-50">
+                <nav className="flex justify-between items-center py-4 px-6 md:px-16">
+                  {/* Logo */}
+                  <div className="text-2xl font-bold text-[#4CAF50]">JobPortal</div>
+        
+                  {/* Desktop Menu */}
+                  <ul className="hidden md:flex gap-8 text-gray-700 font-medium flex-1 justify-center">
+                    <li><Link to="/" className="hover:text-[#4CAF50]">Home</Link></li>
+                    <li><Link to="/about" className="hover:text-[#4CAF50]">About</Link></li>
+                    <li><Link to="/subscription" className="hover:text-[#4CAF50]">Plans</Link></li>
+                    <li><Link to="/support" className="hover:text-[#4CAF50]">Support</Link></li>
+                  </ul>
+        
+                  {/* Desktop CTA */}
+                  <div className="hidden md:flex items-center gap-4">
+                    {/* <Link to="/users/login" className="hover:text-[#4CAF50] font-medium">Login</Link> */}
+                    <Link
+                      to="/recruiters/register"
+                      className="bg-[#4CAF50] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#45a049] transition shadow-md"
+                    >
+                      Post a Job
+                    </Link>
+                  </div>
+        
+                  {/* Mobile Hamburger */}
+                  <button
+                    className="md:hidden flex flex-col gap-1 focus:outline-none"
+                    onClick={() => setIsMenuOpen(true)}
+                  >
+                    <span className="w-6 h-0.5 bg-gray-800"></span>
+                    <span className="w-6 h-0.5 bg-gray-800"></span>
+                    <span className="w-6 h-0.5 bg-gray-800"></span>
+                  </button>
+                </nav>
+              </header>
     <div className="flex min-h-screen bg-gradient-to-r from-gray-200 to-gray-50 justify-center items-center">
       <div className="relative flex flex-col lg:flex-row w-[90%] max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row w-[90%] mx-auto bg-white border-2-gray rounded shadow-xl min-h-[600px] justify-start">
@@ -300,6 +358,7 @@ const Register = () => {
       </div>
       <ToastContainer position="top-center" theme="colored" />
     </div>
+    </>
   );
 };
 

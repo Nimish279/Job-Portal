@@ -14,10 +14,11 @@ const HiringWorkflow = () => {
     "HR Interview",
     "Offer"
   ];
+const backend_url = import.meta.env.VITE_BACKEND_URL
 
   // Fetch workflow status from the backend
   useEffect(() => {
-    axios.get("/api/hiringStatus") // Replace with your actual API endpoint
+    axios.get(backend_url + "/hiringStatus") // Replace with your actual API endpoint
       .then(response => {
         setCompletedSteps(response.data.completedSteps); // backend should send an array of completed steps
         setLoading(false);

@@ -5,11 +5,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import  userecruiterStore  from '../../store/recruiterStore';
 const Logout = () => {
   const navigate = useNavigate();
+  const backend_url = import.meta.env.VITE_BACKEND_URL
   const {logout}=userecruiterStore()
   useEffect(() => {
     const logoutUser = async () => {
       try {
-        const response = await fetch('https://job-portal-backend-swtv.onrender.com/api/recruiters/logout', {
+        const response = await fetch(backend_url+'/recruiters/logout', {
           method: 'POST', // Or GET if your backend handles it that way
           credentials: 'include', // Important for sending cookies
         });

@@ -15,6 +15,7 @@ const CompanyProfileForm = () => {
     contact1: '',
     contact2: '',
   });
+  const backend_url = import.meta.env.VITE_BACKEND_URL
   const [file, setFile] = useState(null);
   const [recruiter, setRecruiter] = useState(null);
 
@@ -24,7 +25,7 @@ const CompanyProfileForm = () => {
   // ✅ Load recruiter from localStorage or backend
   const fetchRecruiterData = async () => {
     try {
-      const res = await axios.get("https://job-portal-backend-swtv.onrender.com/api/recruiters/getProfile", {
+      const res = await axios.get(backend_url+"/recruiters/getProfile", {
         withCredentials: true,
       });
       if (res.data?.recruiter) {
@@ -74,7 +75,7 @@ const CompanyProfileForm = () => {
       if (file) data.append('companyPanCardOrGstFile', file);
 
       const res = await axios.put(
-        `https://job-portal-backend-swtv.onrender.com/api/recruiters/update`,
+        `${backend_url}/recruiters/update`,
         data,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
