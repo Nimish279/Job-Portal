@@ -87,14 +87,9 @@ function PostJob_Internship() {
             console.error("Error fetching profile:", error);
           }
         };
-    
-        
         fetchProfile();
       }, []);
   
-  
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

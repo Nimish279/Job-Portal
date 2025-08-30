@@ -125,12 +125,12 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
               </div>
               <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
                 
-                <input
+                {/* <input
                   type="text"
                   placeholder="Search"
                   className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
                 />
-                <img src={Search} alt="Search Icon" className="w-8 h-8" /> 
+                <img src={Search} alt="Search Icon" className="w-8 h-8" />  */}
                 <Link to="/recruiters/notifications">
                   <img src={Notifications} alt="Notifications Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
                 </Link>
