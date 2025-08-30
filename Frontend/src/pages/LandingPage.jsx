@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import landingImage from "../assets/images/landing_page.jpg";
 
 function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const loginRef = useRef(null);
+
+  // Close login dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (loginRef.current && !loginRef.current.contains(e.target)) {
+        setIsLoginOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Motion variants
   const sidebarVariants = {
@@ -35,8 +48,34 @@ function LandingPage() {
           </ul>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-4">
-            <Link to="/users/login" className="hover:text-[#4CAF50] font-medium">Login</Link>
+          <div className="hidden md:flex items-center gap-4 relative" ref={loginRef}>
+            {/* Dropdown Login */}
+            <button
+              onClick={() => setIsLoginOpen(!isLoginOpen)}
+              className="hover:text-[#4CAF50] font-medium flex items-center gap-1"
+            >
+              Login ▾
+            </button>
+
+            {isLoginOpen && (
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white shadow-lg rounded-md border z-50">
+                <Link
+                  to="/users/login"
+                  onClick={() => setIsLoginOpen(false)}
+                  className="block px-4 py-2 hover:bg-gray-100 text-gray-700"
+                >
+                  Job Seeker Login
+                </Link>
+                <Link
+                  to="/recruiters/login"
+                  onClick={() => setIsLoginOpen(false)}
+                  className="block px-4 py-2 hover:bg-gray-100 text-gray-700"
+                >
+                  Recruiter Login
+                </Link>
+              </div>
+            )}
+
             <Link
               to="/recruiters/register"
               className="bg-[#4CAF50] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#45a049] transition shadow-md"
@@ -81,7 +120,36 @@ function LandingPage() {
               <li><Link to="/about" onClick={() => setIsMenuOpen(false)}>About</Link></li>
               <li><Link to="/subscription" onClick={() => setIsMenuOpen(false)}>Plans</Link></li>
               <li><Link to="/support" onClick={() => setIsMenuOpen(false)}>Support</Link></li>
-              <li><Link to="/users/login" onClick={() => setIsMenuOpen(false)}>Login</Link></li>
+
+              {/* Mobile Login Dropdown */}
+              <li>
+                <details className="group">
+                  <summary className="cursor-pointer list-none hover:text-[#4CAF50]">
+                    Login ▾
+                  </summary>
+                  <ul className="mt-2 bg-white shadow-lg rounded-md border overflow-hidden">
+                    <li>
+                      <Link
+                        to="/users/login"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block px-4 py-2 hover:bg-gray-100 text-gray-700"
+                      >
+                        Job Seeker Login
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/recruiters/login"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block px-4 py-2 hover:bg-gray-100 text-gray-700"
+                      >
+                        Recruiter Login
+                      </Link>
+                    </li>
+                  </ul>
+                </details>
+              </li>
+
               <li>
                 <Link
                   to="/recruiters/register"

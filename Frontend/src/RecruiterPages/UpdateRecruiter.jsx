@@ -15,8 +15,6 @@ const UpdateRecruiter = () => {
     email: "",
     phone: "",
     companyName: "",
-    password: "",
-    website: "",
   });
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -26,7 +24,6 @@ const UpdateRecruiter = () => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const isMobile = screenWidth < 768;
   
-
   // ✅ Handle resize for responsive sidebar
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
@@ -47,8 +44,6 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
           email: recruiter.email || "",
           phone: recruiter.phone || "",
           companyName: recruiter.companyName || "",
-          password: "",
-          website: recruiter.website || "",
         });
         console.log(recruiter);
       } catch (error) {
@@ -66,9 +61,9 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
     }));
   };
 
-  // ✅ File Upload
-  const handleButtonClick = () => fileInputRef.current.click();
-  const handleFileChange = (e) => setFile(e.target.files[0]);
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
   // ✅ Submit update
   const handleSubmit = async (e) => {
@@ -77,13 +72,12 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
       return toast.error("Please fill all required fields");
     }
 
-    const updateData = new FormData();
-    updateData.append("email", formData.email);
-    updateData.append("phone", formData.phone);
-    updateData.append("companyName", formData.companyName);
-    updateData.append("website", formData.website);
-    if (formData.password) updateData.append("password", formData.password);
-    if (file) updateData.append("companyPanCardOrGstFile", file);
+    try {
+      const data = new FormData();
+      data.append("email", formData.email);
+      data.append("phone", formData.phone);
+      data.append("companyName", formData.companyName);
+      if (file) data.append("companyPanCardOrGstFile", file);
 
     try {
       const res=await axios.post(
@@ -94,14 +88,12 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
+
       if(res.data.success){
         console.log(res.data.message)
         toast.success("Recruiter updated successfully!");
         navigate("/recruiters/getProfile");
-      
       }
-      
-      
     } catch (error) {
       toast.error(error.response?.data?.message || "Update failed");
     }
@@ -212,66 +204,19 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
                     onChange={handleChange}
                     required
                   />
-                  <InputField
-                    label="Website"
-                    type="url"
-                    name="website"
-                    value={formData.website}
-                    onChange={handleChange}
-                    placeholder="https://"
-                  />
+                  {/* ✅ Document Upload */}
+                  <div>
+                    <label className="block font-medium mb-1">Company PAN/GST Document</label>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#5F9D08] focus:outline-none"
+                    />
+                  </div>
                 </div>
               </section>
-
-              {/* Security */}
-              <section>
-                <h3 className="text-lg font-semibold mb-4">Security</h3>
-                <InputField
-                  label="New Password"
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Leave blank to keep unchanged"
-                />
-              </section>
-
-              {/* File Upload */}
-              <section>
-                <h3 className="text-lg font-semibold mb-4">Documents</h3>
-                <div className="mb-4">
-                  <button
-                    type="button"
-                    className="w-full md:w-auto py-2 px-4 text-white rounded-md"
-                    style={{ backgroundColor: "#5F9D08" }}
-                    onClick={handleButtonClick}
-                  >
-                    Upload GST / PAN Proof
-                  </button>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    style={{ display: "none" }}
-                  />
-                  {file && (
-                    <p className="mt-2 text-sm text-gray-600">
-                      Selected: {file.name}
-                    </p>
-                  )}
-                </div>
-              </section>
-
-              {/* Terms */}
-              <div className="flex items-center">
-                <input type="checkbox" className="mr-2" required />
-                <span className="text-sm">
-                  I agree to the{" "}
-                  <a href="#" className="text-blue-600 underline">
-                    Terms & Conditions
-                  </a>
-                </span>
-              </div>
 
               {/* Submit */}
               <div className="text-center">
