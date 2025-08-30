@@ -66,38 +66,71 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
   };
 
   // ✅ Submit update
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!formData.email || !formData.phone || !formData.companyName) {
+  //     return toast.error("Please fill all required fields");
+  //   }
+
+  //   try {
+  //     const data = new FormData();
+  //     data.append("email", formData.email);
+  //     data.append("phone", formData.phone);
+  //     data.append("companyName", formData.companyName);
+  //     if (file) data.append("companyPanCardOrGstFile", file);
+
+  //   try {
+  //     const res=await axios.post(
+  //       backend_url+"/recruiters/update",
+  //       updateData,
+  //       {
+  //         withCredentials: true,
+  //         headers: { "Content-Type": "multipart/form-data" },
+  //       }
+  //     );
+
+  //     if(res.data.success){
+  //       console.log(res.data.message)
+  //       toast.success("Recruiter updated successfully!");
+  //       navigate("/recruiters/getProfile");
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.response?.data?.message || "Update failed");
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.email || !formData.phone || !formData.companyName) {
-      return toast.error("Please fill all required fields");
-    }
+  e.preventDefault();
+  if (!formData.email || !formData.phone || !formData.companyName) {
+    return toast.error("Please fill all required fields");
+  }
 
-    try {
-      const data = new FormData();
-      data.append("email", formData.email);
-      data.append("phone", formData.phone);
-      data.append("companyName", formData.companyName);
-      if (file) data.append("companyPanCardOrGstFile", file);
+  try {
+    const data = new FormData();
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+    data.append("companyName", formData.companyName);
+    if (file) data.append("companyPanCardOrGstFile", file);
 
-    try {
-      const res=await axios.post(
-        backend_url+"/recruiters/update",
-        updateData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-
-      if(res.data.success){
-        console.log(res.data.message)
-        toast.success("Recruiter updated successfully!");
-        navigate("/recruiters/getProfile");
+    const res = await axios.post(
+      backend_url + "/recruiters/update",
+      data, // ✅ fixed here
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
       }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Update failed");
+    );
+
+    if (res.data.success) {
+      console.log(res.data.message);
+      toast.success("Recruiter updated successfully!");
+      navigate("/recruiters/getProfile");
     }
-  };
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Update failed");
+  }
+};
+
 
   return (
     <motion.div

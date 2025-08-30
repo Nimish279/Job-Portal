@@ -8,7 +8,7 @@ const CompanyProfileForm = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-
+  const backend_url = import.meta.env.VITE_BACKEND_URL
   useEffect(() => {
     if (location.state?.updatedRecruiter) {
       setCompany(location.state.updatedRecruiter);
@@ -19,7 +19,7 @@ const CompanyProfileForm = () => {
     (async () => {
       try {
         const res = await axios.get(
-          "https://job-portal-backend-swtv.onrender.com/api/recruiters/getProfile",
+          backend_url+"/recruiters/getProfile",
           { withCredentials: true }
         );
         setCompany(res.data.recruiter || null);

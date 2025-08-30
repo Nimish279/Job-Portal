@@ -26,6 +26,7 @@ const RecruiterProfile = () => {
   const [screenWidth, setScreenWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1024
   );
+  const backend_url = import.meta.env.VITE_BACKEND_URL
 
   const isMobile = screenWidth < 768;
 
@@ -40,7 +41,7 @@ const RecruiterProfile = () => {
   const fetchProfile = async () => {
   try {
     const res = await axios.get(
-      "https://job-portal-backend-swtv.onrender.com/api/recruiters/getProfile",
+      backend_url + "/recruiters/getProfile",
       { withCredentials: true }
     );
 
