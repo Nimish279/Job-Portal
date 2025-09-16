@@ -377,15 +377,49 @@ export const openJob = async (req, res) => {
   }
 };
 // GET all internships posted by logged-in recruiter
-export const getRecruiterInternships = async (req, res) => {
+export const myInternships = async (req, res) => {
   try {
-    const recruiterId = req.recruiter._id;
-    const internships = await Internship.find({ recruiter: recruiterId })
-      .sort({ createdAt: -1 });
-    
-    res.status(200).json({ internships });
+    const recruiter = req.recruiter;
+    const internships = await Internship.find({ recruiter: recruiter._id });
+    if (internships.length === 0) {
+      return res.status(203).json({ message: "No Internships Posted by you", internships: [] });
+    }
+    res.status(200).json({ success: true, internships });
   } catch (error) {
-    console.error("Error fetching recruiter internships:", error);
+    console.error("Error fetching internships:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// ✅ Close Internship (soft close with isClosed flag)
+export const closeInternship = async (req, res) => {
+  try {
+    const internship = await Internship.findOneAndUpdate(
+      { _id: req.params.id, recruiter: req.recruiter._id },
+      { status: "closed" },
+      { new: true }
+    );
+    if (!internship) return res.status(404).json({ message: "Internship not found or not authorized" });
+
+    res.status(200).json({ success: true, message: "Internship closed successfully", internship });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const openInternship = async (req, res) => {
+  try {
+    const internship = await Internship.findOneAndUpdate(
+      { _id: req.params.id, recruiter: req.recruiter._id },
+      { status: "open" },
+      { new: true }
+    );
+    if (!internship) return res.status(404).json({ message: "Internship not found or not authorized" });
+
+    res.status(200).json({ success: true, message: "Internship opened successfully", internship });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
