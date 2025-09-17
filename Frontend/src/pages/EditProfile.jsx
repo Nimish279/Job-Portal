@@ -56,7 +56,7 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
   const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const res = await fetch(backend_url+"/user/edit-profile", {
+    const res = await fetch(backend_url+"/users/edit-profile", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

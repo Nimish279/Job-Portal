@@ -1,8 +1,7 @@
-
 import React, { useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';  // use NavLink instead of Link
 import { motion } from 'framer-motion';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { FiX } from 'react-icons/fi';
 import ActiveJobs from '../assets/images/ActiveJob00.png';
 import ClosedJobs from '../assets/images/ClosedJob00.png';
 import PostJobs from '../assets/images/PostAJob00.png';
@@ -14,7 +13,7 @@ const SideBar_Recr = ({ isOpen, onClose, isMobile }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isMobile && isOpen && sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        onClose(); // Close sidebar
+        onClose();
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -40,31 +39,42 @@ const SideBar_Recr = ({ isOpen, onClose, isMobile }) => {
       )}
       <ul className="space-y-1">
         <li>
-          <Link to="/recruiters/jobs/active" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
+          <NavLink 
+            to="/recruiters/jobs/active" 
+            className={({ isActive }) => 
+              `flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606] 
+              ${isActive ? 'bg-[#4e8606]' : ''}`
+            }
+          >
             <img src={ActiveJobs} alt="Active Jobs Icon" className="w-6 h-6" />
             <span className="text-sm sm:text-base">Active Jobs</span>
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/recruiters/jobs/closed" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
+          <NavLink 
+            to="/recruiters/jobs/closed" 
+            className={({ isActive }) => 
+              `flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606] 
+              ${isActive ? 'bg-[#4e8606]' : ''}`
+            }
+          >
             <img src={ClosedJobs} alt="Closed Jobs Icon" className="w-6 h-6" />
             <span className="text-sm sm:text-base">Closed Jobs</span>
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/recruiters/postJob" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
+          <NavLink 
+            to="/recruiters/postJob" 
+            className={({ isActive }) => 
+              `flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606] 
+              ${isActive ? 'bg-[#4e8606]' : ''}`
+            }
+          >
             <img src={PostJobs} alt="Post Job Icon" className="w-6 h-6" />
-            <span className="text-sm sm:text-base">Post a Job</span>
-          </Link>
-        </li>
-        <li>
-          <Link to="/recruiters/postInternship" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
-            <img src={PostJobs} alt="Internship Icon" className="w-6 h-6" />
-            <span className="text-sm sm:text-base">Post a InternShip</span>
-          </Link>
+            <span className="text-sm sm:text-base">Post a Job/Internship</span>
+          </NavLink>
         </li>
       </ul>
-      
     </motion.div>
   );
 };

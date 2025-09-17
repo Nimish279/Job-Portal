@@ -1,11 +1,8 @@
 // src/components/SideBar_Recr.jsx
 import React, { useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'; // ✅ use NavLink
 import { motion } from 'framer-motion';
-import { FiMenu, FiX } from 'react-icons/fi';
-import ActiveJobs from '../assets/images/ActiveJob00.png';
-import ClosedJobs from '../assets/images/ClosedJob00.png';
-import PostJobs from '../assets/images/PostAJob00.png';
+import { FiX } from 'react-icons/fi';
 
 const SideBar = ({ isOpen, onClose, isMobile }) => {
   const sidebarRef = useRef(null);
@@ -14,7 +11,7 @@ const SideBar = ({ isOpen, onClose, isMobile }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isMobile && isOpen && sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        onClose(); // Close sidebar
+        onClose();
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -41,34 +38,53 @@ const SideBar = ({ isOpen, onClose, isMobile }) => {
 
       <ul className="space-y-1">
         <li>
-          <Link to="/users/dashboard" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
-            {/* <img src={PostJobs} alt="Internship Icon" className="w-6 h-6" /> */}
+          <NavLink
+            to="/users/dashboard"
+            className={({ isActive }) =>
+              `flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606] 
+              ${isActive ? 'bg-[#4e8606]' : ''}`
+            }
+          >
             <i className="fas fa-chart-line text-white text-base text-xl"></i>
             <span className="text-sm sm:text-base">DashBoard</span>
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/users/saved-jobs" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
-            {/* <img src={ActiveJobs} alt="Active Jobs Icon" className="w-6 h-6" /> */}
+          <NavLink
+            to="/users/saved-jobs"
+            className={({ isActive }) =>
+              `flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606] 
+              ${isActive ? 'bg-[#4e8606]' : ''}`
+            }
+          >
             <i className="fa-regular fa-font-awesome text-white text-base text-xl"></i>
             <span className="text-sm sm:text-base">Saved Jobs</span>
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/users/job-recommendations" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
-            {/* <img src={ClosedJobs} alt="Closed Jobs Icon" className="w-6 h-6" /> */}
+          <NavLink
+            to="/users/job-recommendations"
+            className={({ isActive }) =>
+              `flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606] 
+              ${isActive ? 'bg-[#4e8606]' : ''}`
+            }
+          >
             <i className="fa-solid fa-briefcase text-white text-base text-xl"></i>
             <span className="text-sm sm:text-base">Job Recommendations</span>
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/users/resume" className="flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606]">
-            {/* <img src={PostJobs} alt="Post Job Icon" className="w-6 h-6" /> */}
+          <NavLink
+            to="/users/resume"
+            className={({ isActive }) =>
+              `flex items-center space-x-2 py-2 px-1 rounded-xl hover:bg-[#4e8606] 
+              ${isActive ? 'bg-[#4e8606]' : ''}`
+            }
+          >
             <i className="fas fa-file-alt text-white text-base text-xl"></i>
             <span className="text-sm sm:text-base">Resume</span>
-          </Link>
+          </NavLink>
         </li>
-        
       </ul>
     </motion.div>
   );
