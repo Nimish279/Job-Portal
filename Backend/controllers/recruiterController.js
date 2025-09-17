@@ -376,3 +376,16 @@ export const openJob = async (req, res) => {
     res.status(500).json({ message: "Server error.", error: error.message });
   }
 };
+// GET all internships posted by logged-in recruiter
+export const getRecruiterInternships = async (req, res) => {
+  try {
+    const recruiterId = req.recruiter._id;
+    const internships = await Internship.find({ recruiter: recruiterId })
+      .sort({ createdAt: -1 });
+    
+    res.status(200).json({ internships });
+  } catch (error) {
+    console.error("Error fetching recruiter internships:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

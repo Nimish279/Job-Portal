@@ -114,7 +114,7 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
 
     const res = await axios.post(
       backend_url + "/recruiters/update",
-      data, // ✅ fixed here
+      data, // fixed here
       {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
