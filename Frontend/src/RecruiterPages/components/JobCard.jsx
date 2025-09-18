@@ -39,14 +39,14 @@ const JobCard = ({
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4">
           <h3 className="text-lg font-semibold text-gray-800">{jobTitle}</h3>
           <div className="flex gap-2 mt-1 sm:mt-0">
-            <Link to="/accepted-applicants">
+            {/* <Link to="/accepted-applicants">
               <span className="bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded-full">
                 Accepted
               </span>
             </Link>
             <span className="bg-red-100 text-red-700 text-xs font-medium px-2 py-1 rounded-full">
               Rejected
-            </span>
+            </span> */}
           </div>
         </div>
 

@@ -10,7 +10,7 @@ const internshipSchema = new mongoose.Schema({
   internshipDuration: { type: String },
   location: { type: String },
   eligibilityCriteria: { type: String },
-  recruiter: { type: mongoose.Schema.Types.ObjectId, ref: "Recruiter" } // optional
+  recruiter: { type: mongoose.Schema.Types.ObjectId, ref: "Recruiter" } // optionalstatus: { type: String, enum: ["active", "closed"], default: "active" } // ✅ new field
 }, { timestamps: true });
 
 export const Internship = mongoose.model("Internship", internshipSchema);
