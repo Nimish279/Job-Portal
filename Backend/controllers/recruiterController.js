@@ -391,7 +391,7 @@ export const myInternships = async (req, res) => {
   }
 };
 
-// ✅ Close Internship (soft close with isClosed flag)
+// Close Internship
 export const closeInternship = async (req, res) => {
   try {
     const internship = await Internship.findOneAndUpdate(
@@ -399,27 +399,43 @@ export const closeInternship = async (req, res) => {
       { status: "closed" },
       { new: true }
     );
-    if (!internship) return res.status(404).json({ message: "Internship not found or not authorized" });
 
-    res.status(200).json({ success: true, message: "Internship closed successfully", internship });
+    if (!internship) {
+      return res.status(404).json({ message: "Internship not found or not authorized" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Internship closed successfully",
+      internship
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
+// Re-open Internship
 export const openInternship = async (req, res) => {
   try {
     const internship = await Internship.findOneAndUpdate(
       { _id: req.params.id, recruiter: req.recruiter._id },
-      { status: "open" },
+      { status: "open" }, // ✅ standardized to "open"
       { new: true }
     );
-    if (!internship) return res.status(404).json({ message: "Internship not found or not authorized" });
 
-    res.status(200).json({ success: true, message: "Internship opened successfully", internship });
+    if (!internship) {
+      return res.status(404).json({ message: "Internship not found or not authorized" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Internship opened successfully",
+      internship
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
+

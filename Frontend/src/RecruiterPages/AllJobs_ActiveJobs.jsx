@@ -1,4 +1,4 @@
-// ✅ JobPage.jsx – Fixed Internship Fetching
+// ✅ JobPage.jsx – Fixed Active/Closed Filtering for Jobs & Internships
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/SideBar_Recr';
@@ -26,6 +26,11 @@ function JobPage() {
   const navigate = useNavigate();
   const backend_url = import.meta.env.VITE_BACKEND_URL;
 
+  // ✅ Utility to check if status is active
+  const isActiveStatus = (status) => {
+    return status === 'open' || status === 'active' || status === 1;
+  };
+
   // Handle window resize
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
@@ -33,13 +38,13 @@ function JobPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Fetch Jobs
+  // ✅ Fetch Jobs
   const fetchJobs = async () => {
     setJobsLoading(true);
     setJobsError(null);
     try {
       const response = await axios.get(`${backend_url}/recruiters/myJobs`, { withCredentials: true });
-      const recruiterAllJobs = response.data.jobs.filter(job => job.status === 'open' || job.status === 1);
+      const recruiterAllJobs = response.data.jobs.filter(job => isActiveStatus(job.status));
       setJobs(recruiterAllJobs);
     } catch (error) {
       console.error('Error fetching jobs:', error);
@@ -50,14 +55,14 @@ function JobPage() {
     }
   };
 
-  // Fetch Internships
+  // ✅ Fetch Internships
   const fetchInternships = async () => {
     setInternshipsLoading(true);
     setInternshipsError(null);
     try {
       const response = await axios.get(`${backend_url}/recruiters/myInternships`, { withCredentials: true });
-      console.log("Internships API response:", response.data);
-      setInternships(response.data.internships || []); // Use internships array from API
+      const recruiterAllInternships = (response.data.internships || []).filter(i => isActiveStatus(i.status));
+      setInternships(recruiterAllInternships);
     } catch (error) {
       console.error('Error fetching internships:', error);
       setInternshipsError('Failed to fetch internships');
@@ -89,7 +94,7 @@ function JobPage() {
   const handleCloseJob = async (jobId) => {
     try {
       await axios.post(`${backend_url}/recruiters/closeJob/${jobId}`, {}, { withCredentials: true });
-      setJobs(prev => prev.filter(job => job._id !== jobId));
+      fetchJobs(); // ✅ refetch instead of just filtering
       toast.success('Job closed successfully');
     } catch (error) {
       console.error('Error closing job:', error);
@@ -100,7 +105,7 @@ function JobPage() {
   const handleCloseInternship = async (internshipId) => {
     try {
       await axios.post(`${backend_url}/recruiters/closeInternship/${internshipId}`, {}, { withCredentials: true });
-      setInternships(prev => prev.filter(i => i._id !== internshipId));
+      fetchInternships(); // ✅ refetch instead of just filtering
       toast.success('Internship closed successfully');
     } catch (error) {
       console.error('Error closing internship:', error);
@@ -111,7 +116,7 @@ function JobPage() {
   const handleViewApplicants = (jobId) => navigate(`/recruiters/applicants/${jobId}`);
   const handleViewInternshipApplicants = (internshipId) => navigate(`/recruiters/internshipApplicants/${internshipId}`);
 
-  // Normalize for JobCard
+  // ✅ Normalize for JobCard
   const normalize = (item, type) => ({
     jobTitle: item.jobRole || item.internshipRole || "Not specified",
     location: item.location || "Remote / Not specified",
@@ -129,7 +134,7 @@ function JobPage() {
     secondaryButtonText: type === "job" ? "Close Job" : "Close Internship",
     actionButtonLink: () => type === "job" ? handleViewApplicants(item._id) : handleViewInternshipApplicants(item._id),
     onSecondaryButtonClick: () => type === "job" ? handleCloseJob(item._id) : handleCloseInternship(item._id),
-    statusText: item.status === 'open' || item.status === 1 || item.status === 'active' || !item.status ? "Active" : "Inactive",
+    statusText: isActiveStatus(item.status) ? "Active" : "Inactive",
   });
 
   return (
