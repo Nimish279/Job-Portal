@@ -14,8 +14,8 @@ import ProfileImage from '../assets/images/Profile_pics/1.jpg';
 function AllJobs_ClosedJobs() {
   const [jobs, setJobs] = useState([]);
   const [internships, setInternships] = useState([]);
-  const [jobs, setJobs] = useState([]);
-  const [internships, setInternships] = useState([]);
+  // const [jobs, setJobs] = useState([]);
+  // const [internships, setInternships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
