@@ -60,9 +60,10 @@ function JobPage() {
       });
 
       // backend internships don’t have status → just return all
-      const recruiterAllInternships = response.data.internships || [];
-
-      setInternships(recruiterAllInternships);
+      const recruiterAllInternships = response.data.internships;
+      const afterfilterInternships= recruiterAllInternships.filter((i) => i.status === 'open');
+      console.log(afterfilterInternships);
+      setInternships(afterfilterInternships);
       setLoading(false);
     } catch (error) {
       toast.error('Failed to fetch internships');
@@ -163,7 +164,7 @@ function JobPage() {
       className="h-screen flex bg-gray-100 flex-col"
     >
       {/* Top Navigation Bar */}
-      <motion.div className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full">
+      <motion.div className="bg-[#5F9D08] sticky top-0 left-0 text-white p-4 flex flex-wrap justify-between items-center w-full">
         <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto"></div>
         <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
           {/* <input

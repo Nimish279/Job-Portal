@@ -359,6 +359,19 @@ export const openJob = async (req, res) => {
     }
   };
 
+  export const getRecruiterInternships = async (req, res) => {
+  try {
+    const recruiterId = req.recruiter._id;
+    const internships = await Internship.find({ recruiter: recruiterId })
+      .sort({ createdAt: -1 });
+    
+    res.status(200).json({ internships });
+  } catch (error) {
+    console.error("Error fetching recruiter internships:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
   export const getJobById = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id)
@@ -377,15 +390,76 @@ export const openJob = async (req, res) => {
   }
 };
 // GET all internships posted by logged-in recruiter
-export const getRecruiterInternships = async (req, res) => {
+
+
+
+// CLOSE INTERNSHIP
+export const closeInternship = async (req, res) => {
   try {
-    const recruiterId = req.recruiter._id;
-    const internships = await Internship.find({ recruiter: recruiterId })
-      .sort({ createdAt: -1 });
-    
-    res.status(200).json({ internships });
+    const internship = await Internship.findOneAndUpdate(
+      { _id: req.params.id, recruiter: req.recruiter._id }, // check ownership
+      { status: "closed" },
+      { new: true, runValidators: false }
+    );
+
+    if (!internship) {
+      return res.status(404).json({ message: "Internship not found or not authorized" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Internship closed successfully",
+      internship,
+    });
   } catch (error) {
-    console.error("Error fetching recruiter internships:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error("❌ Error in closeInternship:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+// OPEN INTERNSHIP
+export const openInternship = async (req, res) => {
+  try {
+    const internship = await Internship.findOneAndUpdate(
+      { _id: req.params.id, recruiter: req.recruiter._id }, // ownership check
+      { status: "open" },
+      { new: true }
+    );
+
+    if (!internship) {
+      return res.status(404).json({ message: "Internship not found or unauthorized" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Internship opened successfully",
+      internship,
+    });
+  } catch (error) {
+    console.error("❌ Error opening internship:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// DELETE INTERNSHIP
+export const deleteInternship = async (req, res) => {
+  try {
+    const internship = await Internship.findOneAndDelete({
+      _id: req.params.id,
+      recruiter: req.recruiter._id,
+    });
+
+    if (!internship) {
+      return res.status(404).json({ message: "Internship not found or unauthorized" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Internship deleted successfully",
+    });
+  } catch (error) {
+    console.error("❌ Error deleting internship:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+

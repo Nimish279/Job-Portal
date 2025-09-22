@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../components/SideBar_Recr';
-import Search from '../assets/images/search00.png';
 import Notifications from '../assets/images/notifications00.png';
 import JobCard from './components/JobCard';
-import{ toast,ToastContainer }from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,75 +11,85 @@ import { FiMenu } from 'react-icons/fi';
 import ProfileImage from '../assets/images/Profile_pics/1.jpg';
 
 function AllJobs_ClosedJobs() {
-   const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [internships, setInternships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-     const isMobile = screenWidth < 768;
-     useEffect(() => {
-         const handleResize = () => setScreenWidth(window.innerWidth);
-         window.addEventListener('resize', handleResize);
-         return () => window.removeEventListener('resize', handleResize);
-       }, []);
-const backend_url = import.meta.env.VITE_BACKEND_URL
-       const fetchJobs = async () => {
+  const [activeTab, setActiveTab] = useState("jobs"); // ✅ new tab state
+  const isMobile = screenWidth < 768;
+
+  const backend_url = import.meta.env.VITE_BACKEND_URL;
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // ✅ Fetch closed jobs
+  const fetchJobs = async () => {
+    try {
+      const response = await axios.get(`${backend_url}/recruiters/myJobs`, {
+        withCredentials: true,
+      });
+      const recruiterAllJobs = response.data.jobs.filter((job) => job.status === 'closed');
+      setJobs(recruiterAllJobs);
+      setLoading(false);
+    } catch (error) {
+      toast.error("Failed to fetch jobs");
+      console.error("Error fetching jobs:", error);
+      setLoading(false);
+    }
+  };
+
+  // ✅ Fetch closed internships
+  const fetchInternships = async () => {
+    try {
+      const response = await axios.get(`${backend_url}/recruiters/myInternships`, {
+        withCredentials: true,
+      });
+      const recruiterAllInternships = response.data.internships.filter((i) => i.status === 'closed');
+      setInternships(recruiterAllInternships);
+      setLoading(false);
+    } catch (error) {
+      toast.error("Failed to fetch internships");
+      console.error("Error fetching internships:", error);
+      setLoading(false);
+    }
+  };
+
+  // ✅ Fetch recruiter profile
+  useEffect(() => {
+    const fetchProfile = async () => {
       try {
-        const response = await axios.get(backend_url+'/recruiters/myJobs', {
-          withCredentials: true, // <-- THIS is required to send cookies
+        const res = await axios.get(`${backend_url}/recruiters/getProfile`, {
+          withCredentials: true,
         });
-        const recruiterAllJobs=response.data.jobs.filter((job) => job.status === 'closed'); //added a filter (by-tushar)
-        setJobs(recruiterAllJobs);
-         
+        const recruiter = res.data.recruiter;
+        setUserName(recruiter.companyName);
         setLoading(false);
-        // console.log(response.data.jobs)
       } catch (error) {
-        toast.error("Failed to fetch jobs");
-        console.error("Error fetching jobs:", error);
+        toast.error("Failed to fetch recruiter details");
+        console.error("Error fetching recruiter:", error);
         setLoading(false);
       }
     };
 
-   useEffect(() => {
-    
-
     fetchJobs();
+    fetchInternships();
+    fetchProfile();
   }, []);
 
-
-  useEffect(() => {
-    const fetchProfile=async()=>{
-      try {
-        const res=await axios.get(backend_url+'/recruiters/getProfile',{
-          withCredentials:true
-        })
-        const recruiter=res.data.recruiter
-        
-        setUserName(recruiter.companyName) //Company Nmae aayega modals me changes hai(By-tushar)
-        setLoading(false);
-        // console.log(res.data.recruiter)
-      } catch (error) {
-         toast.error("Failed to fetch Recrutier Details");
-        console.error("Error fetching recuriter:", error);
-        setLoading(false);
-      }
-    }
-    fetchProfile()
-  }, []);
-
-  const handleOpenJob=async(jobId)=>{
-    
-  try {
-     const res= await axios.post(
-        `${backend_url}/api/recruiters/openJob/${jobId}`,
-        {},
-        { withCredentials: true }
-      );
-      if(res.data.success){
-      
-      fetchJobs();
-      toast.success("Job Opened successfully");
+  // ✅ Job Actions
+  const handleOpenJob = async (jobId) => {
+    try {
+      const res = await axios.post(`${backend_url}/recruiters/openJob/${jobId}`, {}, { withCredentials: true });
+      if (res.data.success) {
+        fetchJobs();
+        toast.success("Job opened successfully");
       }
     } catch (error) {
       toast.error("Failed to open job");
@@ -88,142 +97,151 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
     }
   };
 
-  const handleDeleteJob=async(jobId)=>{
-    
-  try {
-      await axios.delete(
-        `${backend_url}/recruiters/deleteJob/${jobId}`,
-        
-        { withCredentials: true }
-      );
+  const handleDeleteJob = async (jobId) => {
+    try {
+      await axios.delete(`${backend_url}/recruiters/deleteJob/${jobId}`, { withCredentials: true });
       fetchJobs();
-      toast.success("Job Deleted successfully");
+      toast.success("Job deleted successfully");
     } catch (error) {
       toast.error("Failed to delete job");
       console.error("Error deleting job:", error);
     }
   };
 
+  // ✅ Internship Actions
+  const handleOpenInternship = async (internshipId) => {
+    try {
+      const res = await axios.post(`${backend_url}/recruiters/openInternship/${internshipId}`, {}, { withCredentials: true });
+      if (res.data.success) {
+        fetchInternships();
+        toast.success("Internship opened successfully");
+      }
+    } catch (error) {
+      toast.error("Failed to open internship");
+      console.error("Error opening internship:", error);
+    }
+  };
 
-  
+  const handleDeleteInternship = async (internshipId) => {
+    try {
+      await axios.delete(`${backend_url}/recruiters/deleteInternship/${internshipId}`, { withCredentials: true });
+      fetchInternships();
+      toast.success("Internship deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete internship");
+      console.error("Error deleting internship:", error);
+    }
+  };
+
+  // ✅ Normalize function for JobCard
+  const normalize = (item, type) => ({
+    jobTitle: item.jobRole || item.internshipRole,
+    location: item.location,
+    salaryRange: type === "job" ? item.ctc : `${item.stipendType || ""} ${item.stipendAmount || ""}`,
+    description: item.jobDescription || item.internshipDescription || "Not provided",
+    skills: item.skillsRequired,
+    qualifications: item.eligibilityCriteria || "Not provided",
+    status: item.status,
+    opened: item.createdAt,
+    actionButtonText: type === "job" ? "Open Job" : "Open Internship",
+    secondaryButtonText: type === "job" ? "Delete Job" : "Delete Internship",
+    actionButtonLink: () => (type === "job" ? handleOpenJob(item._id) : handleOpenInternship(item._id)),
+    onSecondaryButtonClick: () => (type === "job" ? handleDeleteJob(item._id) : handleDeleteInternship(item._id)),
+    statusText: item.status === 'open' ? "Active" : "Inactive",
+  });
 
   return (
     <div className="h-screen flex bg-gray-100 flex-col">
       {/* Top Navigation Bar */}
-      <motion.div 
-              initial={{ y: -50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full">
-              <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto">
-                {/* <img src={Search} alt="Search Icon" className="w-8 h-8 sm:w-10 sm:h-10" /> //logo */}
-                {/* <input
-                  type="text"
-                  placeholder="Search"
-                  className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
-                /> */}
-              </div>
-              <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
-                
-                {/* <input
-                  type="text"
-                  placeholder="Search"
-                  className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
-                />
-                <img src={Search} alt="Search Icon" className="w-8 h-8" />  */}
-                <Link to="/recruiters/notifications">
-                  <img src={Notifications} alt="Notifications Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
-                </Link>
-                <Link to="/recruiters/getProfile" className='flex flex-row items-center gap-2'>
-                <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8">
-                  <img src={ProfileImage} alt="" className="w-full h-full rounded-full" />
-                </div>
-                
-                <span className="text-sm sm:text-base">{userName || 'Loading...'}</span> 
-                </Link>
-              </div>
-            </motion.div>
+      <motion.div className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full">
+        <div></div>
+        <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
+          <Link to="/recruiters/notifications">
+            <img src={Notifications} alt="Notifications Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
+          </Link>
+          <Link to="/recruiters/getProfile" className="flex flex-row items-center gap-2">
+            <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8">
+              <img src={ProfileImage} alt="" className="w-full h-full rounded-full" />
+            </div>
+            <span className="text-sm sm:text-base">{userName || 'Loading...'}</span>
+          </Link>
+        </div>
+      </motion.div>
 
       <div className="flex flex-1 flex-col sm:flex-row">
         {/* Sidebar */}
         <div className="lg:hidden p-4">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-3xl text-[#5F9D08] cursor-pointer"
-          >
+          <button onClick={() => setIsSidebarOpen(true)} className="text-3xl text-[#5F9D08] cursor-pointer">
             <FiMenu />
           </button>
         </div>
-
-        {/* Sidebar for large screens */}
-         {!isMobile && (
-        <div className="hidden lg:block fixed top-20 left-0 z-30">
-          <Sidebar isOpen={true} isMobile={false} />
-        </div>
-      )}
-
-      {/* Sidebar for mobile (animated) */}
-      <AnimatePresence>
-        { isSidebarOpen && (
-          <Sidebar
-            isOpen={isSidebarOpen}
-            onClose={() => setIsSidebarOpen(false)}
-            isMobile={true}
-          />
+        {!isMobile && (
+          <div className="hidden lg:block fixed top-20 left-0 z-30">
+            <Sidebar isOpen={true} isMobile={false} />
+          </div>
         )}
-      </AnimatePresence>
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} isMobile={true} />
+          )}
+        </AnimatePresence>
 
         {/* Main Content */}
-        <motion.div 
-                  initial={{ x: 50, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex-1 p-4 bg-gray-100 lg:ml-64 justify-center">
-                  <motion.h2 
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.5, }}
-                    className="text-lg sm:text-2xl font-semibold mb-2">All Jobs</motion.h2>
-                  <motion.h3 
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                    className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Closed Jobs</motion.h3>
+        <motion.div className="flex-1 p-4 bg-gray-100 lg:ml-64 justify-center">
+          {/* ✅ Tabs */}
+          <div className="flex space-x-6 border-b border-gray-300 mb-6">
+            <button
+              onClick={() => setActiveTab("jobs")}
+              className={`pb-2 ${activeTab === "jobs" ? "border-b-4 border-[#5F9D08] font-semibold" : "text-gray-500"}`}
+            >
+              Jobs
+            </button>
+            <button
+              onClick={() => setActiveTab("internships")}
+              className={`pb-2 ${activeTab === "internships" ? "border-b-4 border-[#5F9D08] font-semibold" : "text-gray-500"}`}
+            >
+              Internships
+            </button>
+          </div>
 
-          {loading ? (
-            <div className="text-center">
-              <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin mb-4"></div>
-              <p>Loading...</p>
-            </div>
-          ) : error ? (
-            <p className="text-red-500">{error}</p>
-          ) : jobs.length === 0 ? (
-            <p>No closed jobs found.</p>
-          ) : (
-            <div className="space-y-4">
-              {jobs.map((job) => (
-                <JobCard
-                  key={job._id}
-                  jobTitle={job.jobRole}
-                  location={job.location}
-                  salaryRange={job.ctc}
-                  jobDescription={job.jobDescription}
-                  skills={job.skillsRequired}
-                  eligibilityCriteria={job.eligibilityCriteria}
-                  status={job.status}
-                  opened={job.created_at}
-                  actionButtonText="Open Job"
-                  secondaryButtonText="Delete Job"
-                  actionButtonLink={()=>{handleOpenJob(job._id)}}
-                  onSecondaryButtonClick={() => {handleDeleteJob(job._id)}}
-                  // actionButtonText="View Applicants"
-                  // secondaryButtonText="Close Job"
-                  // actionButtonLink={`/recruiters/applicants/${job._id}`}
-                  // onSecondaryButtonClick={() => console.log(`Closing job ${job._id}`)}
-                  statusText={job.status === 1 ? 'Active' : 'Inactive'}
-                />
-              ))}
-            </div>
+          {/* ✅ Jobs Tab */}
+          {activeTab === "jobs" && (
+            <>
+              <h2 className="text-lg sm:text-2xl font-semibold mb-2">All Jobs</h2>
+              <h3 className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Closed Jobs</h3>
+              {loading ? (
+                <p className="text-center">Loading...</p>
+              ) : jobs.length === 0 ? (
+                <p>No closed jobs found.</p>
+              ) : (
+                <div className="space-y-4">
+                  {jobs.map((job) => {
+                    const normalized = normalize(job, "job");
+                    return <JobCard key={job._id} {...normalized} activejob={false} />;
+                  })}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* ✅ Internships Tab */}
+          {activeTab === "internships" && (
+            <>
+              <h2 className="text-lg sm:text-2xl font-semibold mb-2">All Internships</h2>
+              <h3 className="text-base sm:text-xl font-semibold text-[#5F9D08] mb-4">Closed Internships</h3>
+              {loading ? (
+                <p className="text-center">Loading...</p>
+              ) : internships.length === 0 ? (
+                <p>No closed internships found.</p>
+              ) : (
+                <div className="space-y-4">
+                  {internships.map((internship) => {
+                    const normalized = normalize(internship, "internship");
+                    return <JobCard key={internship._id} {...normalized} activejob={false} />;
+                  })}
+                </div>
+              )}
+            </>
           )}
         </motion.div>
       </div>

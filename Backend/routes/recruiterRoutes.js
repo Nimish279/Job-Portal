@@ -21,6 +21,9 @@ import {
   getRecruiterJobs,
   getAllJobs,
   getRecruiterInternships,
+  closeInternship,
+  openInternship,
+  deleteInternship
 } from '../controllers/recruiterController.js';
 
 const router = express.Router();
@@ -47,6 +50,11 @@ router.post('/closeJob/:id', protect, isRecruiter, closeJob);
 router.post('/openJob/:id', protect, isRecruiter, openJob);
 // Fetch all internships for the logged-in recruiter
 router.get('/myInternships', protect, isRecruiter, getRecruiterInternships);
+router.post('/closeInternship/:id', protect, isRecruiter, closeInternship);
+router.post('/openInternship/:id', protect, isRecruiter, openInternship);
+
+// Delete Internship
+router.delete('/deleteInternship/:id', protect, isRecruiter, deleteInternship);
 
 // Candidates
 router.get('/job/:jobId/candidates', protect, isRecruiter, seeCandidates);
