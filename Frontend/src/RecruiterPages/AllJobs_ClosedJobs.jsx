@@ -4,7 +4,7 @@ import Sidebar from '../components/SideBar_Recr';
 import Notifications from '../assets/images/notifications00.png';
 import JobCard from './components/JobCard';
 import { toast, ToastContainer } from 'react-toastify';
-import { toast, ToastContainer } from 'react-toastify';
+// import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -195,13 +195,13 @@ function AllJobs_ClosedJobs() {
           <div className="flex space-x-6 border-b border-gray-300 mb-6">
             <button
               onClick={() => setActiveTab("jobs")}
-              className={`pb-2 ${activeTab === "jobs" ? "border-b-4 border-[#5F9D08] font-semibold" : "text-gray-500"}`}
+              className={`pb-2 cursor-pointer ${activeTab === "jobs" ? "border-b-4 border-[#5F9D08] font-semibold" : "text-gray-500"}`}
             >
               Jobs
             </button>
             <button
               onClick={() => setActiveTab("internships")}
-              className={`pb-2 ${activeTab === "internships" ? "border-b-4 border-[#5F9D08] font-semibold" : "text-gray-500"}`}
+              className={`pb-2 cursor-pointer ${activeTab === "internships" ? "border-b-4 border-[#5F9D08] font-semibold" : "text-gray-500"}`}
             >
               Internships
             </button>

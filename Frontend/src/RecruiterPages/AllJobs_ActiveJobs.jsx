@@ -56,28 +56,28 @@ function JobPage() {
   };
 
   // ✅ Fetch Internships
+ 
   const fetchInternships = async () => {
-    setInternshipsLoading(true);
-    setInternshipsError(null);
-    try {
-      const response = await axios.get(`${backend_url}/recruiters/myInternships`, {
-        withCredentials: true,
-      });
+  setInternshipsLoading(true);
+  setInternshipsError(null);
+  try {
+    const response = await axios.get(`${backend_url}/recruiters/myInternships`, {
+      withCredentials: true,
+    });
 
-      // backend internships don’t have status → just return all
-      const recruiterAllInternships = response.data.internships;
-      const afterfilterInternships= recruiterAllInternships.filter((i) => i.status === 'open');
-      console.log(afterfilterInternships);
-      setInternships(afterfilterInternships);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching internships:', error);
-      setInternshipsError('Failed to fetch internships');
-      toast.error('Failed to fetch internships');
-    } finally {
-      setInternshipsLoading(false);
-    }
-  };
+    const recruiterAllInternships = response.data.internships;
+    const afterfilterInternships = recruiterAllInternships.filter((i) => i.status === 'open');
+    console.log(afterfilterInternships);
+    setInternships(afterfilterInternships);
+  } catch (error) {
+    console.error('Error fetching internships:', error);
+    setInternshipsError('Failed to fetch internships');
+    toast.error('Failed to fetch internships');
+  } finally {
+    setInternshipsLoading(false);
+  }
+};
+
 
   // Fetch Profile
   const fetchProfile = async () => {
@@ -188,13 +188,13 @@ function JobPage() {
           <div className="flex space-x-6 border-b border-gray-300 mb-6">
             <button
               onClick={() => setActiveTab("jobs")}
-              className={`pb-2 ${activeTab === "jobs" ? "border-b-4 border-[#5F9D08] font-semibold" : "text-gray-500"}`}
+              className={`pb-2 cursor-pointer ${activeTab === "jobs" ? "border-b-4  border-[#5F9D08] font-semibold" : "text-gray-500"}`}
             >
               Jobs
             </button>
             <button
               onClick={() => setActiveTab("internships")}
-              className={`pb-2 ${activeTab === "internships" ? "border-b-4 border-[#5F9D08] font-semibold" : "text-gray-500"}`}
+              className={`pb-2 cursor-pointer ${activeTab === "internships" ? "border-b-4  border-[#5F9D08] font-semibold" : "text-gray-500"}`}
             >
               Internships
             </button>
