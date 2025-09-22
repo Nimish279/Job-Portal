@@ -463,3 +463,4 @@ export const deleteInternship = async (req, res) => {
   }
 };
 
+

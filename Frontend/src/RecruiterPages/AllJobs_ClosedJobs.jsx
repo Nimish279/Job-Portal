@@ -4,6 +4,7 @@ import Sidebar from '../components/SideBar_Recr';
 import Notifications from '../assets/images/notifications00.png';
 import JobCard from './components/JobCard';
 import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,6 +12,8 @@ import { FiMenu } from 'react-icons/fi';
 import ProfileImage from '../assets/images/Profile_pics/1.jpg';
 
 function AllJobs_ClosedJobs() {
+  const [jobs, setJobs] = useState([]);
+  const [internships, setInternships] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [internships, setInternships] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -92,8 +95,8 @@ function AllJobs_ClosedJobs() {
         toast.success("Job opened successfully");
       }
     } catch (error) {
-      toast.error("Failed to open job");
-      console.error("Error opening job:", error);
+      toast.error('Failed to open internship');
+      console.error('Error opening internship:', error);
     }
   };
 
@@ -251,3 +254,4 @@ function AllJobs_ClosedJobs() {
 }
 
 export default AllJobs_ClosedJobs;
+
