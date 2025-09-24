@@ -3,7 +3,7 @@
   import jwt from "jsonwebtoken";
   import { Job } from "../models/Job.js";
   import { Internship } from "../models/Internship.js";
-
+import { User} from "../models/User.js";
   // LOGIN RECRUITER
   export const loginRecruiter = async (req, res) => {
     const { email, password } = req.body;
@@ -135,7 +135,7 @@
     const job = await Job.findById(jobId).populate({
       path: 'candidates',
       select: 'name degree photo email', // select the fields you need
-    });
+    })
 
     if (!job) {
       return res.status(404).json({ message: 'Job not found' });
@@ -459,6 +459,40 @@ export const deleteInternship = async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Error deleting internship:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const getCandidateProfile = async (req, res) => {
+  try {
+    const { jobId, applicantId } = req.params;
+
+    // 1. Find the job & populate candidates
+    const job = await Job.findById(jobId).populate("candidates");
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    // 2. Check applicant belongs to this job
+    const isCandidate = job.candidates.some(
+      (c) => c._id.toString() === applicantId
+    );
+    if (!isCandidate) {
+      return res.status(404).json({ message: "Candidate not found in this job" });
+    }
+
+    // 3. Fetch full user details (safe projection)
+    const user = await User.findById(applicantId).select(
+      "name email university city degree github about skills experience profilePhoto resume"
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("❌ Error fetching candidate profile:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

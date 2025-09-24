@@ -79,19 +79,19 @@ function App() {
           <Route path="/users/dashboard" element={<ProtectedRoute allowedRole="user"><Dashboard /></ProtectedRoute>
 } />
   <Route path='/users/logout' element={<ProtectedRoute><Logout /></ProtectedRoute>} />
-  <Route path='/users/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-  <Route path='/users/resume' element={<ProtectedRoute><Resume /></ProtectedRoute>} />
-  <Route path='/users/saved-jobs' element={<ProtectedRoute><SavedJobs /></ProtectedRoute>} />
-  <Route path='/users/edit-profile' element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
-  <Route path='/users/job/:id' element={<ProtectedRoute><JobPage /></ProtectedRoute>} />
-  <Route path='/users/apply/:id' element={<ProtectedRoute><ApplyJob /></ProtectedRoute>} />
-  <Route path='/users/notifications' element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
-  <Route path='/users/job-recommendations' element={<ProtectedRoute><JobRecommendations /></ProtectedRoute>} />
+  <Route path='/users/profile' element={<ProtectedRoute allowedRole="user"><Profile /></ProtectedRoute>} />
+  <Route path='/users/resume' element={<ProtectedRoute allowedRole="user"><Resume /></ProtectedRoute>} />
+  <Route path='/users/saved-jobs' element={<ProtectedRoute allowedRole="user"><SavedJobs /></ProtectedRoute>} />
+  <Route path='/users/edit-profile' element={<ProtectedRoute allowedRole="user"><EditProfile /></ProtectedRoute>} />
+  <Route path='/users/job/:id' element={<ProtectedRoute allowedRole="user"><JobPage /></ProtectedRoute>} />
+  <Route path='/users/apply/:id' element={<ProtectedRoute allowedRole="user"><ApplyJob /></ProtectedRoute>} />
+  <Route path='/users/notifications' element={<ProtectedRoute allowedRole="user"><NotificationsPage /></ProtectedRoute>} />
+  <Route path='/users/job-recommendations' element={<ProtectedRoute allowedRole="user"><JobRecommendations /></ProtectedRoute>} />
 
         {/* Recruiter Routes */}
         <Route path='/recruiters/logout' element={<ProtectedRoute><RecruiterLogout /></ProtectedRoute>} />
         <Route path='/recruiters/jobs/active' element={<ProtectedRoute allowedRole="recruiter"><AllJobs_ActiveJobs /></ProtectedRoute>} />
-        <Route path='/recruiters/jobs/closed' element={<AllJobs_ClosedJobs />} />
+        <Route path='/recruiters/jobs/closed' element={<ProtectedRoute><AllJobs_ClosedJobs /></ProtectedRoute>} />
         <Route path='/recruiters/notifications' element={<NotificationsRecr />} />
         <Route path='/recruiters/getProfile' element={<RecruiterProfile />} />
         <Route path='/recruiters/postJob' element={<PostJob_Job />} />

@@ -148,7 +148,7 @@ function JobPage() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="h-screen flex bg-gray-100 flex-col">
       {/* Top Navigation Bar */}
       <motion.div className="bg-[#5F9D08] sticky top-0 left-0 text-white p-4 flex flex-wrap justify-between items-center w-full">
-        <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto"></div>
+        <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto">logo</div>
         <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
           <Link to="/recruiters/notifications">
             <img src={Notifications} alt="Notifications Icon" className="w-8 h-8 sm:w-10 sm:h-10" />

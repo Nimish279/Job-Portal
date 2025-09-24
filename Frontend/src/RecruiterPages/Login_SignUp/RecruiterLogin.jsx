@@ -3,10 +3,12 @@ import {useNavigate, Link} from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useRecruiterStore from '../../store/recruiterStore.js'
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 const RecruiterLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const [showpassword, setShowPassword] = useState(false);
     const { login } = useRecruiterStore();
   
     const handleSubmit = async (e) => {  // jisne bhi phele likha tha bhai recruiterStore bhi dekh liya kr
@@ -87,13 +89,22 @@ const RecruiterLogin = () => {
                 </div>
                 <div className="mb-6 w-full">
                   <label className="block text-gray-700 mb-2 text-left">Password</label>
-                  <input
-                    type="password"
+                  <div className="relative flex flex-row">
+                    <input
+                    type={showpassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#5F9D08]"
                     required
                   />
+                    <span
+                                                        onClick={() => setShowPassword((prev) => !prev)}
+                                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+                                                      >
+                                                        {showpassword ?  <FaEye />:<FaEyeSlash /> }
+                                                      </span>
+                  </div>
+                  
                 </div>
                 <button
                   type="submit"

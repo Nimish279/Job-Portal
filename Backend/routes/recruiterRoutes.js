@@ -23,7 +23,8 @@ import {
   getRecruiterInternships,
   closeInternship,
   openInternship,
-  deleteInternship
+  deleteInternship,
+  getCandidateProfile
 } from '../controllers/recruiterController.js';
 
 const router = express.Router();
@@ -56,7 +57,15 @@ router.post('/openInternship/:id', protect, isRecruiter, openInternship);
 // Delete Internship
 router.delete('/deleteInternship/:id', protect, isRecruiter, deleteInternship);
 
-// Candidates
-router.get('/job/:jobId/candidates', protect, isRecruiter, seeCandidates);
+// Candidate
+router.get('/jobs/:jobId/candidates', protect, isRecruiter, seeCandidates);
+// Get a specific candidate’s profile for a job
+router.get(
+  '/jobs/:jobId/candidate/:applicantId',
+  protect,
+  isRecruiter,
+  getCandidateProfile
+);
+
 
 export default router;

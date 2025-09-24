@@ -4,9 +4,9 @@ import { protect, isRecruiter } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-/**
+/*
  * Apply for a job
- * body: { jobId, candidateId }
+ * body: { jobId, candidateId 
  */
 router.post("/apply", async (req, res) => {
   try {
@@ -32,17 +32,31 @@ router.post("/apply", async (req, res) => {
  * Get all applications (applicants) for a job
  * GET /api/applications/job/:jobId
  */
+// router.get("/job/:jobId", async (req, res) => {
+//   try {
+//     const job = await Job.findById(req.params.jobId)
+//       .populate("applicants.candidate", "name email photo degree university location github about skills experiences");
+
+//     if (!job) return res.status(404).json({ message: "Job not found" });
+//     res.json(job.applicants || []);
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// });
+// GET /api/applications/job/:jobId
 router.get("/job/:jobId", async (req, res) => {
   try {
     const job = await Job.findById(req.params.jobId)
-      .populate("applicants.candidate", "name email photo degree university location github about skills experiences");
+      .populate("candidates", "name email photo degree university location github about skills experiences");
 
     if (!job) return res.status(404).json({ message: "Job not found" });
-    res.json(job.applicants || []);
+
+    res.json(job.candidates || []); // return array of users
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 /**
  * Update a candidate's application status for a job

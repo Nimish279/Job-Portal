@@ -41,7 +41,7 @@ import ProfileDropdown from '../profile/profile';
 
 const NavSearchBar = ({ toggleSidebar, showHamburger = false }) => {
   return (
-    <nav className="bg-[#5F9D08] sticky top-0 left-0 w-full p-4 flex justify-between items-center text-white z-50">
+    <nav className="bg-[#5F9D08] fixed top-0 left-0 w-full p-4 flex justify-between items-center text-white z-50">
       
       <div className="flex items-center space-x-4">
         {/* ✅ Hamburger only if prop is true */}

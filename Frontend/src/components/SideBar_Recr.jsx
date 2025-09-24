@@ -47,7 +47,7 @@ const SideBar_Recr = ({ isOpen, onClose, isMobile }) => {
             }
           >
             <img src={ActiveJobs} alt="Active Jobs Icon" className="w-6 h-6" />
-            <span className="text-sm sm:text-base">Active Jobs</span>
+            <span className="text-sm sm:text-base">Active Jobs/Internships</span>
           </NavLink>
         </li>
         <li>
@@ -59,7 +59,7 @@ const SideBar_Recr = ({ isOpen, onClose, isMobile }) => {
             }
           >
             <img src={ClosedJobs} alt="Closed Jobs Icon" className="w-6 h-6" />
-            <span className="text-sm sm:text-base">Closed Jobs</span>
+            <span className="text-sm sm:text-base">Closed Jobs/Internships</span>
           </NavLink>
         </li>
         <li>

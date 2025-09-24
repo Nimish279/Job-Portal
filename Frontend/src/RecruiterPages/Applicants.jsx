@@ -3,7 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu } from 'react-icons/fi';
 import axios from 'axios';
-
+import Notifications from '../assets/images/notifications00.png';
+import ProfileImage from '../assets/images/Profile_pics/1.jpg';
 import Sidebar from '../components/SideBar_Recr';
 import Navbar from './Notifications/Navbar';
 
@@ -22,6 +23,7 @@ function Applicants() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { jobId } = useParams();
+  const [userName, setUserName] = useState('Guest');
   const isMobile = screenWidth < 768;
 
   useEffect(() => {
@@ -30,55 +32,77 @@ function Applicants() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 const backend_url = import.meta.env.VITE_BACKEND_URL
+  
   useEffect(() => {
+    fetchProfile();
   const fetchApplicants = async () => {
     try {
       const res = await axios.get(
-        `${backend_url}/jobs/${jobId}/candidates`,
+        `${backend_url}/applications/job/${jobId}`,
         { withCredentials: true }
       );
       console.log(res.data);
-      setApplicants(res.data.candidates || []);  // <-- Add this
-      setLoading(false);                        // <-- Add this
+      setApplicants(res.data || []);  // backend returns array directly
+      setLoading(false);
     } catch (err) {
       console.error("Error fetching applicants:", err.response?.data || err.message);
-      setError(err.response?.data?.message || err.message);  // <-- Add this
+      setError(err.response?.data?.message || err.message);
       setLoading(false);
     }
   };
   fetchApplicants();
 }, [jobId]);
 
+const fetchProfile = async () => {
+    try {
+      const res = await axios.get(`${backend_url}/recruiters/getProfile`, { withCredentials: true });
+      setUserName(res.data.recruiter?.companyName || 'Guest');
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      toast.error('Failed to fetch recruiter details');
+      setUserName('Guest');
+    }
+  };
+
+
+
   if (loading) return <div className="p-8 text-center">Loading applicants...</div>;
   if (error) return <div className="p-8 text-center text-red-600">{error}</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Navbar pageName="Applicants" />
+      <motion.div className="bg-[#5F9D08] sticky top-0 left-0 text-white p-4 flex flex-wrap justify-between items-center w-full">
+        <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto">logo</div>
+        <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
+          <Link to="/recruiters/notifications">
+            <img src={Notifications} alt="Notifications Icon" className="w-8 h-8 sm:w-10 sm:h-10" />
+          </Link>
+          <Link to="/recruiters/getProfile" className="flex flex-row items-center gap-2">
+            <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8">
+              <img src={ProfileImage} alt="" className="w-full h-full rounded-full" />
+            </div>
+            <span className="text-sm sm:text-base">{userName}</span>
+          </Link>
+        </div>
+      </motion.div>
 
-      <div className="flex flex-col lg:flex-row relative">
-        {/* Hamburger Button (Mobile) */}
+      <motion.div className="flex flex-1 flex-col sm:flex-row">
+        {/* Sidebar Toggle */}
         <div className="lg:hidden p-4">
           <button onClick={() => setIsSidebarOpen(true)} className="text-3xl text-[#5F9D08] cursor-pointer">
             <FiMenu />
           </button>
         </div>
 
-        {/* Static Sidebar */}
+        {/* Sidebar */}
         {!isMobile && (
           <div className="hidden lg:block fixed top-20 left-0 z-30">
             <Sidebar isOpen={true} isMobile={false} />
           </div>
         )}
-
-        {/* Animated Sidebar for Mobile */}
         <AnimatePresence>
           {isSidebarOpen && (
-            <Sidebar
-              isOpen={isSidebarOpen}
-              onClose={() => setIsSidebarOpen(false)}
-              isMobile={true}
-            />
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} isMobile={true} />
           )}
         </AnimatePresence>
 
@@ -151,8 +175,9 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
             </div>
           </motion.div>
         </main>
+      </motion.div>
       </div>
-    </div>
+    
   );
 }
 

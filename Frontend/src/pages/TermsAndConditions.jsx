@@ -21,40 +21,35 @@ const TermsAndConditions = () => {
     <main className="bg-gray-50 min-h-screen">
       {/* Header */}
       <header className="bg-white shadow-md sticky top-0 z-50">
-        <nav className="flex justify-between items-center py-4 px-6 md:px-16">
-          {/* Logo */}
-          <div className="text-2xl font-bold text-[#4CAF50]">
-            <Link to="/">JobPortal</Link>
-          </div>
+        <nav className="flex justify-between items-center py-4 px-8 md:px-16">
+          <div className="text-2xl font-bold text-[#4CAF50]"><Link to="/" className="hover:text-[#4CAF50]">JobPortal</Link></div>
 
-          {/* Desktop Nav */}
           <ul className="hidden md:flex gap-8 text-gray-700 font-medium flex-1 justify-center">
+            <li><Link to="/" className="hover:text-[#4CAF50]">Home</Link></li>
             <li><Link to="/about" className="hover:text-[#4CAF50]">About</Link></li>
             <li><Link to="/subscription" className="hover:text-[#4CAF50]">Plans</Link></li>
             <li><Link to="/support" className="hover:text-[#4CAF50]">Support</Link></li>
           </ul>
 
-          {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
-            <Link to="/users/login" className="hover:text-[#4CAF50] font-medium">Login</Link>
-            <Link
-              to="/recruiters/register"
-              className="bg-[#4CAF50] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#45a049] transition shadow-md"
-            >
-              Post a Job
-            </Link>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button onClick={() => setIsMenuOpen(true)} className="md:hidden flex flex-col gap-1">
+                      <Link to="/users/login" className="hover:text-[#4CAF50] font-medium">Login</Link>
+                      <Link
+                        to="/recruiters/register"
+                        className="bg-[#4CAF50] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#45a049] transition shadow-md"
+                      >
+                        Post a Job
+                      </Link>
+                    </div>
+          <button
+            className="md:hidden flex flex-col gap-1 focus:outline-none"
+            onClick={() => setIsMenuOpen(true)}
+          >
             <span className="w-6 h-0.5 bg-gray-800"></span>
             <span className="w-6 h-0.5 bg-gray-800"></span>
             <span className="w-6 h-0.5 bg-gray-800"></span>
           </button>
         </nav>
       </header>
-
-      {/* Mobile Sidebar */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.aside
@@ -62,15 +57,19 @@ const TermsAndConditions = () => {
             animate="visible"
             exit="exit"
             variants={sidebarVariants}
-            className="absolute top-0 right-0 w-3/4 sm:w-1/4 bg-white shadow-2xl z-50 p-8 flex flex-col"
+            className="absolute top-0 right-0  min-w-1/4  bg-white rounded-xl shadow-2xl z-50 p-8 flex flex-col"
           >
+            {/* Close Button */}
             <button
-              className="self-end text-2xl mb-6 text-gray-600 hover:text-[#4CAF50]"
+              className="self-end text-2xl mb-8 text-gray-600 hover:text-[#4CAF50]"
               onClick={() => setIsMenuOpen(false)}
             >
               ✕
             </button>
+
+            {/* Nav Links */}
             <ul className="flex flex-col gap-6 text-lg font-medium text-gray-700">
+              <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
               <li><Link to="/about" onClick={() => setIsMenuOpen(false)}>About</Link></li>
               <li><Link to="/subscription" onClick={() => setIsMenuOpen(false)}>Plans</Link></li>
               <li><Link to="/support" onClick={() => setIsMenuOpen(false)}>Support</Link></li>
