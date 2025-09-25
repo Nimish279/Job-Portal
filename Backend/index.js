@@ -13,6 +13,11 @@ import { seeCandidates } from "./controllers/recruiterController.js";
 import { protect, isRecruiter } from "./middlewares/authMiddleware.js";
 import { User } from "./models/User.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
+
+
+
+
 
 dotenv.config();
 const app = express();
@@ -39,6 +44,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/upload", upload);
 // app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/users/notifications", notificationRoutes);
+app.use("/api/recruiters/notifications", notificationRoutes);
 // Get all jobs
 app.get("/api/jobs", async (req, res) => {
   try {

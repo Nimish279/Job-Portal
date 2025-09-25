@@ -1,282 +1,151 @@
-// // C:\Users\Lenovo\Downloads\feature\Job-Portal\Frontend\src\RecruiterPages\NotificationsRecr.jsx
-// import React, { useEffect, useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import Sidebar from '../components/SideBar_Recr';
-// import Navbar from './Notifications/Navbar';
-// import axios from 'axios';
-// import { toast } from 'react-toastify';
-// import { AnimatePresence } from 'framer-motion';
-// import { FiMenu } from 'react-icons/fi';
-
-// export default function NotificationsRecr() {
-//   const [notifications, setNotifications] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-//   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-//        const isMobile = screenWidth < 768;
-//        useEffect(() => {
-//            const handleResize = () => setScreenWidth(window.innerWidth);
-//            window.addEventListener('resize', handleResize);
-//            return () => window.removeEventListener('resize', handleResize);
-//          }, []);
-
-//   useEffect(() => {
-//     const fetchNotifications = async () => {
-//       try {
-//         // In a real app, you would fetch notifications from your API
-//         // const response = await axios.get('http://localhost:8000/api/recruiters/notifications', {
-//         //   withCredentials: true,
-//         // });
-//         // setNotifications(response.data.notifications);
-
-//         // For now, using mock data
-//         const mockNotifications = [
-//           {
-//             message: "10 new Employees Applied for Software Developer Job Posting.",
-//             time: "1 hr ago"
-//           },
-//           {
-//             message: "5 new Employees Applied for Project Manager Job Posting.",
-//             time: "2 hrs ago"
-//           },
-//           {
-//             message: "20 new Employees Applied for Data Scientist Job Posting.",
-//             time: "3 hrs ago"
-//           },
-//           {
-//             message: "15 new Employees Applied for UI/UX Designer Job Posting.",
-//             time: "4 hrs ago"
-//           },
-//           {
-//             message: "8 new Employees Applied for QA Engineer Job Posting.",
-//             time: "5 hrs ago"
-//           }
-//         ];
-
-//         setNotifications(mockNotifications);
-//         setLoading(false);
-//       } catch (error) {
-//         toast.error("Failed to load notifications");
-//         console.error("Error fetching notifications:", error);
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchNotifications();
-//   }, []);
-
-//   return (
-
-// <div className="min-h-screen bg-gray-100 flex flex-col gap-10">
-//   {/* Navbar always on top */}
-//   <Navbar pageName="Notifications" />
-
-//   {/* Main Content Area Below Navbar */}
-//   <div className="flex flex-col lg:flex-row relative">
-//     {/* Mobile Hamburger (inside content, below navbar) */}
-//    <div className="lg:hidden p-4">
-//       <button
-//         onClick={() => setIsSidebarOpen(true)}
-//         className="text-3xl text-[#5F9D08] cursor-pointer"
-//       >
-//         <FiMenu />
-//       </button>
-//     </div>
-
-//     {/* Sidebar for large screens */}
-//      {!isMobile && (
-//     <div className="hidden lg:block fixed top-20 left-0 z-30">
-//       <Sidebar isOpen={true} isMobile={false} />
-//     </div>
-//   )}
-
-//   {/* Sidebar for mobile (animated) */}
-//   <AnimatePresence>
-//     { isSidebarOpen && (
-//       <Sidebar
-//         isOpen={isSidebarOpen}
-//         onClose={() => setIsSidebarOpen(false)}
-//         isMobile={true}
-//       />
-//     )}
-//   </AnimatePresence>
-
-//         {/* Main Notification Content */}
-//         <main className="flex-1 px-4 md:px-6 mt-4 lg:mt-6">
-//           <div className="max-w-4xl mx-auto">
-//             <div className="bg-white rounded-lg shadow-md overflow-hidden">
-//               <div className="p-4 border-b border-gray-200">
-//                 <h1 className="text-2xl font-semibold text-gray-800">Notifications</h1>
-//               </div>
-
-//               {loading ? (
-//                 <div className="p-8 text-center text-gray-500">Loading notifications...</div>
-//               ) : notifications.length > 0 ? (
-//                 <div className="divide-y divide-gray-200">
-//                   {notifications.map((notification, index) => (
-//                     <div
-//                       key={index}
-//                       className="p-4 hover:bg-gray-50 transition-colors duration-200"
-//                     >
-//                       <p className="text-gray-800 text-sm sm:text-base">
-//                         {notification.message}
-//                       </p>
-//                       <p className="text-gray-500 text-xs mt-1">{notification.time}</p>
-//                     </div>
-//                   ))}
-//                 </div>
-//               ) : (
-//                 <div className="p-8 text-center text-gray-500">No notifications yet</div>
-//               )}
-//             </div>
-//           </div>
-//         </main>
-//       </div>
-//     </div>
-//   );
-// }
-
-//by mukund
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "../components/SideBar_Recr";
-import Navbar from "./Notifications/Navbar";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { AnimatePresence } from "framer-motion";
-import { FiMenu } from "react-icons/fi";
-import {FaHome} from 'react-icons/fa';
-import {motion} from "framer-motion";
-import Search from '../assets/images/search00.png';
-import ProfileImage from '../assets/images/Profile_pics/1.jpg';
+import { AnimatePresence, motion } from "framer-motion";
+import { FiMenu, FiCheckCircle, FiXCircle, FiTrash2, FiCheckSquare } from "react-icons/fi";
+import { FaHome } from "react-icons/fa";
+
+import ProfileImage from "../assets/images/Profile_pics/1.jpg";
 
 export default function NotificationsRecr() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const isMobile = screenWidth < 768;
   const [userName, setUserName] = useState("");
+
+  const backend_url = import.meta.env.VITE_BACKEND_URL;
+  const isMobile = screenWidth < 768;
+
+  // ✅ Fetch recruiter profile (for top nav)
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get(`${backend_url}/recruiters/getProfile`, {
+          withCredentials: true,
+        });
+        setUserName(res.data.recruiter.companyName);
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+    fetchProfile();
+  }, [backend_url]);
+
+  // ✅ Fetch recruiter notifications
+  const fetchNotifications = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${backend_url}/recruiters/notifications`, {
+        withCredentials: true,
+      });
+      setNotifications(res.data.notifications || []);
+    } catch (error) {
+      toast.error("Failed to load notifications");
+      console.error("Error fetching notifications:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ Mark single notification as read
+  const markAsRead = async (id) => {
+    try {
+      await axios.patch(`${backend_url}/recruiters/notifications/${id}/read`, {}, { withCredentials: true });
+      setNotifications((prev) => prev.map((n) => (n._id === id ? { ...n, isRead: true } : n)));
+    } catch {
+      toast.error("Failed to mark as read");
+    }
+  };
+
+  // ✅ Delete single notification
+  const deleteNotification = async (id) => {
+    try {
+      await axios.delete(`${backend_url}/recruiters/notifications/${id}`, {
+        withCredentials: true,
+      });
+      setNotifications((prev) => prev.filter((n) => n._id !== id));
+    } catch {
+      toast.error("Failed to delete notification");
+    }
+  };
+
+  // ✅ Bulk: Mark all as read
+  const markAllAsRead = async () => {
+    try {
+      await Promise.all(
+        notifications
+          .filter((n) => !n.isRead)
+          .map((n) =>
+            axios.patch(`${backend_url}/recruiters/notifications/${n._id}/read`, {}, { withCredentials: true })
+          )
+      );
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+      toast.success("All notifications marked as read");
+    } catch {
+      toast.error("Failed to mark all as read");
+    }
+  };
+
+  // ✅ Bulk: Delete all
+  const deleteAll = async () => {
+    try {
+      await Promise.all(
+        notifications.map((n) =>
+          axios.delete(`${backend_url}/recruiters/notifications/${n._id}`, { withCredentials: true })
+        )
+      );
+      setNotifications([]);
+      toast.success("All notifications deleted");
+    } catch {
+      toast.error("Failed to delete all");
+    }
+  };
+
+  // Resize listener
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  const backend_url = import.meta.env.VITE_BACKEND_URL
-  useEffect(()=>{
-      const fetchProfile = async () => {
-            try {
-              const res = await axios.get(backend_url+'/recruiters/getProfile', {
-                withCredentials: true
-              });
-              setUserName(res.data.recruiter.companyName);
-            } catch (error) {
-              console.error("Error fetching profile:", error);
-            }
-          };
-      
-          
-          fetchProfile();
-        }, []);
 
+  // Initial load
   useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        // In a real app, you would fetch notifications from your API
-        // const response = await axios.get('http://localhost:8000/api/recruiters/notifications', {
-        //   withCredentials: true,
-        // });
-        // setNotifications(response.data.notifications);
-
-        // For now, using mock data
-        const mockNotifications = [
-          {
-            id: 1,
-            message:
-              "10 new Employees Applied for Software Developer Job Posting.",
-            time: "1 hr ago",
-          },
-          {
-            id: 2,
-            message: "5 new Employees Applied for Project Manager Job Posting.",
-            time: "2 hrs ago",
-          },
-          {
-            id: 3,
-            message: "20 new Employees Applied for Data Scientist Job Posting.",
-            time: "3 hrs ago",
-          },
-          {
-            id: 4,
-            message: "15 new Employees Applied for UI/UX Designer Job Posting.",
-            time: "4 hrs ago",
-          },
-          {
-            id: 5,
-            message: "8 new Employees Applied for QA Engineer Job Posting.",
-            time: "5 hrs ago",
-          },
-        ];
-
-        setNotifications(mockNotifications);
-        setLoading(false);
-      } catch (error) {
-        toast.error("Failed to load notifications");
-        console.error("Error fetching notifications:", error);
-        setLoading(false);
-      }
-    };
-
     fetchNotifications();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col gap-10">
-      {/* Navbar always on top */}
-      {/* <Navbar pageName="Notifications" /> */}
-      <motion.div 
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      {/* Top Navbar */}
+      <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="bg-[#5F9D08] text-white p-4 flex flex-wrap justify-between items-center w-full">
-        <div className="flex items-center space-x-2 mb-2 sm:mb-0 w-full sm:w-auto">
-          {/* <img src={Search} alt="Search Icon" className="w-8 h-8 sm:w-10 sm:h-10" /> //logo */}
-          {/* <input
-            type="text"
-            placeholder="Search"
-            className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
-          /> */}
-        </div>
-        <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
-          
-          {/* <input
-            type="text"
-            placeholder="Search"
-            className="w-full sm:w-64 p-2 rounded bg-white text-gray-700"
-          />
-          <img src={Search} alt="Search Icon" className="w-8 h-8" /> */}
+        transition={{ duration: 0.5 }}
+        className="bg-[#5F9D08] text-white p-4 flex justify-between items-center w-full"
+      >
+        <div className="flex items-center space-x-4">
           <Link to="/recruiters/jobs/active">
-                                                <FaHome className="text-2xl w-8 h-8  cursor-pointer hover:text-gray-300" />
-                                              </Link>
-          
-          <Link to="/recruiters/getProfile" className='flex flex-row items-center gap-2'>
-          <div className="rounded-full bg-gray-300 w-6 h-6 sm:w-8 sm:h-8">
-            <img src={ProfileImage} alt="" className="w-full h-full rounded-full" />
-          </div>
-          
-          <span className="text-sm sm:text-base">{userName || 'Loading...'}</span> 
+            <FaHome className="text-2xl w-8 h-8 cursor-pointer hover:text-gray-300" />
+          </Link>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Link to="/recruiters/getProfile" className="flex flex-row items-center gap-2">
+            <div className="rounded-full bg-gray-300 w-8 h-8">
+              <img src={ProfileImage} alt="Profile" className="w-full h-full rounded-full" />
+            </div>
+            <span className="text-sm sm:text-base">{userName || "Loading..."}</span>
           </Link>
         </div>
       </motion.div>
 
-      {/* Main Content Area Below Navbar */}
+      {/* Main Layout */}
       <div className="flex flex-col lg:flex-row relative">
-        {/* Mobile Hamburger (inside content, below navbar) */}
+        {/* Mobile Hamburger */}
         <div className="lg:hidden p-4">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-3xl text-[#5F9D08] cursor-pointer"
-          >
+          <button onClick={() => setIsSidebarOpen(true)} className="text-3xl text-[#5F9D08] cursor-pointer">
             <FiMenu />
           </button>
         </div>
@@ -290,65 +159,99 @@ export default function NotificationsRecr() {
 
         {/* Sidebar for mobile (animated) */}
         <AnimatePresence>
-          {isSidebarOpen && (
-            <Sidebar
-              isOpen={isSidebarOpen}
-              onClose={() => setIsSidebarOpen(false)}
-              isMobile={true}
-            />
-          )}
+          {isSidebarOpen && <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} isMobile={true} />}
         </AnimatePresence>
-        {/* Main Notification Content */}
-        <main
-          className={`flex-1 px-4 md:px-6 mt-0 lg:mt-0 ${
-            !isMobile ? "lg:pl-64" : ""
-          }`}
-        >
-          <div className="bg-gray-100 min-h-screen flex justify-center px-4">
-            <div className="max-w-4xl w-full mt-[10px]">
-              <div className="bg-white rounded-lg shadow-md p-6 md:p-12">
-                <div className="border-b pb-4 mb-4 border-gray-200">
-                  <h1 className="text-2xl font-semibold text-gray-800">
-                    Notifications
-                  </h1>
-                </div>
 
-                {loading ? (
-                  <div className="p-8 text-center text-gray-500">
-                    Loading notifications...
-                  </div>
-                ) : notifications.length > 0 ? (
-                  <div className="divide-y divide-gray-200">
-                    {notifications.map((notification) => (
-                      <div
-                        key={notification.id}
-                        className="p-4 hover:bg-gray-100 transition-colors duration-200"
+        {/* Notifications Content */}
+        <main className={`flex-1 px-4 md:px-6 mt-2 ${!isMobile ? "lg:pl-64" : ""}`}>
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-lg shadow-md p-6 md:p-12">
+              {/* Header */}
+              <div className="border-b pb-4 mb-4 border-gray-200 flex justify-between items-center">
+                <h1 className="text-2xl font-semibold text-gray-800">Notifications</h1>
+                <div className="flex space-x-4">
+                  <button onClick={fetchNotifications} className="text-sm text-[#5F9D08] hover:underline">
+                    Refresh
+                  </button>
+                  {notifications.length > 0 && (
+                    <>
+                      <button
+                        onClick={markAllAsRead}
+                        className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
                       >
-                        <div className="flex items-start space-x-3">
-                          {/* Circle placeholder */}
-                          <div className="w-10 h-10 rounded-full bg-gray-300 flex-shrink-0 flex items-center justify-center">
-                            <span className="text-gray-600 text-lg font-bold">
-                              R
-                            </span>
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-gray-800 text-sm sm:text-base">
-                              {notification.message}
-                            </p>
-                            <p className="text-gray-500 text-xs mt-1">
-                              {notification.time}
-                            </p>
-                          </div>
+                        <FiCheckSquare /> Mark all read
+                      </button>
+                      <button
+                        onClick={deleteAll}
+                        className="flex items-center gap-1 text-sm text-red-600 hover:underline"
+                      >
+                        <FiTrash2 /> Delete all
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Notifications List */}
+              {loading ? (
+                <div className="p-8 text-center text-gray-500">Loading notifications...</div>
+              ) : notifications.length > 0 ? (
+                <div className="divide-y divide-gray-200">
+                  {notifications.map((notification) => (
+                    <motion.div
+                      key={notification._id}
+                      className={`p-4 flex items-start justify-between ${
+                        notification.isRead ? "bg-gray-50" : "bg-white"
+                      }`}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div
+                          className={`w-10 h-10 flex items-center justify-center rounded-full ${
+                            notification.isRead ? "bg-gray-300" : "bg-[#5F9D08] text-white"
+                          }`}
+                        >
+                          {notification.type === "new_application" && "👨‍💻"}
+                          {notification.type === "job_status" && "📢"}
+                          {notification.type === "general" && "🔔"}
+                        </div>
+                        <div>
+                          <p
+                            className={`text-sm sm:text-base ${
+                              notification.isRead ? "text-gray-500" : "text-gray-800 font-medium"
+                            }`}
+                          >
+                            {notification.message}
+                          </p>
+                          <p className="text-gray-400 text-xs mt-1">{notification.timeAgo}</p>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-8 text-center text-gray-500">
-                    No notifications yet
-                  </div>
-                )}
-              </div>
+                      <div className="flex space-x-2">
+                        {!notification.isRead && (
+                          <button
+                            onClick={() => markAsRead(notification._id)}
+                            className="text-green-600 hover:text-green-800"
+                            title="Mark as Read"
+                          >
+                            <FiCheckCircle size={18} />
+                          </button>
+                        )}
+                        <button
+                          onClick={() => deleteNotification(notification._id)}
+                          className="text-red-500 hover:text-red-700"
+                          title="Delete"
+                        >
+                          <FiXCircle size={18} />
+                        </button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-8 text-center text-gray-500">📭 No notifications yet.</div>
+              )}
             </div>
           </div>
         </main>
