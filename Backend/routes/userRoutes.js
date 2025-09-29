@@ -9,6 +9,7 @@ import {
   getAppliedJobs,
   getCurrentUser,
   removeSavedJob,
+  getInternships,
 } from "../controllers/userController.js";
 import { isSeeker, protect } from "../middlewares/authMiddleware.js";
 
@@ -24,5 +25,6 @@ router.get("/getAppliedJobs", protect, isSeeker, getAppliedJobs);
 router.get("/profile", protect, isSeeker, getCurrentUser);
 router.put("/edit-profile", protect, isSeeker, editProfile);
 router.delete("/savedJobs/:jobId", protect, removeSavedJob);
+router.get("/getInternships", protect, isSeeker, getInternships);
 router.get('/me', protect,isSeeker, getCurrentUser);
 export default router;

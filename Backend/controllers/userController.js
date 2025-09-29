@@ -2,6 +2,7 @@ import { User } from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Job } from "../models/Job.js";
+import { Internship } from "../models/Internship.js";
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -171,7 +172,7 @@ export const userlogout = async (req, res) => {
 
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find();
+    const jobs = await Job.find().populate('recruiter', 'companyName');
     if (jobs.length === 0) {
       return res.status(203).json({ message: "No Active jobs" });
     }
@@ -291,4 +292,19 @@ export const removeSavedJob = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+export const getInternships = async (req, res) => {
+  try {
+    // Populate the recruiter field to get companyName
+    const internships = await Internship.find()
+      .populate("recruiter", "companyName"); // Only fetch companyName from recruiter
 
+    if (internships.length === 0) {
+      return res.status(203).json({ message: "No active internships" });
+    }
+
+    return res.status(200).json({ success: true, internships });
+  } catch (error) {
+    console.error("Get internships error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};

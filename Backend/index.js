@@ -14,8 +14,7 @@ import { protect, isRecruiter } from "./middlewares/authMiddleware.js";
 import { User } from "./models/User.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
-
-
+import { getInternships } from "./controllers/userController.js";
 
 
 
@@ -67,6 +66,8 @@ app.get("/api/jobs/:id", async (req, res) => {
     res.status(500).json({ message: "Error fetching job", error: err.message });
   }
 });
+app.get("/api/internships", getInternships);
+
 // app.get("/api/jobs/:id/candidates", protect, isRecruiter, seeCandidates);
 app.get('/api/applicants/:applicantId', protect, isRecruiter, async (req, res) => {
   try {
