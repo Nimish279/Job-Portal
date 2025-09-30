@@ -4,6 +4,7 @@
   import { Job } from "../models/Job.js";
   import { Internship } from "../models/Internship.js";
 import { User} from "../models/User.js";
+import { Notification } from "../models/Notification.js";
   // LOGIN RECRUITER
   export const loginRecruiter = async (req, res) => {
     const { email, password } = req.body;
@@ -114,19 +115,48 @@ import { User} from "../models/User.js";
   };
 
   // POST JOB
+  // export const postJob = async (req, res) => {
+  //   try {
+  //     const recruiter = req.recruiter;
+  //     const newJob = await Job.create({
+  //       recruiter: recruiter._id,
+  //       ...req.body,
+  //     });
+  //     res.status(201).json({ message: "Job created successfully", job: newJob });
+  //   } catch (error) {
+  //     res.status(500).json({ error: error.message });
+  //     console.log(error);
+  //   }
+  // };
+
   export const postJob = async (req, res) => {
-    try {
-      const recruiter = req.recruiter;
-      const newJob = await Job.create({
-        recruiter: recruiter._id,
-        ...req.body,
-      });
-      res.status(201).json({ message: "Job created successfully", job: newJob });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-      console.log(error);
-    }
-  };
+  try {
+    const recruiter = req.recruiter;
+    const newJob = await Job.create({
+      recruiter: recruiter._id,
+      ...req.body,
+    });
+
+    // 🔔 Notify all users
+    const users = await User.find({}, "_id");
+    const notifications = users.map(user => ({
+      recipient: user._id,
+      recipientModel: "User",
+      sender: recruiter._id,
+      senderModel: "Recruiter",
+      type: "job_posted",
+      message: `New job posted: ${newJob.title} by ${recruiter.companyName}`,
+      job: newJob._id,
+    }));
+    await Notification.insertMany(notifications);
+
+    res.status(201).json({ message: "Job created successfully", job: newJob });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+};
+
 
   // SEE CANDIDATES
   export const seeCandidates = async (req, res) => {
@@ -166,20 +196,51 @@ import { User} from "../models/User.js";
   };
 
   // POST INTERNSHIP
+  // export const postInternship = async (req, res) => {
+  //   try {
+  //     const recruiter = req.recruiter;
+  //     const newInternship = await Internship.create({
+  //       recruiter: recruiter._id,
+  //       ...req.body,
+  //     });
+  //     res
+  //       .status(201)
+  //       .json({ message: "Internship created successfully", internship: newInternship });
+  //   } catch (error) {
+  //     res.status(500).json({ error: error.message });
+  //   }
+  // };
   export const postInternship = async (req, res) => {
-    try {
-      const recruiter = req.recruiter;
-      const newInternship = await Internship.create({
-        recruiter: recruiter._id,
-        ...req.body,
-      });
-      res
-        .status(201)
-        .json({ message: "Internship created successfully", internship: newInternship });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  };
+  try {
+    const recruiter = req.recruiter;
+    const newInternship = await Internship.create({
+      recruiter: recruiter._id,
+      ...req.body,
+    });
+
+    // 🔔 Notify all users
+    const users = await User.find({}, "_id");
+    const notifications = users.map(user => ({
+      recipient: user._id,
+      recipientModel: "User",
+      sender: recruiter._id,
+      senderModel: "Recruiter",
+      type: "internship_posted",
+      message: `New internship posted: ${newInternship.title} by ${recruiter.companyName}`,
+      internship: newInternship._id,
+    }));
+    await Notification.insertMany(notifications);
+
+    res.status(201).json({
+      message: "Internship created successfully",
+      internship: newInternship,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 
   // DELETE JOB
   export const deleteJob = async (req, res) => {

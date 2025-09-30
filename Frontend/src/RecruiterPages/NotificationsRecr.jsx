@@ -170,7 +170,7 @@ export default function NotificationsRecr() {
               <div className="border-b pb-4 mb-4 border-gray-200 flex justify-between items-center">
                 <h1 className="text-2xl font-semibold text-gray-800">Notifications</h1>
                 <div className="flex space-x-4">
-                  <button onClick={fetchNotifications} className="text-sm text-[#5F9D08] hover:underline">
+                  <button onClick={fetchNotifications} className="text-sm text-[#5F9D08] bg-green-200 p-2 rounded-full cursor-pointer hover:underline">
                     Refresh
                   </button>
                   {notifications.length > 0 && (

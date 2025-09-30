@@ -182,30 +182,38 @@ export const getJobs = async (req, res) => {
   }
 };
 
+import { Notification } from "../models/Notification.js";
+
 export const applyToJobs = async (req, res) => {
   try {
     const { jobId } = req.body;
-    const job = await Job.findById(jobId);
-    if (job === null) {
-      return res.status(404).json({ message: "Job Not found" });
-    }
+    const job = await Job.findById(jobId).populate('recruiter');
+    if (!job) return res.status(404).json({ message: "Job Not found" });
 
-    if (job.status === "closed") {
+    if (job.status === "closed")
       return res.status(403).json({ message: "Job Opening Is closed" });
-    }
-    const user = req.user;
 
+    const user = req.user;
     const alreadyApplied = job.candidates.includes(user._id);
-    if (alreadyApplied) {
+    if (alreadyApplied)
       return res.status(403).json({ message: "Already applied to this job" });
-    }
-    job.candidates.push(user._id); //ye job pe kitno ne apply kiya
-    user.appliedJobs.push(job._id); //ye bande ke kitne job pe apply kiya
-    await job.save({
-      validateBeforeSave: false,
-    });
-    await user.save({
-      validateBeforeSave: false,
+
+    // Push user into candidates
+    job.candidates.push(user._id);
+    user.appliedJobs.push(job._id);
+
+    await job.save({ validateBeforeSave: false });
+    await user.save({ validateBeforeSave: false });
+
+    // 🔔 Send notification to recruiter
+    await Notification.create({
+      recipient: job.recruiter._id,
+      recipientModel: "Recruiter",
+      sender: user._id,
+      senderModel: "User",
+      type: "job_applied",
+      message: `${user.name} applied for your job: ${job.title}`,
+      job: job._id,
     });
 
     res.status(200).json({ message: "Applied To Job successfully" });
@@ -214,6 +222,7 @@ export const applyToJobs = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 export const getAppliedJobs = async (req, res) => {
   try {
