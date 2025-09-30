@@ -62,16 +62,16 @@ const NavSearchBar = ({ toggleSidebar, showHamburger = false }) => {
       <div className="flex items-center space-x-4">
         <div className="hidden md:flex items-center space-x-2">
           
-          <input
+          {/* <input
             type="text"
             placeholder="Search..."
             className="p-2 rounded-md bg-gray-100 text-black w-32 sm:w-48 md:w-64 lg:w-80"
           />
-          <FaSearch className="text-xl" />
+          <FaSearch className="text-xl" /> */}
         </div>
-        <button className="md:hidden p-2 rounded-full">
+        {/* <button className="md:hidden p-2 rounded-full">
           <FaSearch />
-        </button>
+        </button> */}
         <ProfileDropdown />
       </div>
     </nav>

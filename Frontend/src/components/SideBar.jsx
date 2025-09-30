@@ -58,7 +58,7 @@ const SideBar = ({ isOpen, onClose, isMobile }) => {
             }
           >
             <i className="fa-regular fa-font-awesome text-white text-base text-xl"></i>
-            <span className="text-sm sm:text-base">Saved Jobs</span>
+            <span className="text-sm sm:text-base">Saved Jobs/Internships</span>
           </NavLink>
         </li>
         <li>
@@ -70,7 +70,7 @@ const SideBar = ({ isOpen, onClose, isMobile }) => {
             }
           >
             <i className="fa-solid fa-briefcase text-white text-base text-xl"></i>
-            <span className="text-sm sm:text-base">Job Recommendations</span>
+            <span className="text-sm sm:text-base">Job/Internships Recommendations</span>
           </NavLink>
         </li>
         <li>

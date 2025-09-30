@@ -9,6 +9,9 @@ const SavedJobs = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [savedJobs, setSavedJobs] = useState([]);
+  const [activeTab, setActiveTab] = useState("jobs"); // "jobs" or "internships"
+
+  const isMobile = windowWidth < 768;
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -19,29 +22,45 @@ const SavedJobs = () => {
   useEffect(() => {
     const storedJobs = localStorage.getItem("savedJobs");
     if (storedJobs) {
-      setSavedJobs(JSON.parse(storedJobs));
+      const jobsArray = JSON.parse(storedJobs);
+
+      // Normalize internships to always have recruiter.companyName
+      const normalizedJobs = jobsArray.map(item => {
+        if (item.internshipRole && !item.recruiter) {
+          return {
+            ...item,
+            recruiter: { companyName: item.companyName || "Unknown Company" },
+          };
+        }
+        return item;
+      });
+
+      setSavedJobs(normalizedJobs);
     }
   }, []);
-
-  const isMobile = windowWidth < 768;
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
 
-  // ✅ Remove single job
+  // Remove single item
   const handleRemoveJob = (jobId) => {
     const updatedJobs = savedJobs.filter((job) => job._id !== jobId && job.id !== jobId);
     setSavedJobs(updatedJobs);
     localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
   };
 
-  // ✅ Clear all jobs
+  // Clear all items
   const handleClearAll = () => {
     setSavedJobs([]);
     localStorage.removeItem("savedJobs");
   };
+
+  // Filter saved items based on active tab
+  const filteredItems = savedJobs.filter(item =>
+    activeTab === "jobs" ? item.jobRole : item.internshipRole
+  );
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col md:flex-row">
@@ -67,6 +86,7 @@ const SavedJobs = () => {
       </AnimatePresence>
 
       <div className="flex-1 flex flex-col pt-24 lg:pl-64 px-4 md:px-8">
+        {/* Header */}
         <motion.div
           className="mb-4 flex justify-between items-center"
           initial={{ opacity: 0, y: -20 }}
@@ -75,10 +95,12 @@ const SavedJobs = () => {
         >
           <div>
             <h1 className="text-2xl font-bold text-gray-800 border-l-4 border-[#5F9D08] pl-3">
-              Saved Jobs
+              Saved {activeTab === "jobs" ? "Jobs" : "Internships"}
             </h1>
             <p className="text-gray-600 mt-2 pl-4">
-              Jobs you've saved for later application
+              {activeTab === "jobs"
+                ? "Jobs you've saved for later application"
+                : "Internships you've saved for later application"}
             </p>
           </div>
 
@@ -92,6 +114,31 @@ const SavedJobs = () => {
           )}
         </motion.div>
 
+        {/* Tabs */}
+        <div className="flex space-x-4 mb-4">
+          <button
+            onClick={() => setActiveTab("jobs")}
+            className={`px-4 py-2 font-medium rounded-lg ${
+              activeTab === "jobs"
+                ? "bg-[#5F9D08] text-white"
+                : "bg-white text-gray-800 border border-gray-300"
+            }`}
+          >
+            Jobs
+          </button>
+          <button
+            onClick={() => setActiveTab("internships")}
+            className={`px-4 py-2 font-medium rounded-lg ${
+              activeTab === "internships"
+                ? "bg-[#5F9D08] text-white"
+                : "bg-white text-gray-800 border border-gray-300"
+            }`}
+          >
+            Internships
+          </button>
+        </div>
+
+        {/* Job / Internship Cards */}
         <motion.div
           className="w-full max-w-5xl mx-auto"
           variants={containerVariants}
@@ -99,21 +146,29 @@ const SavedJobs = () => {
           animate="visible"
         >
           <div className="flex flex-col space-y-4 sm:pt-6">
-            {savedJobs.length > 0 ? (
-              savedJobs.map((job, index) => (
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item, index) => (
                 <motion.div
-                  key={job._id || job.id}
+                  key={item._id || item.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                   whileHover={{ scale: 1.01 }}
                   className="relative"
                 >
-                  <JobCard job={job} />
+                  {/* Pass normalized title & company */}
+                  <JobCard
+                    job={{
+                      ...item,
+                      title: item.jobRole || item.internshipRole,
+                      company: item.recruiter?.companyName || "Unknown Company",
+                    }}
+                    isInternship={!!item.internshipRole}
+                  />
 
-                  {/* ✅ Remove button on each job */}
+                  {/* Remove button */}
                   <button
-                    onClick={() => handleRemoveJob(job._id || job.id)}
+                    onClick={() => handleRemoveJob(item._id || item.id)}
                     className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600"
                   >
                     Remove
@@ -144,10 +199,12 @@ const SavedJobs = () => {
                   </svg>
                 </div>
                 <h3 className="text-xl font-medium text-gray-800 mb-2">
-                  No saved jobs yet
+                  No saved {activeTab}
                 </h3>
                 <p className="text-gray-600">
-                  Jobs you save will appear here for easy access
+                  {activeTab === "jobs"
+                    ? "Jobs you save will appear here for easy access"
+                    : "Internships you save will appear here for easy access"}
                 </p>
               </motion.div>
             )}

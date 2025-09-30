@@ -5,74 +5,56 @@ import Sidebar from '../components/SideBar';
 import JobCards from '../components/JobCards';
 import AppliedJobs from '../components/AppliedJobs';
 import useUserStore from '../store/userStore.js';
-import {motion,AnimatePresence} from 'framer-motion';
-import { FiMenu } from 'react-icons/fi';
+import { AnimatePresence } from 'framer-motion';
+
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isLoading, setIsLoading] = useState(true);
   const [jobs, setJobs] = useState([]);
   const navigate = useNavigate();
-  const user = useUserStore(state => state.user);
-  const getAppliedJobs=useUserStore(state=>state.getAppliedJobs)
-  const appliedJobs=useUserStore(state=>state.appliedJobs)
-  // Check if user is logged in
-  useEffect(() => {
-    // If no user is found after a short delay, redirect to login
-    // const timer = setTimeout(() => {
-    //   if (!user) {
-    //     navigate('/users/login');
-    //   } else {
-    // const timer = setTimeout(() => {
-    //   if (!user) {
-    //     navigate('/users/login');
-    //   } else {
-        setIsLoading(false);
-      
-    },); // Small delay to allow store to initialize
 
-  //   return () => clearTimeout(timer);
-  // },);
-const backend_url = import.meta.env.VITE_BACKEND_URL
-  useEffect(() =>{
+  const user = useUserStore(state => state.user);
+  const appliedJobs = useUserStore(state => state.appliedJobs);
+  const getAppliedJobs = useUserStore(state => state.getAppliedJobs);
+
+  const backend_url = import.meta.env.VITE_BACKEND_URL;
+
+  // Fetch jobs from backend and normalize company field
+  useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await fetch (backend_url+"/jobs");
+        const res = await fetch(`${backend_url}/jobs`);
         const data = await res.json();
-        if(data.success) {
-          setJobs(data.jobs);
+        if (data.success) {
+          const normalizedJobs = data.jobs.map(job => ({
+            ...job,
+            company: job.company || job.recruiter?.companyName || job.recruiterName || "Unknown Company"
+          }));
+          setJobs(normalizedJobs);
         }
-      }
-      catch(err){
+      } catch (err) {
         console.error("Failed to fetch jobs:", err);
-      }
-      finally{
+      } finally {
         setIsLoading(false);
       }
     };
+
     fetchJobs();
   }, []);
-   // Fetch applied jobs for the current user
-  // useEffect(() => {
-  //   const fetchApplied = async () => {
-  //     if (user) await getAppliedJobs();
-  //   };
-  //   fetchApplied();
-  // }, [user, getAppliedJobs]);
 
+  // Fetch applied jobs for current user
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    
+    if (getAppliedJobs) getAppliedJobs();
+  }, [getAppliedJobs]);
+
+  // Handle window resize for responsive sidebar
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
 
-  const isMobile = windowWidth < 768;
-  
-  // Show loading state while checking authentication
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -86,49 +68,34 @@ const backend_url = import.meta.env.VITE_BACKEND_URL
 
   return (
     <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex flex-col md:flex-row">
-      {/* <NavSearchBar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} /> */}
-      {/* <div className="lg:hidden p-4 mt-10">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-3xl text-[#5F9D08] cursor-pointer"
-          >
-            <FiMenu />
-          </button>
-        </div> */}
-        <NavSearchBar
-        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-        showHamburger={true}
-      />  
+      <NavSearchBar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} showHamburger={true} />
 
-        {/* Sidebar for large screens */}
-        <div className="hidden lg:block mt-20 fixed top-0 left-0 min-h-screen">
-          <Sidebar isOpen={true} isMobile={false} />
-        </div>
+      {/* Sidebar */}
+      <div className="hidden lg:block mt-20 fixed top-0 left-0 min-h-screen">
+        <Sidebar isOpen={true} isMobile={false} />
+      </div>
 
-        {/* Sidebar for small screens (AnimatePresence handles mount/unmount) */}
-        <AnimatePresence>
-          {isSidebarOpen && (
-            <Sidebar
-              isOpen={isSidebarOpen}
-              onClose={() => setIsSidebarOpen(false)}
-              isMobile
-            />
-          )}
-        </AnimatePresence>
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} isMobile />
+        )}
+      </AnimatePresence>
+
       <div className="flex flex-1 flex-col md:flex-row md:mt-20 lg:ml-64">
-      
-        
-        <div className="flex-1 pl-4 mt-20 md:mt-5 md:w-3/4 ">
+        <div className="flex-1 pl-4 mt-20 md:mt-5 md:w-3/4">
           <div className="bg-white rounded-xl shadow-sm p-5 mr-4">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2 ">Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''}!</h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">
+              Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''}!
+            </h1>
             <p className="text-gray-600">Find your perfect job match from our listings.</p>
           </div>
-          {/* Pass jobs into job cards */}
-          <JobCards jobs={jobs} appliedJobs={appliedJobs.map(j => j._id)} />
-          {/* <JobCards />*/}
+
+          {/* Pass jobs and applied jobs */}
+          <JobCards jobs={jobs} appliedJobs={appliedJobs.map(j => j._id || j.id)} />
         </div>
-        <div className="md:w-1/4 "> 
-          <AppliedJobs /> 
+
+        <div className="md:w-1/4">
+          <AppliedJobs />
         </div>
       </div>
     </div>
