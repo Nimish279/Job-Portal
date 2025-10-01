@@ -15,8 +15,7 @@ import { User } from "./models/User.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import { getInternships } from "./controllers/userController.js";
-
-
+import { getInternshipById } from "./controllers/userController.js";
 
 dotenv.config();
 const app = express();
@@ -67,7 +66,7 @@ app.get("/api/jobs/:id", async (req, res) => {
   }
 });
 app.get("/api/internships", getInternships);
-
+app.get("/api/internships/:id", getInternshipById);
 // app.get("/api/jobs/:id/candidates", protect, isRecruiter, seeCandidates);
 app.get('/api/applicants/:applicantId', protect, isRecruiter, async (req, res) => {
   try {

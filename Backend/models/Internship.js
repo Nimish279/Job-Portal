@@ -11,7 +11,8 @@ const internshipSchema = new mongoose.Schema({
   location: { type: String },
   eligibilityCriteria: { type: String },
   recruiter: { type: mongoose.Schema.Types.ObjectId, ref: "Recruiter" }, // optional
-  status: { type: String, enum: ['closed','open'], default: "open" }
+  status: { type: String, enum: ['closed','open'], default: "open" },
+  candidates: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 
 }, { timestamps: true });
 

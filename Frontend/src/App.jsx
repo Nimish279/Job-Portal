@@ -87,7 +87,8 @@ function App() {
   <Route path='/users/apply/:id' element={<ProtectedRoute allowedRole="user"><ApplyJob /></ProtectedRoute>} />
   <Route path='/users/notifications' element={<ProtectedRoute allowedRole="user"><NotificationsPage /></ProtectedRoute>} />
   <Route path='/users/job-recommendations' element={<ProtectedRoute allowedRole="user"><JobRecommendations /></ProtectedRoute>} />
-
+  <Route path="/users/internship/:id" element={<ProtectedRoute allowedRole="user"><JobPage /></ProtectedRoute>} /> 
+  <Route path="/users/internship/apply/:id" element={<ProtectedRoute allowedRole="user"><ApplyJob /></ProtectedRoute>} />
         {/* Recruiter Routes */}
         <Route path='/recruiters/logout' element={<ProtectedRoute><RecruiterLogout /></ProtectedRoute>} />
         <Route path='/recruiters/jobs/active' element={<ProtectedRoute allowedRole="recruiter"><AllJobs_ActiveJobs /></ProtectedRoute>} />

@@ -317,3 +317,93 @@ export const getInternships = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+// ✅ Get internship by ID
+export const getInternshipById = async (req, res) => {
+  try {
+    const internship = await Internship.findById(req.params.id).populate(
+      "recruiter",
+      "companyName email"
+    );
+    if (!internship) {
+      return res.status(404).json({ message: "Internship not found" });
+    }
+    res.json(internship);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching internship", error: err.message });
+  }
+};
+
+// ✅ Get internship workflow (if you want a separate workflow endpoint like jobs)
+export const getInternshipWorkflow = async (req, res) => {
+  try {
+    const internship = await Internship.findById(req.params.id);
+    if (!internship) {
+      return res.status(404).json({ message: "Internship not found" });
+    }
+
+    res.json({
+      workflowSteps: internship.workflowSteps || [
+        "Application Submitted",
+        "Resume Shortlisting",
+        "Interview",
+        "Offer",
+      ],
+      status: internship.status,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching workflow", error: err.message });
+  }
+};
+export const applyToInternships = async (req, res) => {
+    try {
+        // We expect the frontend to send the ID of the internship
+        const { internshipId } = req.body; 
+        
+        // 1. Find the Internship and populate the Recruiter for notification
+        const internship = await Internship.findById(internshipId).populate('recruiter');
+        if (!internship) return res.status(404).json({ message: "Internship not found" });
+
+        // 2. Check if the internship is open
+        if (internship.status === "closed")
+            return res.status(403).json({ message: "Internship opening is closed" });
+
+        // Get the authenticated user object
+        const user = req.user; 
+        
+        // 3. Check for duplicate application on the Internship model
+        const alreadyApplied = internship.candidates.includes(user._id);
+        if (alreadyApplied)
+            return res.status(403).json({ message: "Already applied to this internship" });
+
+        // 4. Perform the Application Update (Mongoose)
+        
+        // Add user to the internship's candidates list
+        internship.candidates.push(user._id);
+        await internship.save({ validateBeforeSave: false });
+
+        /* CRUCIAL ASSUMPTION: The User model needs an 'appliedInternships' array. 
+        If it exists, uncomment the lines below.
+        
+        // Add internship to the user's applied internships list
+        await User.findByIdAndUpdate(user._id, {
+            $push: { appliedInternships: internship._id }
+        }, { new: true, runValidators: true });
+        */
+
+        // 5. 🔔 Send notification to recruiter
+        await Notification.create({
+            recipient: internship.recruiter._id,
+            recipientModel: "Recruiter",
+            sender: user._id,
+            senderModel: "User",
+            type: "internship_applied",
+            message: `${user.name} applied for your internship: ${internship.internshipRole}`,
+            internship: internship._id,
+        });
+
+        res.status(200).json({ success: true, message: "Applied to Internship successfully" });
+    } catch (error) {
+        console.error("Apply to Internship Error:", error);
+        res.status(500).json({ success: false, error: error.message, message: "Server error during application" });
+    }
+};
