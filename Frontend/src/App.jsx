@@ -92,18 +92,18 @@ function App() {
         {/* Recruiter Routes */}
         <Route path='/recruiters/logout' element={<ProtectedRoute><RecruiterLogout /></ProtectedRoute>} />
         <Route path='/recruiters/jobs/active' element={<ProtectedRoute allowedRole="recruiter"><AllJobs_ActiveJobs /></ProtectedRoute>} />
-        <Route path='/recruiters/jobs/closed' element={<ProtectedRoute><AllJobs_ClosedJobs /></ProtectedRoute>} />
-        <Route path='/recruiters/notifications' element={<NotificationsRecr />} />
-        <Route path='/recruiters/getProfile' element={<RecruiterProfile />} />
-        <Route path='/recruiters/postJob' element={<PostJob_Job />} />
-        <Route path='/recruiters/postInternship' element={<PostJob_Internship />} />
-        <Route path='/recruiters/acceptedApplicants' element={<AcceptedApplicants />} />
-        <Route path='/recruiters/applicants/:jobId' element={<Applicants />} />
-        <Route path='/recruiters/updateRecruiter' element={<UpdateRecruiter />} />
-        <Route path='/recruiters/applicantsProfile/:jobId/:applicantId' element={<ApplicantsProfile />} />
-        <Route path='/recruiters/post-job/job' element={<PostJob_Job />} />
+        <Route path='/recruiters/jobs/closed' element={<ProtectedRoute allowedRole="recruiter"><AllJobs_ClosedJobs /></ProtectedRoute>} />
+        <Route path='/recruiters/notifications' element={<ProtectedRoute allowedRole="recruiter"><NotificationsRecr /></ProtectedRoute>} />
+        <Route path='/recruiters/getProfile' element={<ProtectedRoute allowedRole="recruiter"><RecruiterProfile /></ProtectedRoute>} />
+        <Route path='/recruiters/postJob' element={<ProtectedRoute allowedRole="recruiter"><PostJob_Job /></ProtectedRoute>} />
+        <Route path='/recruiters/postInternship' element={<ProtectedRoute allowedRole="recruiter"><PostJob_Internship /></ProtectedRoute>} />
+        <Route path='/recruiters/acceptedApplicants' element={<ProtectedRoute allowedRole="recruiter"><AcceptedApplicants /></ProtectedRoute>} />
+        <Route path='/recruiters/applicants/:jobId' element={<ProtectedRoute allowedRole="recruiter"><Applicants /></ProtectedRoute>} />
+        <Route path='/recruiters/updateRecruiter' element={<ProtectedRoute allowedRole="recruiter"><UpdateRecruiter /></ProtectedRoute>} />
+        <Route path='/recruiters/applicantsProfile/:jobId/:applicantId' element={<ProtectedRoute allowedRole="recruiter"><ApplicantsProfile /></ProtectedRoute>} />
+        <Route path='/recruiters/post-job/job' element={<ProtectedRoute allowedRole="recruiter"><PostJob_Job /></ProtectedRoute>} />
         {/* <Route path='/recruiters/applicants/:jobId' element={<Applicants />} /> */}
-        <Route path='/recruiters/post-job/internship' element={<PostJob_Internship />} />
+        <Route path='/recruiters/post-job/internship' element={<ProtectedRoute allowedRole="recruiter"><PostJob_Internship /></ProtectedRoute>} />
         <Route path='/recruiters/change-password' element={<ChangePassword />} />
 
         
