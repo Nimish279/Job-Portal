@@ -9,6 +9,7 @@ import Notifications from "../../assets/images/notifications00.png";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { FaHome } from "react-icons/fa";
+import { FaKey, FaUserEdit, FaSignOutAlt } from "react-icons/fa";
 
 const RecruiterProfile = () => {
   const [logoUrl, setLogoUrl] = useState("");
@@ -180,42 +181,48 @@ useEffect(() => {
               <CompanyProfileForm onProfileUpdated={fetchProfile} />
             </motion.div>
 
-            {/* Recruiter Info */}
-            <motion.div
-              initial={{ x: 50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="w-full lg:w-1/3 bg-white rounded-md shadow-md p-6 h-fit"
-            >
-              <h3 className="text-xl font-bold mb-6 text-center">
-                Recruiter Profile
-              </h3>
-              <div className="space-y-3 text-sm text-gray-800">
-                {userName && <InfoRow label="Name" value={userName} />}
-                {email && <InfoRow label="Email" value={email} />}
-                {designation && <InfoRow label="Job Title" value={designation} />}
-                {linkedin && <InfoRow label="LinkedIn" value={linkedin} isLink />}
-                {phone && <InfoRow label="Phone" value={phone} />}
-                {companyName && <InfoRow label="Company" value={companyName} />}
-                {website && <InfoRow label="Website" value={website} isLink />}
-                {address && <InfoRow label="Address" value={address} />}
-                {industryType && (
-                  <InfoRow label="Industry" value={industryType} />
-                )}
-              </div>
-              <hr className="my-6 border-gray-300" />
-              <div className="space-y-2 text-sm text-gray-600">
-                <Link to="/recruiters/change-password" className="block hover:underline">
-                  Change Password
-                </Link>
-                <Link to="/recruiters/updateRecruiter" className="block hover:underline">
-                  Update Recruiter
-                </Link>
-                <Link to="/recruiters/logout" className="block hover:underline">
-                  Sign Out
-                </Link>
-              </div>
-            </motion.div>
+            
+<motion.div
+  initial={{ x: 50, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ duration: 0.6, delay: 0.4 }}
+  className="w-full lg:w-1/3 bg-white rounded-xl shadow-lg overflow-hidden"
+>
+  {/* Profile Header */}
+  <div className="relative bg-gradient-to-r from-[#5F9D08] to-green-500 text-white py-8 px-6 text-center">
+    <motion.img
+      src={logoUrl || AmazonLogo}
+      alt="Recruiter Avatar"
+      className="w-20 h-20 rounded-full mx-auto border-4 border-white shadow-md object-cover"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ type: "spring", stiffness: 120 }}
+    />
+    <h3 className="text-2xl font-semibold mt-3">{userName || "Recruiter Name"}</h3>
+    <p className="text-sm opacity-90">{designation || "Recruiter Role"}</p>
+  </div>
+
+  {/* Profile Info */}
+  <div className="p-6 space-y-3 text-gray-800 text-sm">
+    {email && <InfoRow label="Email" value={email} />}
+    {linkedin && <InfoRow label="LinkedIn" value={linkedin} isLink />}
+    {phone && <InfoRow label="Phone" value={phone} />}
+    {companyName && <InfoRow label="Company" value={companyName} />}
+    {website && <InfoRow label="Website" value={website} isLink />}
+    {address && <InfoRow label="Address" value={address} />}
+    {industryType && <InfoRow label="Industry" value={industryType} />}
+  </div>
+
+  {/* Divider */}
+  <div className="border-t border-gray-200 my-4"></div>
+
+  {/* Action Buttons */}
+  <div className="flex flex-col gap-3 px-6 pb-6">
+    <AnimatedButton to="/recruiters/change-password" label="Change Password" />
+    <AnimatedButton to="/recruiters/updateRecruiter" label="Update Recruiter" />
+    <AnimatedButton to="/recruiters/logout" label="Sign Out" danger />
+  </div>
+</motion.div>
           </div>
         </div>
       </div>
@@ -235,5 +242,35 @@ const InfoRow = ({ label, value, isLink }) => (
     )}
   </div>
 );
+
+
+
+const AnimatedButton = ({ to, label, danger }) => {
+  const icons = {
+    "Change Password": <FaKey />,
+    "Update Recruiter": <FaUserEdit />,
+    "Sign Out": <FaSignOutAlt />,
+  };
+
+  return (
+    <motion.div
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 200 }}
+    >
+      <Link
+        to={to}
+        className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-md font-medium text-sm transition-all duration-200 ${
+          danger
+            ? "bg-red-500 hover:bg-red-600 text-white"
+            : "bg-[#5F9D08] hover:bg-green-600 text-white"
+        }`}
+      >
+        {icons[label]} {label}
+      </Link>
+    </motion.div>
+  );
+};
+
 
 export default RecruiterProfile;
