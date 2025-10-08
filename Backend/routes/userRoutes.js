@@ -14,6 +14,7 @@ import {
   getInternshipById,
 } from "../controllers/userController.js";
 import { isSeeker, protect } from "../middlewares/authMiddleware.js";
+import upload from "../middlewares/multer.js";
 
 const router = express.Router();
 
@@ -29,6 +30,6 @@ router.put("/edit-profile", protect, isSeeker, editProfile);
 router.delete("/savedJobs/:jobId", protect, removeSavedJob);
 router.get("/getInternships", protect, isSeeker, getInternships);
 router.get("/internship/:id", protect, isSeeker, getInternshipById);
-router.put("/applyInternship", protect, isSeeker, applyToInternships);
+router.put("/applyInternship", protect, isSeeker,upload.single("resume"), applyToInternships);
 router.get('/me', protect,isSeeker, getCurrentUser);
 export default router;

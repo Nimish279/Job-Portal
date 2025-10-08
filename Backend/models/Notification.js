@@ -31,6 +31,7 @@ const notificationSchema = new mongoose.Schema(
         "job_applied",
         "application_status",
         "general",
+        "internship_applied"
       ],
       required: true,
     },
