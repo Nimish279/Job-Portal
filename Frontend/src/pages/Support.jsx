@@ -156,16 +156,16 @@ function SupportPage() {
         <form className="max-w-2xl mx-auto space-y-6">
           <input
             type="text"
-            placeholder="Your Name"
+            placeholder="Your Name" required
             className="w-full p-4 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-[#4CAF50]"
           />
           <input
-            type="email"
+            type="email" required
             placeholder="Your Email"
             className="w-full p-4 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-[#4CAF50]"
           />
           <textarea
-            placeholder="Your Message"
+            placeholder="Your Message" required
             rows="5"
             className="w-full p-4 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-[#4CAF50]"
           ></textarea>
