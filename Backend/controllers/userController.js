@@ -187,43 +187,78 @@ import { Notification } from "../models/Notification.js";
 
 export const applyToJobs = async (req, res) => {
   try {
-    const { jobId } = req.body;
+    // Debug logs — helpful while developing locally
+    console.log("=== APPLY TO JOB REQUEST ===");
+    console.log("req.body:", req.body);
+    console.log("req.file:", req.file);
+
+    // Support several possible keys that frontend may send
+    const jobId = req.body?.jobId || req.body?.id || req.body?.job_id;
+    if (!jobId) {
+      return res.status(400).json({ message: "Job ID is required in the request body." });
+    }
+
+    // Find job and populate recruiter for notification
     const job = await Job.findById(jobId).populate('recruiter');
-    if (!job) return res.status(404).json({ message: "Job Not found" });
+    if (!job) return res.status(404).json({ message: "Job not found" });
 
     if (job.status === "closed")
-      return res.status(403).json({ message: "Job Opening Is closed" });
+      return res.status(403).json({ message: "Job Opening is closed" });
 
-    const user = req.user;
-    const alreadyApplied = job.candidates.includes(user._id);
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Check duplicate (handle ObjectId comparisons)
+    const alreadyApplied = job.candidates.some(
+      (id) => id.toString() === user._id.toString()
+    );
     if (alreadyApplied)
       return res.status(403).json({ message: "Already applied to this job" });
 
-    // Push user into candidates
+    // Push user into candidates and user.appliedJobs (original app behaviour)
     job.candidates.push(user._id);
     user.appliedJobs.push(job._id);
+
+    // Optional: store resume path locally (if multer configured to save local files).
+    // We don't modify your schema — we just log and include the path in response for debugging.
+    let resumeInfo = null;
+    if (req.file) {
+      resumeInfo = {
+        originalname: req.file.originalname,
+        filename: req.file.filename || null,
+        path: req.file.path || null,
+        mimetype: req.file.mimetype || null,
+        size: req.file.size || null,
+      };
+      console.log("Resume uploaded:", resumeInfo);
+      // If you want to store resume path in DB, add a field to your schema and save it.
+    }
 
     await job.save({ validateBeforeSave: false });
     await user.save({ validateBeforeSave: false });
 
-    // 🔔 Send notification to recruiter
-    await Notification.create({
-      recipient: job.recruiter._id,
-      recipientModel: "Recruiter",
-      sender: user._id,
-      senderModel: "User",
-      type: "job_applied",
-      message: `${user.name} applied for your job: ${job.title}`,
-      job: job._id,
-    });
+    // Send notification to recruiter
+    if (job.recruiter && job.recruiter._id) {
+      await Notification.create({
+        recipient: job.recruiter._id,
+        recipientModel: "Recruiter",
+        sender: user._id,
+        senderModel: "User",
+        type: "job_applied",
+        message: `${user.name} applied for your job: ${job.title}`,
+        job: job._id,
+      });
+    }
 
-    res.status(200).json({ message: "Applied To Job successfully" });
+    return res.status(200).json({
+      message: "Applied To Job successfully",
+      resume: resumeInfo,
+    });
   } catch (error) {
-    console.log(error);
+    console.error("ApplyToJobs Error:", error);
     res.status(500).json({ error: error.message });
   }
 };
-
 
 export const getAppliedJobs = async (req, res) => {
   try {

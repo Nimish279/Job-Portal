@@ -23,13 +23,17 @@ router.post("/login", loginUser);
 // router.post("/editProfile", protect, editProfile);
 router.get("/getJobs", protect, isSeeker, getJobs);
 router.post("/logout", protect, isSeeker, userlogout);
-router.put("/applyJob", protect, isSeeker, applyToJobs);
+
+// note: multer included so multipart/form-data (FormData) will be parsed
+router.put("/applyJob", protect, isSeeker, upload.single("resume"), applyToJobs);
+
 router.get("/getAppliedJobs", protect, isSeeker, getAppliedJobs);
 router.get("/profile", protect, isSeeker, getCurrentUser);
 router.put("/edit-profile", protect, isSeeker, editProfile);
 router.delete("/savedJobs/:jobId", protect, removeSavedJob);
 router.get("/getInternships", protect, isSeeker, getInternships);
 router.get("/internship/:id", protect, isSeeker, getInternshipById);
-router.put("/applyInternship", protect, isSeeker,upload.single("resume"), applyToInternships);
+router.put("/applyInternship", protect, isSeeker, upload.single("resume"), applyToInternships);
 router.get('/me', protect,isSeeker, getCurrentUser);
+
 export default router;
